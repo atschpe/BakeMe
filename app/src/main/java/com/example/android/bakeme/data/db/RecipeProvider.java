@@ -107,7 +107,7 @@ public class RecipeProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        Cursor csr;
+        Cursor csr = null;
         switch (getMatch(uri)) {
             case RECIPE_LIST:
                 csr = dbReader.query(RecipeEntry.TABLE_RECIPE, projection, selection, selectionArgs,
@@ -152,20 +152,6 @@ public class RecipeProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown uri " + uri + " with match " + match);
         }
     }
-
-//    @Override
-//    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
-//        switch (getMatch(uri)) {
-//            case RECIPE_LIST:
-//                final List<Recipe> recipes = new ArrayList<>();
-//                for (int i = 0; i < values.length; i++) {
-//                    recipes.set(i, Recipe.fromContentValues(values[i]));
-//                }
-//                return recipeDao.insertAll(recipes).length;
-//            default:
-//                throw new IllegalArgumentException("Unknown URI: " + uri);
-//        }
-//    }
 
     @Nullable
     @Override

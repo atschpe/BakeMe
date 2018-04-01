@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     }
 
     public boolean isDbIsUpToDate() { //getter for DB boolean
-        DB_IS_UPTODATE  = sharedPref.getBoolean(DB_BOO,
+        DB_IS_UPTODATE = sharedPref.getBoolean(DB_BOO,
                 getResources().getBoolean(R.bool.dbBoo_default));
         return DB_IS_UPTODATE;
     }
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
         if (requestCode == RecipeUtils.FAV_UPDATED_FLAG) {
             if (isDbIsUpToDate()) {
                 getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
@@ -265,8 +265,11 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data == null) {
             mainBinder.alertView.alertTv.setText(R.string.no_recipes);
+            Timber.v("Cursor is empty");
         } else {
+            recipeList = new ArrayList<>();
             RecipeUtils.getRecipeDataFromCursor(data, recipeList);
+            Timber.v(String.valueOf(data.getCount()));
             data.close();
             setAdapter(this, recipeList, this);
         }

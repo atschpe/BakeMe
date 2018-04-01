@@ -33,19 +33,13 @@ public class RecipeUtils {
 
     private static boolean favIsUpdated;
 
+    //keep track of when the user (un)favourites a recipe
     public static boolean isFavIsUpdated() {
         return favIsUpdated;
     }
 
     public static void setFavIsUpdated(boolean favIsUpdated) {
         RecipeUtils.favIsUpdated = favIsUpdated;
-    }
-
-    public static String getCurrentRecipeName() {
-//        if (currentRecipeName.isEmpty()) {
-//            currentRecipeName = null;
-//        }
-        return currentRecipeName;
     }
 
     public static void setCurrentRecipeName(String currentRecipeName) {
@@ -139,42 +133,46 @@ public class RecipeUtils {
     }
 
     public static void updateFavDb(Recipe selectedRecipe, Context ctxt) {
-        //create uri referencing the recipe's id
+        //create uri referencing the recipe's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(RecipeEntry.CONTENT_URI_RECIPE,
                 selectedRecipe.getId());
+        String selection = RecipeEntry.RECIPE_ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(selectedRecipe.getId())};
 
         //store changed favourite selection to the db.
         ContentValues singleRecipe = new ContentValues();
         getRecipeValues(singleRecipe, selectedRecipe);
-        ctxt.getContentResolver().update(uri, singleRecipe, null, null);
+        ctxt.getContentResolver().update(uri, singleRecipe, selection, selectionArgs);
     }
 
     public static void updateCheckedDb(String recipeName, Ingredients selectedIngredients, Context ctxt) {
-        //create uri referencing the ingredient's id
+        //create uri referencing the ingredient's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                 selectedIngredients.getId());
+        String selection = IngredientsEntry.INGREDIENTS_ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(selectedIngredients.getId())};
 
         //store changed checked state to the db.
         ContentValues singleIngredients = new ContentValues();
         getIngredientValues(recipeName, singleIngredients, selectedIngredients);
-        ctxt.getContentResolver().update(uri, singleIngredients, null, null);
+        ctxt.getContentResolver().update(uri, singleIngredients, selection, selectionArgs);
     }
 
     public static ArrayList<Ingredients> getIngredientList(Cursor data,
                                                            ArrayList<Ingredients> ingredientsList) {
         data.moveToFirst();
         while (data.moveToNext()) {
-                long id = data.getLong(data.getColumnIndex(Ingredients.INGREDIENTS_ID));
-                String ingredient = data.getString(data.getColumnIndex(IngredientsEntry
-                        .INGREDIENTS_INGREDIENT));
-                String measure = data.getString(data.getColumnIndex(IngredientsEntry
-                        .INGREDIENTS_MEASURE));
-                int quantity = data.getInt(data.getColumnIndex(IngredientsEntry
-                        .INGREDIENTS_QUANTITY));
-                boolean checked = data.getInt(data.getColumnIndex(IngredientsEntry
-                        .INGREDIENTS_CHECKED)) == IngredientsEntry.CHECKED_TRUE;
-                ingredientsList.add(new Ingredients(id, ingredient, measure, quantity,
-                        checked));
+            long id = data.getLong(data.getColumnIndex(Ingredients.INGREDIENTS_ID));
+            String ingredient = data.getString(data.getColumnIndex(IngredientsEntry
+                    .INGREDIENTS_INGREDIENT));
+            String measure = data.getString(data.getColumnIndex(IngredientsEntry
+                    .INGREDIENTS_MEASURE));
+            int quantity = data.getInt(data.getColumnIndex(IngredientsEntry
+                    .INGREDIENTS_QUANTITY));
+            boolean checked = data.getInt(data.getColumnIndex(IngredientsEntry
+                    .INGREDIENTS_CHECKED)) == IngredientsEntry.CHECKED_TRUE;
+            ingredientsList.add(new Ingredients(id, ingredient, measure, quantity,
+                    checked));
         }
         return ingredientsList;
     }
@@ -182,14 +180,14 @@ public class RecipeUtils {
     public static ArrayList<Steps> getSteps(Cursor data, ArrayList<Steps> stepsList) {
         data.moveToFirst();
         while (data.moveToNext()) {
-                long id = data.getLong(data.getColumnIndex(StepsEntry.STEPS_ID));
-                String shortDescrip
-                        = data.getString(data.getColumnIndex(StepsEntry.STEPS_SHORT_DESCRIP));
-                String descrip
-                        = data.getString(data.getColumnIndex(StepsEntry.STEPS_DESCRIP));
-                String video = data.getString(data.getColumnIndex(StepsEntry.STEPS_VIDEO));
-                String thumb = data.getString(data.getColumnIndex(StepsEntry.STEPS_THUMB));
-                stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
+            long id = data.getLong(data.getColumnIndex(StepsEntry.STEPS_ID));
+            String shortDescrip
+                    = data.getString(data.getColumnIndex(StepsEntry.STEPS_SHORT_DESCRIP));
+            String descrip
+                    = data.getString(data.getColumnIndex(StepsEntry.STEPS_DESCRIP));
+            String video = data.getString(data.getColumnIndex(StepsEntry.STEPS_VIDEO));
+            String thumb = data.getString(data.getColumnIndex(StepsEntry.STEPS_THUMB));
+            stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
         }
         return stepsList;
     }
@@ -200,7 +198,6 @@ public class RecipeUtils {
             String image = data.getString((data.getColumnIndex(RecipeEntry.RECIPE_IMAGE)));
             String name = data.getString(data.getColumnIndex(RecipeEntry.RECIPE_NAME));
             int servings = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_SERVINGS));
-            //TODO: data returns -1 on column ?!
             int favValue = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_FAVOURITED));
             boolean favourited = favValue == RecipeEntry.FAVOURITED_TRUE;
             recipeList.add(new Recipe(id, image, name, servings, favourited));

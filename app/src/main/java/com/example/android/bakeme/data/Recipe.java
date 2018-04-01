@@ -119,12 +119,12 @@ public class Recipe implements Parcelable {
         id = in.readInt();
         favourited = in.readByte() != 0;
 
-        //inner classes
-        ingredients = new ArrayList<>();
-        in.readList(ingredients, Ingredients.class.getClassLoader());
-
-        steps = new ArrayList<>();
-        in.readList(steps, Steps.class.getClassLoader());
+//        //inner classes
+//        ingredients = new ArrayList<>();
+//        in.readList(ingredients, Ingredients.class.getClassLoader());
+//
+//        steps = new ArrayList<>();
+//        in.readList(steps, Steps.class.getClassLoader());
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {

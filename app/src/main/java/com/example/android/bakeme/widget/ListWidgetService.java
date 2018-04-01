@@ -45,7 +45,7 @@ public class ListWidgetService extends RemoteViewsService {
         //Called when first launched and on any update made from within the app or widget
         @Override
         public void onDataSetChanged() {
-            String selection = IngredientsEntry.INGREDIENTS_CHECKED;
+            String selection = IngredientsEntry.INGREDIENTS_CHECKED + "=?";
             String [] selectionArgs = new String[]{String.valueOf(IngredientsEntry.CHECKED_FALSE)};
             String sortOrder = IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE;
             csr = ctxt.getContentResolver().query(IngredientsEntry.CONTENT_URI_INGREDIENTS,

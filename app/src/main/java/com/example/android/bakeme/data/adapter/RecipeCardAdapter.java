@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * {@link RecipeCardAdapter} is a {@link RecyclerView.Adapter} to populate the RecipeCards.
@@ -61,7 +62,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     @Override
     public RecipeCardHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(ctxt).inflate(R.layout.recipe_card, parent, false);
-        root.setFocusable(true);
+        //root.setFocusable(true);
         return new RecipeCardHolder(root);
     }
 
@@ -74,6 +75,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     @Override
     public void onBindViewHolder(final RecipeCardHolder holder, int position) {
         final Recipe currentRecipe = this.recipeList.get(position);
+        Timber.v("recipeList:" + recipeList.size());
 
         //currently there are no images available in the api, but assuming it would be updated at
         //some point this code will display the image or a thumbnail.

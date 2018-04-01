@@ -139,7 +139,7 @@ public class OverviewFragment extends Fragment {
                     isFavourited = false;
                     ingredientAdapter.setOfferCheckBoxes(false);
                 }
-                RecipeUtils.updateFavDb(selectedRecipe, getActivity());
+                RecipeUtils.updateFavDb(selectedRecipe, getActivity()); //TODO: After update MainAcitivty repeats the same (favourited) recipe
                 loadManagerRestart.onLoaderRestarted();
                 ingredientAdapter.notifyDataSetChanged();
                 RecipeUtils.setFavIsUpdated(true);

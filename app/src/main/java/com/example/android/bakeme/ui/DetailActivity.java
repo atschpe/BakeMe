@@ -112,7 +112,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             methodFrag = new MethodFragment();
         }
 
-        //set up the loadermangers to retrieve the needed data
+        //set up the loaderManagers to retrieve the needed data
         getSupportLoaderManager().initLoader(RecipeUtils.RECIPE_DETAIL_LOADER, null,
                 this);
         getSupportLoaderManager().initLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,

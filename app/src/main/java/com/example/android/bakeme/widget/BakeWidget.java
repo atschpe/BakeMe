@@ -1,10 +1,12 @@
 package com.example.android.bakeme.widget;
 
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 import com.example.android.bakeme.R;
@@ -20,6 +22,7 @@ import timber.log.Timber;
  */
 public class BakeWidget extends AppWidgetProvider {
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         Timber.plant(new Timber.DebugTree());
@@ -57,9 +60,11 @@ public class BakeWidget extends AppWidgetProvider {
             intent.putExtra(String.valueOf(R.string.SELECTED_RECIPE),
                     WidgetUtils.getFavouritedRecipes(ctxt).get(0));
         }
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctxt, requestCode, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.shopping_list_empty, pendingIntent);
+        if (intent != null) { // forgo NullPointerException on intent
+            PendingIntent pendingIntent = PendingIntent.getActivity(ctxt, requestCode, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setOnClickPendingIntent(R.id.shopping_list_empty, pendingIntent);
+        }
 
         // handle clicks to open the correct BakeMe activity.
         if (!nothingFavourited && !nothingChecked) {

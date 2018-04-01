@@ -25,10 +25,10 @@ public class RecipeContract {
                 .appendPath(PATH_RECIPE).build();
 
         //MIME types
-        public static final String CONTENT_LIST_TYPE_RECIPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
-                + CONTENT_AUTH + PATH_RECIPE;
-        public static final String CONTENT_ITEM_TYPE_RECIPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
-                + CONTENT_AUTH + PATH_RECIPE;
+        public static final String CONTENT_LIST_TYPE_RECIPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+                + "/" + CONTENT_AUTH + PATH_RECIPE;
+        public static final String CONTENT_ITEM_TYPE_RECIPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+                + "/" + CONTENT_AUTH + PATH_RECIPE;
 
         //db table as well as api keys
         public static final String TABLE_RECIPE = "recipes";
@@ -36,7 +36,7 @@ public class RecipeContract {
         public static final String RECIPE_IMAGE = "image";
         public static final String RECIPE_SERVINGS = "servings";
         public static final String RECIPE_NAME = "name";
-        public static final String RECIPE_FAVOURITED = " favourited";
+        public static final String RECIPE_FAVOURITED = "favourited";
 
         //favourite ints (for boolean)
         public static final int FAVOURITED_TRUE = 1;
@@ -82,10 +82,10 @@ public class RecipeContract {
                 .appendPath(PATH_STEPS).build();
 
         //MIME types
-        public static final String CONTENT_LIST_TYPE_STEPS = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
-                + CONTENT_AUTH + PATH_STEPS;
-        public static final String CONTENT_ITEM_TYPE_STEPS = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
-                + CONTENT_AUTH + PATH_STEPS;
+        public static final String CONTENT_LIST_TYPE_STEPS = ContentResolver.CURSOR_DIR_BASE_TYPE
+                + "/" + CONTENT_AUTH + PATH_STEPS;
+        public static final String CONTENT_ITEM_TYPE_STEPS = ContentResolver.CURSOR_ITEM_BASE_TYPE
+                + "/" + CONTENT_AUTH + PATH_STEPS;
 
         public static final String TABLE_STEPS = "steps";
         public static final String STEPS_ID = "id";
