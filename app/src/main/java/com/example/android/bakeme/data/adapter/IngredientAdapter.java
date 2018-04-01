@@ -1,9 +1,6 @@
 package com.example.android.bakeme.data.adapter;
 
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.android.bakeme.R;
-import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
-import com.example.android.bakeme.data.db.RecipeProvider;
 
 import java.util.ArrayList;
 
@@ -92,7 +87,7 @@ public class IngredientAdapter
 
     public class IngredientViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.ingredient_tv)
+        @BindView(R.id.widget_ingredient_tv)
         TextView ingredientTv;
         @BindView(R.id.ingredient_cb)
         CheckBox ingredientCb;

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "74e907afa951e06b3d0f140fb5d7f8de",
+    "identityHash": "5d39c40c9b81bef299836bcc2e9abd63",
     "entities": [
       {
         "tableName": "recipes",
@@ -71,7 +71,7 @@
       },
       {
         "tableName": "steps",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`thumbnailURL` TEXT, `videoURL` TEXT, `description` TEXT, `shortDescription` TEXT, `associatedRecipe` INTEGER NOT NULL, `id` INTEGER NOT NULL, `globalId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`thumbnailURL` TEXT, `videoURL` TEXT, `description` TEXT, `shortDescription` TEXT, `associatedRecipe` TEXT, `id` INTEGER NOT NULL, `globalId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "thumbnail",
@@ -100,8 +100,8 @@
           {
             "fieldPath": "associatedRecipe",
             "columnName": "associatedRecipe",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "id",
@@ -144,7 +144,7 @@
       },
       {
         "tableName": "ingredients",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ingredient` TEXT, `measure` TEXT, `quantity` REAL NOT NULL, `associatedRecipe` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `checked` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ingredient` TEXT, `measure` TEXT, `quantity` REAL NOT NULL, `associatedRecipe` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `checked` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "ingredient",
@@ -167,8 +167,8 @@
           {
             "fieldPath": "associatedRecipe",
             "columnName": "associatedRecipe",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "id",
@@ -204,7 +204,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"74e907afa951e06b3d0f140fb5d7f8de\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5d39c40c9b81bef299836bcc2e9abd63\")"
     ]
   }
 }

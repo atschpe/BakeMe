@@ -11,13 +11,13 @@ import android.widget.RemoteViewsService;
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.db.RecipeProvider;
-import com.example.android.bakeme.ui.DetailActivity;
 
 import java.util.ArrayList;
 
 public class ListWidgetService extends RemoteViewsService {
     private String EXTRA_ID = "extra_id";
-    private String EXTRA_RECIPE_ID = "extra_recipe_id";
+    private String EXTRA_RECIPE_NAME = "extra_recipe_id";
+    private boolean recipeNameAlreadyUsed = false;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -44,9 +44,9 @@ public class ListWidgetService extends RemoteViewsService {
         public void onDataSetChanged() {
             if (csr != null) csr.close();
             String selection = Ingredients.INGREDIENTS_CHECKED + "=?";
-            String[] selectionArgs = new String[]{String.valueOf(R.integer.is_checked)};
-            csr = getContentResolver().query(RecipeProvider.CONTENT_URI_INGREDIENTS,
-                    null, selection, selectionArgs, Ingredients.INGREDIENTS_ASSOCIATED_RECIPE);
+            String[] selectionArgs = new String[]{"1"};
+            csr = getContentResolver().query(RecipeProvider.CONTENT_URI_INGREDIENTS, null,
+                    selection, selectionArgs, Ingredients.INGREDIENTS_ASSOCIATED_RECIPE);
         }
 
         @Override
@@ -64,25 +64,30 @@ public class ListWidgetService extends RemoteViewsService {
         public RemoteViews getViewAt(int position) {
             if (csr != null && csr.getCount() > 0) csr.close();
                 csr.moveToPosition(position);
-            long recipeId = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE));
+            String recipeName = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE));
             long id = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ID));
             String ingredient = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
             String measure = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
             double quantity = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
-            ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeId));
+            ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
 
-            RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.ingredient_item);
+            RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.widget_ingredient_item);
+            if (recipeNameAlreadyUsed) {
+                views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
+            } else {
+                views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
+                views.setTextViewText(R.id.widget_recipe_tv, recipeName);
+            }
 
-            views.setTextViewText(R.id.ingredient_tv, ingredientsList.toString());
-            views.setViewVisibility(R.id.ingredient_cb, View.GONE);
+            views.setTextViewText(R.id.widget_ingredient_tv, ingredientsList.toString());
 
             // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
             Bundle extras = new Bundle();
             extras.putLong(EXTRA_ID, id);
-            extras.putLong(EXTRA_RECIPE_ID, recipeId);
+            extras.putString(EXTRA_RECIPE_NAME, recipeName);
             Intent fillInIntent = new Intent();
             fillInIntent.putExtras(extras);
-            views.setOnClickFillInIntent(R.id.ingredient_tv, fillInIntent);
+            views.setOnClickFillInIntent(R.id.widget_ingredient_tv, fillInIntent);
 
             return views;
         }

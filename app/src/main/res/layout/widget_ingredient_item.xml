@@ -13,22 +13,26 @@
         style="@style/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/half_margin"
         android:layout_marginEnd="@dimen/half_margin"
-        android:layout_marginStart="@dimen/half_margin"
-        android:layout_marginTop="8dp"
+        android:layout_marginRight="@dimen/half_margin"
+        android:layout_marginTop="@dimen/half_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ingredient_cb"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/widget_recipe_tv"
+        app:layout_constraintTop_toBottomOf="@+id/widget_recipe_tv"
         tools:text="listed ingredient" />
 
-    <CheckBox
-        android:theme="@style/check"
-        android:id="@+id/ingredient_cb"
+    <TextView
+        style="@style/text"
+        android:textStyle="bold"
+        android:id="@+id/widget_recipe_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/widget_ingredient_tv"
+        android:layout_marginLeft="@dimen/half_margin"
+        android:layout_marginStart="@dimen/half_margin"
+        android:layout_marginTop="@dimen/half_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/widget_ingredient_tv" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Recipe Title" />
 </android.support.constraint.ConstraintLayout>

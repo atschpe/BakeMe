@@ -10,7 +10,6 @@ import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.Recipe.Steps;
 import com.example.android.bakeme.data.db.RecipeProvider;
-import com.example.android.bakeme.ui.DetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +41,15 @@ public class RecipeUtils {
         RecipeUtils.favIsUpdated = favIsUpdated;
     }
 
-    public static long getCurrentRecipeId() {
-        return currentRecipeId;
+    public static String getCurrentRecipeName() {
+        return currentRecipeName;
     }
 
-    public static void setCurrentRecipeId(long currentRecipeId) {
-        RecipeUtils.currentRecipeId = currentRecipeId;
+    public static void setCurrentRecipeName(String currentRecipeName) {
+        RecipeUtils.currentRecipeName = currentRecipeName;
     }
 
-    static long currentRecipeId;
+    static String currentRecipeName;
 
     public static void writeRecipesToRoom(List<Recipe> recipes, Context ctxt) {
         ContentValues singleRecipe = new ContentValues();
@@ -73,19 +72,20 @@ public class RecipeUtils {
     }
 
     public static void writeIngredientsToRoom(ArrayList<Ingredients> ingredientsList,
-                                              long recipeId, Context ctxt) {
+                                              String recipeName, Context ctxt) {
         ContentValues setOfIngredients = new ContentValues();
 
         for (int i = 0; i < ingredientsList.size(); i++) {
             Ingredients receivedIngredients = ingredientsList.get(i);
 
-            getIngredientValues(recipeId, setOfIngredients, receivedIngredients);
+            getIngredientValues(recipeName, setOfIngredients, receivedIngredients);
 
-            ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_INGREDIENTS, setOfIngredients);
+            ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_INGREDIENTS,
+                    setOfIngredients);
         }
     }
 
-    private static void getIngredientValues(long recipeId, ContentValues setOfIngredients,
+    private static void getIngredientValues(String recipeName, ContentValues setOfIngredients,
                                             Ingredients receivedIngredients) {
         setOfIngredients.put(Ingredients.INGREDIENTS_ID, receivedIngredients.getId());
         setOfIngredients.put(Ingredients.INGREDIENTS_INGREDIENT, receivedIngredients
@@ -97,10 +97,11 @@ public class RecipeUtils {
         setOfIngredients.put(Ingredients.INGREDIENTS_CHECKED,
                 receivedIngredients.isChecked());
         setOfIngredients.put(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE,
-                recipeId);
+                recipeName);
     }
 
-    public static void writeStepsToRoom(ArrayList<Steps> stepsList, long recipeId, Context ctxt) {
+    public static void writeStepsToRoom(ArrayList<Steps> stepsList, String recipeName,
+                                        Context ctxt) {
         ContentValues setOfSteps = new ContentValues();
 
         for (int i = 0; i < stepsList.size(); i++) {
@@ -112,10 +113,10 @@ public class RecipeUtils {
             setOfSteps.put(Steps.STEPS_SHORT_DESCRIP,
                     receivedSteps.getShortDescription());
             setOfSteps.put(Steps.STEPS_DESCRIP, receivedSteps.getDescription());
-            setOfSteps.put(Steps.STEPS_ASSOCIATED_RECIPE, recipeId);
+            setOfSteps.put(Steps.STEPS_ASSOCIATED_RECIPE, recipeName);
 
-            Uri inserted = ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_STEPS, setOfSteps);
-            Timber.v("writing Step to room" + inserted + "; recipe id: " + recipeId);
+            Uri inserted = ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_STEPS,
+                    setOfSteps);
         }
     }
 
@@ -130,14 +131,14 @@ public class RecipeUtils {
         ctxt.getContentResolver().update(uri, singleRecipe, null, null);
     }
 
-    public static void updateCheckedDb(long recipeId, Ingredients selectedIngredients, Context ctxt) {
+    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredients, Context ctxt) {
         //create uri referencing the ingredient's id
         Uri uri = ContentUris.withAppendedId(RecipeProvider.CONTENT_URI_INGREDIENTS,
                 selectedIngredients.getId());
 
         //store changed checked state to the db.
         ContentValues singleIngredients = new ContentValues();
-        getIngredientValues(recipeId, singleIngredients, selectedIngredients);
+        getIngredientValues(recipeName, singleIngredients, selectedIngredients);
         ctxt.getContentResolver().update(uri, singleIngredients, null, null);
     }
 

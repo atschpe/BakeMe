@@ -4,15 +4,12 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.Recipe.Steps;
@@ -107,10 +104,10 @@ public class RecipeProvider extends ContentProvider {
                 csr = recipeDao.QueryAllRecipes();
                 break;
             case INGREDIENTS_LIST:
-                csr = recipeDao.QueryAllIngredients(RecipeUtils.getCurrentRecipeId());
+                csr = recipeDao.QueryAllIngredients(RecipeUtils.getCurrentRecipeName());
                 break;
             case STEPS_LIST:
-                csr = recipeDao.QueryAllSteps(RecipeUtils.getCurrentRecipeId());
+                csr = recipeDao.QueryAllSteps(RecipeUtils.getCurrentRecipeName());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown uri, which cannot be queried: " + uri);

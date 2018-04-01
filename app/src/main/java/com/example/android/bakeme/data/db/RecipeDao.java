@@ -73,16 +73,16 @@ public interface RecipeDao {
      *
      * @return cursor with all ingredients stored in the db
      */
-    @Query("SELECT * FROM " + TABLE_INGREDIENTS + " WHERE " + INGREDIENTS_ASSOCIATED_RECIPE + " = :recipeId")
-    Cursor QueryAllIngredients(long recipeId);
+    @Query("SELECT * FROM " + TABLE_INGREDIENTS + " WHERE " + INGREDIENTS_ASSOCIATED_RECIPE + " = :recipeName")
+    Cursor QueryAllIngredients(String recipeName);
 
     /**
      * Query all steps to display
      *
      * @return cursor with all steps stored in the db
      */
-    @Query("SELECT * FROM " + TABLE_STEPS + " WHERE " + STEPS_ASSOCIATED_RECIPE + "= :recipeId")
-    Cursor QueryAllSteps(long recipeId);
+    @Query("SELECT * FROM " + TABLE_STEPS + " WHERE " + STEPS_ASSOCIATED_RECIPE + "= :recipeName")
+    Cursor QueryAllSteps(String recipeName);
 
     //we don't need to query single recipes, ingredients or steps
 

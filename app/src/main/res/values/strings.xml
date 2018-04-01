@@ -47,6 +47,7 @@
     <string name="favourite_button">favourite button</string>
     <string name="unknown_uri">Unknown URI:</string>
     <string name="widget_all_available">You have all ingredients to make the recipe!</string>
+    <string name="widget_no_recipes">You have not favourited any Recipes for your shopping list.</string>
 
 
 </resources>

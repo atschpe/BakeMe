@@ -220,8 +220,8 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         String[] projection = new String[0];
         String selection = null;
         String[] selectionArgs = new String[0];
-        long selectedRecipeId = selectedRecipe.getId();
-        RecipeUtils.setCurrentRecipeId(selectedRecipeId);
+        String selectedRecipeName = selectedRecipe.getName();
+        RecipeUtils.setCurrentRecipeName(selectedRecipeName);
         switch (id) {
             case RecipeUtils.RECIPE_DETAIL_LOADER:
                 uri = RecipeProvider.CONTENT_URI_RECIPE;
@@ -230,12 +230,12 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
                 uri = RecipeProvider.CONTENT_URI_INGREDIENTS;
                 selection = Ingredients.INGREDIENTS_ASSOCIATED_RECIPE + "=?";
-                selectionArgs = new String[]{String.valueOf(selectedRecipeId)};
+                selectionArgs = new String[]{String.valueOf(selectedRecipeName)};
                 break;
             case RecipeUtils.STEPS_DETAIL_LOADER:
                 uri = RecipeProvider.CONTENT_URI_STEPS;
                 selection = Steps.STEPS_ASSOCIATED_RECIPE + "=?";
-                selectionArgs = new String[]{String.valueOf(selectedRecipeId)};
+                selectionArgs = new String[]{String.valueOf(selectedRecipeName)};
                 break;
         }
         return new CursorLoader(this, uri, projection, selection, selectionArgs,
@@ -289,7 +289,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             ingredients.setChecked(false);
         }
         //update the db and then restart the loader.
-        RecipeUtils.updateCheckedDb(selectedRecipe.getId(), ingredients, this);
+        RecipeUtils.updateCheckedDb(selectedRecipe.getName(), ingredients, this);
         getSupportLoaderManager().restartLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
                 this);
     }

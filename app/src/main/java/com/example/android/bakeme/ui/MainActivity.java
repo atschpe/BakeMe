@@ -153,18 +153,18 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                         //create arrayList both Ingredients and Steps.
                         ArrayList<Ingredients> ingredientsList = new ArrayList<>();
                         ArrayList<Steps> stepsList = new ArrayList<>();
-                        long recipeId;
+                        String recipeName;
 
                         for (Recipe recipe : recipes) {
-                            recipeId = recipe.getId();
+                            recipeName = recipe.getName();
                             //get this recipe's ingredients from response and write them to room.
                             ingredientsList.addAll(recipe.getIngredients());
-                            RecipeUtils.writeIngredientsToRoom(ingredientsList, recipeId,
+                            RecipeUtils.writeIngredientsToRoom(ingredientsList, recipeName,
                                     MainActivity.this);
 
                             //get this recipe's steps from response and write them to room.
                             stepsList.addAll(recipe.getSteps());
-                            RecipeUtils.writeStepsToRoom(stepsList, recipeId,
+                            RecipeUtils.writeStepsToRoom(stepsList, recipeName,
                                     MainActivity.this);
 
                             //clear all for next recipe

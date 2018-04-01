@@ -276,7 +276,7 @@ public class Recipe implements Parcelable {
         private String shortDescription;
 
         @ColumnInfo(name = STEPS_ASSOCIATED_RECIPE)
-        private long associatedRecipe;
+        private String associatedRecipe;
 
         @ColumnInfo(index = true, name = STEPS_ID)
         @Expose
@@ -319,7 +319,7 @@ public class Recipe implements Parcelable {
                 steps.shortDescription = values.getAsString(STEPS_SHORT_DESCRIP);
             }
             if (values.containsKey(STEPS_ASSOCIATED_RECIPE)) {
-                steps.associatedRecipe = values.getAsLong(STEPS_ASSOCIATED_RECIPE);
+                steps.associatedRecipe = values.getAsString(STEPS_ASSOCIATED_RECIPE);
             }
             if (values.containsKey(STEPS_GLOBAL_ID)) {
                 steps.globalId = values.getAsLong(STEPS_GLOBAL_ID);
@@ -333,7 +333,7 @@ public class Recipe implements Parcelable {
             description = in.readString();
             shortDescription = in.readString();
             id = in.readLong();
-            associatedRecipe = in.readLong();
+            associatedRecipe = in.readString();
             globalId = in.readLong();
         }
 
@@ -389,11 +389,11 @@ public class Recipe implements Parcelable {
             this.id = id;
         }
 
-        public long getAssociatedRecipe() {
+        public String getAssociatedRecipe() {
             return associatedRecipe;
         }
 
-        public void setAssociatedRecipe(long associatedRecipe) {
+        public void setAssociatedRecipe(String associatedRecipe) {
             this.associatedRecipe = associatedRecipe;
         }
 
@@ -417,7 +417,7 @@ public class Recipe implements Parcelable {
             dest.writeString(description);
             dest.writeString(shortDescription);
             dest.writeLong(id);
-            dest.writeLong(associatedRecipe);
+            dest.writeString(associatedRecipe);
             dest.writeLong(globalId);
         }
     }
@@ -449,7 +449,7 @@ public class Recipe implements Parcelable {
         private double quantity;
 
         @ColumnInfo(name = INGREDIENTS_ASSOCIATED_RECIPE)
-        private long associatedRecipe;
+        private String associatedRecipe;
 
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(index = true, name = INGREDIENTS_ID)
@@ -474,7 +474,7 @@ public class Recipe implements Parcelable {
 
         @Ignore
         public Ingredients(long id, String ingredient, String measure, double quantity,
-                           long associatedRecipe) {
+                           String associatedRecipe) {
             this.id = id;
             this.ingredient = ingredient;
             this.measure = measure;
@@ -500,7 +500,7 @@ public class Recipe implements Parcelable {
                 ingredients.checked = values.getAsBoolean(INGREDIENTS_CHECKED);
             }
             if ( values.containsKey(INGREDIENTS_ASSOCIATED_RECIPE)) {
-                ingredients.associatedRecipe = values.getAsLong(INGREDIENTS_ASSOCIATED_RECIPE);
+                ingredients.associatedRecipe = values.getAsString(INGREDIENTS_ASSOCIATED_RECIPE);
             }
             return ingredients;
         }
@@ -510,7 +510,7 @@ public class Recipe implements Parcelable {
             measure = in.readString();
             quantity = in.readDouble();
             checked = in.readByte() != 0;
-            associatedRecipe = in.readLong();
+            associatedRecipe = in.readString();
         }
 
         @Override
@@ -519,7 +519,7 @@ public class Recipe implements Parcelable {
             dest.writeString(measure);
             dest.writeDouble(quantity);
             dest.writeByte((byte) (checked ? 1 : 0));
-            dest.writeLong(associatedRecipe);
+            dest.writeString(associatedRecipe);
         }
 
         @Override
@@ -579,11 +579,11 @@ public class Recipe implements Parcelable {
             this.checked = checked;
         }
 
-        public long getAssociatedRecipe() {
+        public String getAssociatedRecipe() {
             return associatedRecipe;
         }
 
-        public void setAssociatedRecipe(long associatedRecipe) {
+        public void setAssociatedRecipe(String associatedRecipe) {
             this.associatedRecipe = associatedRecipe;
         }
 
