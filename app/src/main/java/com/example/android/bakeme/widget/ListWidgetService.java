@@ -79,9 +79,6 @@ public class ListWidgetService extends RemoteViewsService {
                         = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
                 double quantity
                         = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
-//                ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
-//
-//                Ingredients currentIngredients = ingredientsList.get(position);
 
                 //only show the recipe name on the first ingredient in the list.
                 if (recipeName.equals(prevRecipeName)) {

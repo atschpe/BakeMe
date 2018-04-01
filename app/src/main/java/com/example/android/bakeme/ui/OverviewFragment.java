@@ -83,9 +83,6 @@ public class OverviewFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_overview, container, false);
         ButterKnife.bind(this, root);
 
-        Timber.v("ingredients: %s", ingredientsList);
-        Timber.v("steps: %s", stepsList);
-
         //Setup adapters
         if (ingredientsList != null) {
             ingredientAdapter = new IngredientAdapter((DetailActivity) getActivity());

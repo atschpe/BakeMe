@@ -137,18 +137,20 @@ public class RecipeUtils {
     /** Ingredients
      *
      * @param recipeName of the associated recipe
-     * @param selectedIngredients the set of ingredients to be updated
+     * @param selectedIngredient the selected ingredient to be updated
      * @param ctxt of the activity calling this method
      */
-    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredients, Context ctxt) {
+    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredient, Context ctxt) {
         //create uri referencing the ingredient's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
-                selectedIngredients.getId());
+                selectedIngredient.getId());
+        String selection = IngredientsEntry.INGREDIENTS_ID + "=?";
+        String[] selectionArgs = new String[] {String.valueOf(selectedIngredient.getId())};
 
         //store changed checked state to the db.
-        ContentValues singleIngredients = new ContentValues();
-        getIngredientValues(recipeName, singleIngredients, selectedIngredients);
-        ctxt.getContentResolver().update(uri, singleIngredients, null, null);
+        ContentValues singleIngredient = new ContentValues();
+        getIngredientValues(recipeName, singleIngredient, selectedIngredient);
+        ctxt.getContentResolver().update(uri, singleIngredient, selection, selectionArgs);
     }
 
     // –––––– preparing the ContentValues ready for inserting/updating the db ––––––
