@@ -1,7 +1,9 @@
 package com.example.android.bakeme.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe;
@@ -32,10 +33,10 @@ import timber.log.Timber;
  */
 public class OverviewFragment extends Fragment {
 
-    LoadManagerRestarter loadManagerRestarter;
+    OnLoadManagerRestart loadManagerRestart;
 
     // Container Activity must implement this interface to track restart calls for the loader.
-    public interface LoadManagerRestarter {
+    public interface OnLoadManagerRestart {
         void onLoaderRestarted();
     }
 
@@ -44,16 +45,17 @@ public class OverviewFragment extends Fragment {
         super.onAttach(ctxt);
         // ensure DetailActivity has implemented the LoadManagerRestarter
         try {
-           loadManagerRestarter = (LoadManagerRestarter) ctxt;
+           loadManagerRestart = (OnLoadManagerRestart) ctxt;
         } catch (ClassCastException e) {
             throw new ClassCastException(ctxt.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement LoadManagerRestart");
         }
     }
 
     // lists for the recipe in question.
     ArrayList<Ingredients> ingredientsList;
     ArrayList<Steps> stepsList;
+
     boolean isFavourited;
     Recipe selectedRecipe;
 
@@ -77,7 +79,7 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_overview, container, false);
+        final View root = inflater.inflate(R.layout.fragment_overview, container, false);
         ButterKnife.bind(this, root);
 
         Timber.v("ingredients: %s", ingredientsList);
@@ -85,7 +87,8 @@ public class OverviewFragment extends Fragment {
 
         //Setup adapters
         if (ingredientsList != null) {
-            ingredientAdapter = new IngredientAdapter(getActivity(), ingredientsList);
+            ingredientAdapter = new IngredientAdapter((DetailActivity) getActivity());
+            ingredientAdapter.setData(getContext(), ingredientsList);
             ingredientRv.setAdapter(ingredientAdapter);
             ingredientRv.setLayoutManager(new StaggeredGridLayoutManager(2,
                     StaggeredGridLayoutManager.VERTICAL));
@@ -103,27 +106,42 @@ public class OverviewFragment extends Fragment {
         //setup favourite button
         if (selectedRecipe.isFavourited()) {
            favButtonCb.setChecked(true);
+           ingredientAdapter.setOfferCheckBoxes(true);
            Timber.v("boolean – button setup: favourite = true");
         } else {
             favButtonCb.setChecked(false);
             Timber.v("boolean – button setup: favourite = false");
         }
-
-        favButtonCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        favButtonCb.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View v) {
+                boolean checked = ((CheckBox)v).isChecked();
+                if (checked) {
                     selectedRecipe.setFavourited(true);
                     isFavourited = true;
                     ingredientAdapter.setOfferCheckBoxes(true);
+                    Snackbar infoSnackbar = Snackbar.make(root, R.string.favourite_snack_message,
+                            Snackbar.LENGTH_LONG);
+                    infoSnackbar.setAction("Learn more",
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AlertDialog dialogBuilder
+                                            = new AlertDialog.Builder(getActivity()).create();
+                                    dialogBuilder.setMessage(getString(R.string.favourite_info_dialog));
+                                    dialogBuilder.show();
+                                }
+                            });
+                    infoSnackbar.show();
                 } else {
                     selectedRecipe.setFavourited(false);
                     isFavourited = false;
                     ingredientAdapter.setOfferCheckBoxes(false);
                 }
                 RecipeUtils.updateFavDb(selectedRecipe, getActivity());
-                loadManagerRestarter.onLoaderRestarted();
+                loadManagerRestart.onLoaderRestarted();
                 ingredientAdapter.notifyDataSetChanged();
+                RecipeUtils.setFavIsUpdated(true);
             }
         });
         return root;

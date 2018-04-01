@@ -26,6 +26,20 @@ public class RecipeUtils {
     public static final int STEPS_DETAIL_LOADER = 23;
     public static int RECIPE_MAIN_LOADER = 11;
 
+    //Flag constants
+    public static int FAV_UPDATED_FLAG = 222;
+    public static int FAV_UNCHANGED_FLAG = 111;
+
+    private static boolean favIsUpdated;
+
+    public static boolean isFavIsUpdated() {
+        return favIsUpdated;
+    }
+
+    public static void setFavIsUpdated(boolean favIsUpdated) {
+        RecipeUtils.favIsUpdated = favIsUpdated;
+    }
+
     public static long getCurrentRecipeId() {
         return currentRecipeId;
     }
@@ -63,20 +77,25 @@ public class RecipeUtils {
         for (int i = 0; i < ingredientsList.size(); i++) {
             Ingredients receivedIngredients = ingredientsList.get(i);
 
-            setOfIngredients.put(Ingredients.INGREDIENTS_ID, receivedIngredients.getId());
-            setOfIngredients.put(Ingredients.INGREDIENTS_INGREDIENT, receivedIngredients
-                    .getIngredient());
-            setOfIngredients.put(Ingredients.INGREDIENTS_MEASURE,
-                    receivedIngredients.getMeasure());
-            setOfIngredients.put(Ingredients.INGREDIENTS_QUANTITY, receivedIngredients
-                    .getQuantity());
-            setOfIngredients.put(Ingredients.INGREDIENTS_CHECKED,
-                    receivedIngredients.isChecked());
-            setOfIngredients.put(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE,
-                    recipeId);
+            getIngredientValues(recipeId, setOfIngredients, receivedIngredients);
 
             ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_INGREDIENTS, setOfIngredients);
         }
+    }
+
+    private static void getIngredientValues(long recipeId, ContentValues setOfIngredients,
+                                            Ingredients receivedIngredients) {
+        setOfIngredients.put(Ingredients.INGREDIENTS_ID, receivedIngredients.getId());
+        setOfIngredients.put(Ingredients.INGREDIENTS_INGREDIENT, receivedIngredients
+                .getIngredient());
+        setOfIngredients.put(Ingredients.INGREDIENTS_MEASURE,
+                receivedIngredients.getMeasure());
+        setOfIngredients.put(Ingredients.INGREDIENTS_QUANTITY, receivedIngredients
+                .getQuantity());
+        setOfIngredients.put(Ingredients.INGREDIENTS_CHECKED,
+                receivedIngredients.isChecked());
+        setOfIngredients.put(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE,
+                recipeId);
     }
 
     public static void writeStepsToRoom(ArrayList<Steps> stepsList, long recipeId, Context ctxt) {
@@ -107,5 +126,16 @@ public class RecipeUtils {
         ContentValues singleRecipe = new ContentValues();
         getRecipeValues(singleRecipe, selectedRecipe);
         ctxt.getContentResolver().update(uri, singleRecipe, null, null);
+    }
+
+    public static void updateCheckedDb(long recipeId, Ingredients selectedIngredients, Context ctxt) {
+        //create uri referencing the ingredient's id
+        Uri uri = ContentUris.withAppendedId(RecipeProvider.CONTENT_URI_INGREDIENTS,
+                selectedIngredients.getId());
+
+        //store changed checked state to the db.
+        ContentValues singleIngredients = new ContentValues();
+        getIngredientValues(recipeId, singleIngredients, selectedIngredients);
+        ctxt.getContentResolver().update(uri, singleIngredients, null, null);
     }
 }

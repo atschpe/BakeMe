@@ -42,5 +42,9 @@
     <string name="associated_recipe">associatedRecipe</string>
     <string name="favourite_button">favourite button</string>
     <string name="unknown_uri">Unknown URI:</string>
+    <string name="favourite_snack_message">Select the ingredients for your shopping list.</string>
+    <string name="favourite_info_dialog">You can select ingredients by ticking their checkboxes. These ingredients will be listed in the BakeMe widget, which you can install on your home screen. As you shop for your ingredients you can the remove each ingredient from the list once acquired by swiping them off the list. Once the list is empty you know you are ready to start baking.</string>
+    <string name="favourite_title_dialog">Time to go shopping</string>
+    <string name="ok">Ok</string>
 
 </resources>

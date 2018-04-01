@@ -1,13 +1,14 @@
 package com.example.android.bakeme.ui;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -47,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     RecipeCardAdapter recipeCardAdapter;
     ArrayList<Recipe> recipeList;
 
+    //keep track of changes made by user of their favourite recipes
+    private boolean DB_IS_UPTODATE = false;
+    private SharedPreferences.Editor sharedPrefEd;
+    private SharedPreferences sharedPref;
+    private String DB_BOO = "api_boolean";
+
     // Idling resource for testing purposes only
     @Nullable
     private RecipeIdlingResource idlingResource;
@@ -70,6 +77,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         Timber.plant(new Timber.DebugTree());
 
+        //setup to keep track of whether the db is uptodate.
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefEd = sharedPref.edit();
+
+        recipeList = new ArrayList<>(); //instantiate ArrayList ready for use.
+
+        //retrieve any persisted data if available or get from db or api
         if (savedInstanceState != null && savedInstanceState.containsKey(String
                 .valueOf(R.string.RECIPE_KEY))) {
             mainBinder.alertView.progressPb.setVisibility(View.GONE);
@@ -80,16 +94,37 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                 setAdapter(this, recipeList, this);
             }
         } else {
-            getSupportLoaderManager().initLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
-                    MainActivity.this);
+            if (isDbIsUpToDate()) {
+                getSupportLoaderManager().initLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
+                        MainActivity.this);
+            } else {
+                checkNetworkAndLoadData();
+            }
         }
     }
 
+    public boolean isDbIsUpToDate() { //getter for DB boolean
+        DB_IS_UPTODATE  = sharedPref.getBoolean(DB_BOO,
+                getResources().getBoolean(R.bool.dbBoo_default));
+        return DB_IS_UPTODATE;
+    }
+
+    public void setDbIsUpToDate(boolean dbIsUptodate) { // setter for DB boolean
+        sharedPrefEd.putBoolean(DB_BOO, dbIsUptodate);
+        sharedPrefEd.apply();
+    }
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER,null, this);
-        //TODO: cursor is empty in onLoadFinished() when coming from onResume. why?
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RecipeUtils.FAV_UPDATED_FLAG) {
+            if (isDbIsUpToDate()) {
+                getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
+                        MainActivity.this);
+            } else {
+                checkNetworkAndLoadData();
+            }
+        }
     }
 
     //Make sure we have internet before we load the data.
@@ -122,19 +157,21 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
                         for (Recipe recipe : recipes) {
                             recipeId = recipe.getId();
-                            //get this recipe's ingredients from the response and write them to room.
+                            //get this recipe's ingredients from response and write them to room.
                             ingredientsList.addAll(recipe.getIngredients());
                             RecipeUtils.writeIngredientsToRoom(ingredientsList, recipeId,
                                     MainActivity.this);
 
-                            //get this recipe's steps from the response and write them to room.
+                            //get this recipe's steps from response and write them to room.
                             stepsList.addAll(recipe.getSteps());
-                            RecipeUtils.writeStepsToRoom(stepsList, recipeId, MainActivity.this);
+                            RecipeUtils.writeStepsToRoom(stepsList, recipeId,
+                                    MainActivity.this);
 
                             //clear all for next recipe
                             ingredientsList.clear();
                             stepsList.clear();
                         }
+                        setDbIsUpToDate(true);//data has been successfully added to the db.
                     } else {
                         //write error to log as a warning
                         Timber.w("HTTP status code: %s", response.code());
@@ -167,7 +204,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mainBinder.recipeOverviewRv.setLayoutManager(new LinearLayoutManager(this));
         } else {
-            mainBinder.recipeOverviewRv.setLayoutManager(new GridLayoutManager(this, 2));
+            mainBinder.recipeOverviewRv.setLayoutManager(new GridLayoutManager(this,
+                    2));
         }
         recipeCardAdapter.notifyDataSetChanged();
     }
@@ -193,7 +231,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
             recipe.setFavourited(false);
         }
         RecipeUtils.updateFavDb(recipe, this);
-        getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null, this);
+        getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
+                this);
     }
 
     /**
@@ -222,7 +261,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        recipeList = new ArrayList<>();
         if (data == null) {
             mainBinder.alertView.alertTv.setText(R.string.no_recipes);
         } else {
@@ -237,9 +275,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
             data.close();
             setAdapter(this, recipeList, this);
             Timber.v("recipeList: %s", recipeList.size());
-        }
-        if (recipeList.size() == 0) {
-            checkNetworkAndLoadData();
         }
     }
 

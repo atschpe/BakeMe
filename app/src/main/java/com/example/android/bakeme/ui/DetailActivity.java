@@ -11,11 +11,13 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.Recipe.Steps;
+import com.example.android.bakeme.data.adapter.IngredientAdapter;
 import com.example.android.bakeme.data.adapter.StepAdapter;
 import com.example.android.bakeme.data.db.RecipeDao;
 import com.example.android.bakeme.data.db.RecipeDatabase;
@@ -30,16 +32,18 @@ import timber.log.Timber;
 import static com.example.android.bakeme.data.Recipe.RECIPE_FAVOURITED;
 
 public class DetailActivity extends AppCompatActivity implements StepAdapter.StepClickHandler,
-        LoaderManager.LoaderCallbacks<Cursor>, OverviewFragment.LoadManagerRestarter {
+        IngredientAdapter.IngredientClickHandler, LoaderManager.LoaderCallbacks<Cursor>,
+        OverviewFragment.OnLoadManagerRestart {
 
     Recipe selectedRecipe;
     OverviewFragment overviewFrag;
     MethodFragment methodFrag;
     FragmentManager fragMan;
 
-    //booleans to track layout
+    //booleans to track layout & favouriting action
     public static boolean twoPane;
     private boolean isFavourited;
+    private boolean loaderIsRestarted = false;
 
     RecipeDao recipeDao;
 
@@ -103,6 +107,29 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
 
         getSupportActionBar().setTitle(selectedRecipe.getName());
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnToMain = new Intent(this, MainActivity.class);
+        int CODE;
+        if (RecipeUtils.isFavIsUpdated()) {
+            CODE = RecipeUtils.FAV_UPDATED_FLAG;
+        } else {
+            CODE = RecipeUtils.FAV_UNCHANGED_FLAG;
+        }
+        RecipeUtils.setFavIsUpdated(false);
+        startActivityForResult(returnToMain, CODE);
     }
 
     @Override
@@ -243,23 +270,42 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
                     }
                 }
                 break;
-
         }
         data.close();
 
-        //keep track of each loader finishing so the fragments start with all data on hand.
-        loaderHasFinished();
+        if (loaderIsRestarted) {
+            overviewFrag.setSelectedRecipe(selectedRecipe);
+            loaderIsRestarted = false;
+        } else {
+            //keep track of each loader finishing so the fragments start with all data on hand.
+            loaderHasFinished();
+        }
+
+
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-    //not needed
+        //not needed
     }
 
     @Override
     public void onLoaderRestarted() {
+        loaderIsRestarted = true;
         getSupportLoaderManager().restartLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
                 this);
-        overviewFrag.setSelectedRecipe();
+    }
+
+    @Override
+    public void onIngredientClick(Ingredients ingredients, int ingredientPostion, boolean isChecked) {
+        if (isChecked) {
+            ingredients.setChecked(true);
+        } else {
+            ingredients.setChecked(false);
+        }
+        //update the db and then restart the loader.
+        RecipeUtils.updateCheckedDb(selectedRecipe.getId(), ingredients, this);
+        getSupportLoaderManager().restartLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
+                this);
     }
 }

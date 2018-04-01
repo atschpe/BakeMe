@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.android.bakeme.R;
+import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.db.RecipeProvider;
 
@@ -41,9 +41,20 @@ public class IngredientAdapter
         this.offerCheckBoxes = offerCheckBoxes;
     }
 
-    public IngredientAdapter(Context ctxt, ArrayList<Ingredients> ingredientsList) {
+    public IngredientAdapter(IngredientClickHandler ingredientClicker) {
+        this.ingredientClicker = ingredientClicker;
+    }
+
+    final private IngredientClickHandler ingredientClicker;
+
+    public void setData(Context ctxt, ArrayList<Ingredients> ingredientsList) {
         this.ctxt = ctxt;
         this.ingredientsList = ingredientsList;
+    }
+
+    public interface IngredientClickHandler {
+        void onIngredientClick(Ingredients ingredients, int ingredientPostion, boolean isChecked);
+
     }
 
     @Override
@@ -65,24 +76,7 @@ public class IngredientAdapter
             holder.ingredientCb.setVisibility(View.VISIBLE);
         } else {
             holder.ingredientCb.setVisibility(View.GONE);
-
         }
-
-        holder.ingredientCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ContentValues contentValues = new ContentValues();
-                if (isChecked) {
-                    contentValues.put(Ingredients.INGREDIENTS_CHECKED, R.integer.is_checked);
-                } else {
-                    contentValues.put(Ingredients.INGREDIENTS_CHECKED, R.integer.not_checked);
-                }
-                //create uri referencing the recipe's id
-                Uri uri = ContentUris.withAppendedId(RecipeProvider.CONTENT_URI_INGREDIENTS,
-                        currentItem.getId());
-                ctxt.getContentResolver().update(uri, contentValues, null, null);
-            }
-        });
     }
 
     @Override
@@ -101,7 +95,17 @@ public class IngredientAdapter
         public IngredientViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
+            ingredientCb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Ingredients currentIngredient = ingredientsList.get(getAdapterPosition());
+                    boolean checked = ((CheckBox) v).isChecked();
+                    ingredientClicker.onIngredientClick(currentIngredient, getAdapterPosition(),
+                            checked);
+                }
+            });
         }
     }
+
 }
+
