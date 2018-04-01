@@ -90,7 +90,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.cardImageIv);
 
-        String servingText = "Serves: " + currentRecipe.getServings();
+        String servingText = String.valueOf(currentRecipe.getServings());
         holder.cardServingTv.setText(servingText);
 
         holder.cardNameTv.setText(currentRecipe.getName());

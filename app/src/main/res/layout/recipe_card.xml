@@ -5,8 +5,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/floured_bench">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/card_image_iv"
@@ -24,10 +23,9 @@
 
         <TextView
             android:id="@+id/card_name_tv"
+            style="@style/labels"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:alpha="0.75"
-            android:background="@color/colorAccent"
             android:gravity="center_horizontal"
             android:padding="@dimen/margin"
             android:textColor="@color/colorPrimaryDark"
@@ -40,18 +38,25 @@
             android:id="@+id/card_serving_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/card_image_iv"
+            android:textColor="@color/colorSemiAccent"
+            app:layout_constraintBottom_toBottomOf="@+id/serving_iv"
+            app:layout_constraintStart_toEndOf="@+id/serving_iv"
             app:layout_constraintTop_toTopOf="@+id/card_image_iv"
-            tools:text="Serves: 4" />
+            tools:text="8" />
 
         <CheckBox
             android:id="@+id/recipe_favourite_cb"
             style="@style/favButton"
-            android:layout_marginEnd="@dimen/margin"
-            android:layout_marginRight="@dimen/margin"
-            app:layout_constraintBottom_toBottomOf="@+id/card_name_tv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/card_name_tv" />
+            app:layout_constraintEnd_toEndOf="@+id/card_image_iv"
+            app:layout_constraintTop_toTopOf="@+id/card_image_iv" />
+
+        <ImageView
+            android:id="@+id/serving_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/card_image_iv"
+            app:layout_constraintTop_toTopOf="@+id/card_image_iv"
+            android:src="@drawable/ic_serving"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>
