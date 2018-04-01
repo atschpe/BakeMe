@@ -27,7 +27,8 @@ public class MethodActivity extends AppCompatActivity {
         setContentView(R.layout.activity_method);
 
         Intent recipeReceived = getIntent();
-        Bundle recipeBundle = recipeReceived.getBundleExtra(String.valueOf(RecipeUtils.RECIPE_BUNDLE));
+        Bundle recipeBundle = recipeReceived.getBundleExtra(String.valueOf(
+                RecipeUtils.RECIPE_BUNDLE));
 
         selectedRecipe = recipeBundle.getParcelable(String.valueOf(RecipeUtils.SELECTED_RECIPE));
         step = recipeBundle.getParcelable(String.valueOf(RecipeUtils.SELECTED_STEP));
@@ -40,7 +41,7 @@ public class MethodActivity extends AppCompatActivity {
         methodFrag.setRecipe(selectedRecipe);
         methodFrag.setStepsList(stepsList);
 
-        fragMan.beginTransaction().add(R.id.method_container, methodFrag).addToBackStack(null).commit();
-
+        fragMan.beginTransaction().add(R.id.method_container, methodFrag).addToBackStack(null)
+                .commit();
     }
 }

@@ -68,7 +68,8 @@ public class ListWidgetService extends RemoteViewsService {
                     R.layout.widget_ingredient_item);
             csr.moveToPosition(position);
             String recipeName
-                    = csr.getString(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE));
+                    = csr.getString(csr.getColumnIndex(
+                            IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE));
             long id = csr.getLong(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_ID));
             String ingredient
                     = csr.getString(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_INGREDIENT));

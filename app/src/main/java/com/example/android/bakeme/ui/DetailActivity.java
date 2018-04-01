@@ -102,7 +102,8 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             if (recipeIntent != null
                     && recipeIntent.hasExtra(String.valueOf(RecipeUtils.SELECTED_RECIPE))) {
                 selectedRecipe
-                        = recipeIntent.getParcelableExtra(String.valueOf(RecipeUtils.SELECTED_RECIPE));
+                        = recipeIntent.getParcelableExtra(String.valueOf(
+                                RecipeUtils.SELECTED_RECIPE));
             }
 
             overviewFrag = new OverviewFragment();

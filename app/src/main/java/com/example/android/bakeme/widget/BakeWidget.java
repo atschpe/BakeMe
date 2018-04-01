@@ -21,7 +21,8 @@ import timber.log.Timber;
 public class BakeWidget extends AppWidgetProvider {
 
     //@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
+    private static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager,
+                                        int appWidgetId) {
 
         Timber.plant(new Timber.DebugTree());
 
@@ -53,7 +54,7 @@ public class BakeWidget extends AppWidgetProvider {
             intent = new Intent(ctxt, MainActivity.class);
             requestCode = RecipeUtils.FAV_UNCHANGED_FLAG;
         } else if (nothingChecked) {
-            // Open DetailActivity pointing to the first overview of the selected recipe when clicked
+            // Open DetailActivity pointing to the 1st overview of the selected recipe when clicked
             intent = new Intent(ctxt, DetailActivity.class);
             intent.putExtra(String.valueOf(RecipeUtils.SELECTED_RECIPE),
                     WidgetUtils.getFavouritedRecipes(ctxt).get(0));

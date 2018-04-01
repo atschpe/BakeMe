@@ -43,7 +43,8 @@ public class RecipeProvider extends ContentProvider {
         uriMatcher.addURI(authority, RecipeContract.PATH_STEPS, STEPS_LIST);
         uriMatcher.addURI(authority, RecipeContract.PATH_STEPS + "/#", STEPS_ENTRY);
         uriMatcher.addURI(authority, RecipeContract.PATH_INGREDIENTS, INGREDIENTS_LIST);
-        uriMatcher.addURI(authority, RecipeContract.PATH_INGREDIENTS + "/#", INGREDIENTS_ENTRY);
+        uriMatcher.addURI(authority, RecipeContract.PATH_INGREDIENTS + "/#",
+                INGREDIENTS_ENTRY);
         return uriMatcher;
     }
 
@@ -112,12 +113,13 @@ public class RecipeProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) { // no single insertRecipe needed
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         int match = getMatch(uri);
         assert values != null;
         switch (match) {
             case RECIPE_LIST:
-                long recipeId = dbWriter.insert(RecipeEntry.TABLE_RECIPE, null, values);
+                long recipeId = dbWriter.insert(RecipeEntry.TABLE_RECIPE, null,
+                        values);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(uri, recipeId);
             case INGREDIENTS_LIST:

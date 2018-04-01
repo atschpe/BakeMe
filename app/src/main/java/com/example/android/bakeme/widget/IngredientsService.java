@@ -40,7 +40,8 @@ public class IngredientsService extends IntentService {
                 Bundle getData = intent.getExtras();
                 if (getData != null && getData.containsKey(ListWidgetService.EXTRA_INGREDIENT) &&
                 getData.containsKey(ListWidgetService.EXTRA_ID)) {
-                    Ingredients currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
+                    Ingredients currentIngredients = getData.getParcelable(
+                            ListWidgetService.EXTRA_INGREDIENT);
                     long ingredientId = getData.getLong(ListWidgetService.EXTRA_ID);
                     handleActionRemoveIngredients(currentIngredients, ingredientId);
                 }

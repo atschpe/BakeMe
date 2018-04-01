@@ -79,7 +79,8 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.fragment_overview, container, false);
+        final View root = inflater.inflate(R.layout.fragment_overview, container,
+                false);
         ButterKnife.bind(this, root);
 
         //Setup adapters
@@ -125,7 +126,8 @@ public class OverviewFragment extends Fragment {
                                 public void onClick(View v) {
                                     AlertDialog dialogBuilder
                                             = new AlertDialog.Builder(getActivity()).create();
-                                    dialogBuilder.setMessage(getString(R.string.favourite_info_dialog));
+                                    dialogBuilder.setMessage(getString(
+                                            R.string.favourite_info_dialog));
                                     dialogBuilder.show();
                                 }
                             });

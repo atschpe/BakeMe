@@ -166,7 +166,8 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
                     startChosenVideo();
 
                     if (landMode) { //to help the user stay oriented when swiping through the videos
-                        Toast.makeText(getActivity(), step.getShortDescription(), Toast.LENGTH_SHORT)
+                        Toast.makeText(getActivity(), step.getShortDescription(),
+                                Toast.LENGTH_SHORT)
                                 .show();
                         setLandMode();
                     }
@@ -175,14 +176,16 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
             public void onSwipeRight() {
                 if (stepsList.size() == step.getId() + 1) {
-                    Toast.makeText(getActivity(), R.string.swiper_last_step_toast, Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(), R.string.swiper_last_step_toast,
+                            Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     goToNextStep();
                     startChosenVideo();
 
                     if (landMode) { //to help the user stay oriented when swiping through the videos
-                        Toast.makeText(getActivity(), step.getShortDescription(), Toast.LENGTH_SHORT)
+                        Toast.makeText(getActivity(), step.getShortDescription(),
+                                Toast.LENGTH_SHORT)
                                 .show();
                         setLandMode();
                     }
@@ -307,11 +310,14 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     private void initializePlayer() {
         if (exoPlayer == null) {
             // Create an instance of the ExoPlayer.
-            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(new DefaultBandwidthMeter());
-            DefaultTrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+            TrackSelection.Factory videoTrackSelectionFactory
+                    = new AdaptiveVideoTrackSelection.Factory(new DefaultBandwidthMeter());
+            DefaultTrackSelector trackSelector
+                    = new DefaultTrackSelector(videoTrackSelectionFactory);
             LoadControl loadControl = new DefaultLoadControl();
 
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector, loadControl);
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector,
+                    loadControl);
             exoPlayerView.requestFocus();
             exoPlayerView.setPlayer(exoPlayer);
 
@@ -446,13 +452,15 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
             }
 
             @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                   float velocityY) {
                 boolean result = false;
                 try {
                     float diffY = e2.getY() - e1.getY();
                     float diffX = e2.getX() - e1.getX();
                     if (Math.abs(diffX) > Math.abs(diffY)) {
-                        if (Math.abs(diffX) > THRESHOLD && Math.abs(velocityX) > VELOCITY_THRESHOLD) {
+                        if (Math.abs(diffX) > THRESHOLD && Math.abs(velocityX) >
+                                VELOCITY_THRESHOLD) {
                             if (diffX > 0) {
                                 onSwipeRight();
                             } else {
