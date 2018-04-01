@@ -15,7 +15,7 @@ import com.example.android.bakeme.ui.DetailActivity;
 
 import java.util.ArrayList;
 
-class ListWidgetService extends RemoteViewsService {
+public class ListWidgetService extends RemoteViewsService {
     private String EXTRA_ID = "extra_id";
     private String EXTRA_RECIPE_ID = "extra_recipe_id";
 

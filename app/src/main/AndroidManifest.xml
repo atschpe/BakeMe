@@ -40,10 +40,14 @@
                 android:resource="@xml/bake_widget_info" />
         </receiver>
         <provider
-            android:authorities="com.example.android.bakeme"
             android:name=".data.db.RecipeProvider"
-            android:exported="false"/>
+            android:authorities="com.example.android.bakeme"
+            android:exported="false" />
+
         <service android:name=".widget.IngredientsService" />
+        <service
+            android:name=".widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

@@ -22,7 +22,8 @@ public class BakeWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
 
-        CharSequence widgetText = "Some text";
+        String recipeTitle = null; //TODO: retrieve title of favourited recipe(s)
+        CharSequence widgetText = String.valueOf(R.string.widget_title) + recipeTitle;
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.bake_widget);
         views.setTextViewText(R.id.widget_title, widgetText);
@@ -45,7 +46,7 @@ public class BakeWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-       // IngredientsService.startHandleActionUpdateWidget(ctxt);
+       IngredientsService.startHandleActionUpdateWidget(ctxt);
     }
 
     @Override
