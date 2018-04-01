@@ -48,6 +48,13 @@ public class RecipeUtils {
 
     static String currentRecipeName;
 
+    // –––––– Insert the data to the respective tables ––––––
+
+    /** recipe
+     *
+     * @param recipes obtained from the api
+     * @param ctxt of the activity calling this method
+     */
     public static void writeRecipesToDb(List<Recipe> recipes, Context ctxt) {
         ContentValues singleRecipe = new ContentValues();
 
@@ -61,21 +68,12 @@ public class RecipeUtils {
         }
     }
 
-    public static void getRecipeValues(ContentValues singleRecipe, Recipe receivedRecipe) {
-        singleRecipe.put(RecipeEntry.RECIPE_ID, receivedRecipe.getId());
-        singleRecipe.put(RecipeEntry.RECIPE_IMAGE, receivedRecipe.getImage());
-        singleRecipe.put(RecipeEntry.RECIPE_NAME, receivedRecipe.getName());
-        singleRecipe.put(RecipeEntry.RECIPE_SERVINGS, receivedRecipe.getServings());
-
-        int favValue; //convert boolean to int value for db
-        if (receivedRecipe.isFavourited()) {
-            favValue = RecipeEntry.FAVOURITED_TRUE;
-        } else {
-            favValue = RecipeEntry.FAVOURITED_FALSE;
-        }
-        singleRecipe.put(RecipeEntry.RECIPE_FAVOURITED, favValue);
-    }
-
+    /** ingredients
+     *
+     * @param ingredientsList obtained from the api
+     * @param recipeName the recipe associated with the ingredients being stored
+     * @param ctxt of the activity calling this method
+     */
     public static void writeIngredientsToDb(ArrayList<Ingredients> ingredientsList,
                                             String recipeName, Context ctxt) {
         ContentValues setOfIngredients = new ContentValues();
@@ -91,6 +89,96 @@ public class RecipeUtils {
         }
     }
 
+    /** steps
+     *
+     * @param stepsList obtained from the api
+     * @param recipeName the recipe associated with the ingredients being stored
+     * @param ctxt of the activity calling this method
+     */
+    public static void writeStepsToDb(ArrayList<Steps> stepsList, String recipeName,
+                                      Context ctxt) {
+        ContentValues setOfSteps = new ContentValues();
+
+        for (int i = 0; i < stepsList.size(); i++) {
+            Steps receivedSteps = stepsList.get(i);
+
+            setOfSteps.put(Steps.STEPS_ID, receivedSteps.getId());
+            setOfSteps.put(Steps.STEPS_THUMB, receivedSteps.getThumbnail());
+            setOfSteps.put(Steps.STEPS_VIDEO, receivedSteps.getVideo());
+            setOfSteps.put(Steps.STEPS_SHORT_DESCRIP,
+                    receivedSteps.getShortDescription());
+            setOfSteps.put(Steps.STEPS_DESCRIP, receivedSteps.getDescription());
+            setOfSteps.put(Steps.STEPS_ASSOCIATED_RECIPE, recipeName);
+
+            ctxt.getContentResolver().insert(StepsEntry.CONTENT_URI_STEPS, setOfSteps);
+        }
+    }
+
+    // –––––– updating the data in the respective tables ––––––
+
+    /** Recipe
+     *
+     * @param selectedRecipe the recipe to be updated
+     * @param ctxt of the activity calling this method
+     */
+    public static void updateFavDb(Recipe selectedRecipe, Context ctxt) {
+        //create uri referencing the recipe's id as well as the selection arguments.
+        Uri uri = ContentUris.withAppendedId(RecipeEntry.CONTENT_URI_RECIPE,
+                selectedRecipe.getId());
+        String selection = RecipeEntry.RECIPE_ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(selectedRecipe.getId())};
+
+        //store changed favourite selection to the db.
+        ContentValues singleRecipe = new ContentValues();
+        getRecipeValues(singleRecipe, selectedRecipe);
+        ctxt.getContentResolver().update(uri, singleRecipe, selection, selectionArgs);
+    }
+
+    /** Ingredients
+     *
+     * @param recipeName of the associated recipe
+     * @param selectedIngredients the set of ingredients to be updated
+     * @param ctxt of the activity calling this method
+     */
+    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredients, Context ctxt) {
+        //create uri referencing the ingredient's id as well as the selection arguments.
+        Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
+                selectedIngredients.getId());
+
+        //store changed checked state to the db.
+        ContentValues singleIngredients = new ContentValues();
+        getIngredientValues(recipeName, singleIngredients, selectedIngredients);
+        ctxt.getContentResolver().update(uri, singleIngredients, null, null);
+    }
+
+    // –––––– preparing the ContentValues ready for inserting/updating the db ––––––
+
+    /** Recipe
+     *
+     * @param singleRecipe the ContentValues ready to receive the data
+     * @param receivedRecipe the recipe in question to be insterted/updated
+     */
+    public static void getRecipeValues(ContentValues singleRecipe, Recipe receivedRecipe) {
+        singleRecipe.put(RecipeEntry.RECIPE_ID, receivedRecipe.getId());
+        singleRecipe.put(RecipeEntry.RECIPE_IMAGE, receivedRecipe.getImage());
+        singleRecipe.put(RecipeEntry.RECIPE_NAME, receivedRecipe.getName());
+        singleRecipe.put(RecipeEntry.RECIPE_SERVINGS, receivedRecipe.getServings());
+
+        int favValue; //convert boolean to int value for db
+        if (receivedRecipe.isFavourited()) {
+            favValue = RecipeEntry.FAVOURITED_TRUE;
+        } else {
+            favValue = RecipeEntry.FAVOURITED_FALSE;
+        }
+        singleRecipe.put(RecipeEntry.RECIPE_FAVOURITED, favValue);
+    }
+
+    /** Ingredients
+     *
+     * @param recipeName reference to the associated recipe
+     * @param setOfIngredients the ContentValues ready to receive the data
+     * @param receivedIngredients the recipe in question to be insterted/updated
+     */
     private static void getIngredientValues(String recipeName, ContentValues setOfIngredients,
                                             Ingredients receivedIngredients) {
         setOfIngredients.put(IngredientsEntry.INGREDIENTS_ID, receivedIngredients.getId());
@@ -112,52 +200,14 @@ public class RecipeUtils {
         setOfIngredients.put(IngredientsEntry.INGREDIENTS_CHECKED, checkValue);
     }
 
-    public static void writeStepsToDb(ArrayList<Steps> stepsList, String recipeName,
-                                      Context ctxt) {
-        ContentValues setOfSteps = new ContentValues();
+    // –––––– Getting the data from the cursor ––––––
 
-        for (int i = 0; i < stepsList.size(); i++) {
-            Steps receivedSteps = stepsList.get(i);
-
-            setOfSteps.put(Steps.STEPS_ID, receivedSteps.getId());
-            setOfSteps.put(Steps.STEPS_THUMB, receivedSteps.getThumbnail());
-            setOfSteps.put(Steps.STEPS_VIDEO, receivedSteps.getVideo());
-            setOfSteps.put(Steps.STEPS_SHORT_DESCRIP,
-                    receivedSteps.getShortDescription());
-            setOfSteps.put(Steps.STEPS_DESCRIP, receivedSteps.getDescription());
-            setOfSteps.put(Steps.STEPS_ASSOCIATED_RECIPE, recipeName);
-
-            Uri inserted = ctxt.getContentResolver().insert(StepsEntry.CONTENT_URI_STEPS,
-                    setOfSteps);
-        }
-    }
-
-    public static void updateFavDb(Recipe selectedRecipe, Context ctxt) {
-        //create uri referencing the recipe's id as well as the selection arguments.
-        Uri uri = ContentUris.withAppendedId(RecipeEntry.CONTENT_URI_RECIPE,
-                selectedRecipe.getId());
-        String selection = RecipeEntry.RECIPE_ID + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(selectedRecipe.getId())};
-
-        //store changed favourite selection to the db.
-        ContentValues singleRecipe = new ContentValues();
-        getRecipeValues(singleRecipe, selectedRecipe);
-        ctxt.getContentResolver().update(uri, singleRecipe, selection, selectionArgs);
-    }
-
-    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredients, Context ctxt) {
-        //create uri referencing the ingredient's id as well as the selection arguments.
-        Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
-                selectedIngredients.getId());
-        String selection = IngredientsEntry.INGREDIENTS_ID + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(selectedIngredients.getId())};
-
-        //store changed checked state to the db.
-        ContentValues singleIngredients = new ContentValues();
-        getIngredientValues(recipeName, singleIngredients, selectedIngredients);
-        ctxt.getContentResolver().update(uri, singleIngredients, selection, selectionArgs);
-    }
-
+    /** Ingredients
+     *
+     * @param data is the cursor from which the data will be extracted
+     * @param ingredientsList will hold the data for the adapter
+     * @return the ingredientsList for further processing by the adapter.
+     */
     public static ArrayList<Ingredients> getIngredientList(Cursor data,
                                                            ArrayList<Ingredients> ingredientsList) {
         data.moveToFirst();
@@ -177,7 +227,13 @@ public class RecipeUtils {
         return ingredientsList;
     }
 
-    public static ArrayList<Steps> getSteps(Cursor data, ArrayList<Steps> stepsList) {
+    /** Steps
+     *
+     * @param data is the cursor from which the data will be extracted
+     * @param stepsList will hold the data for the adapter
+     * @return the stepsList for further processing by the adapter.
+     */
+    public static ArrayList<Steps> getStepsList(Cursor data, ArrayList<Steps> stepsList) {
         data.moveToFirst();
         while (data.moveToNext()) {
             long id = data.getLong(data.getColumnIndex(StepsEntry.STEPS_ID));
@@ -192,7 +248,12 @@ public class RecipeUtils {
         return stepsList;
     }
 
-    public static void getRecipeDataFromCursor(Cursor data, ArrayList<Recipe> recipeList) {
+    /** Recipe
+     *
+     * @param data is the cursor from which the data will be extracted
+     * @param recipeList will hold the data for the adapter
+     */
+    public static void getRecipeList(Cursor data, ArrayList<Recipe> recipeList) {
         while (data.moveToNext()) {
             int id = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_ID));
             String image = data.getString((data.getColumnIndex(RecipeEntry.RECIPE_IMAGE)));

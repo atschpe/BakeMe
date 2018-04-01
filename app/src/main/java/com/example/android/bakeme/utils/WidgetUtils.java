@@ -2,14 +2,11 @@ package com.example.android.bakeme.utils;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
-import com.example.android.bakeme.data.db.RecipeContract;
 import com.example.android.bakeme.data.db.RecipeContract.IngredientsEntry;
 import com.example.android.bakeme.data.db.RecipeContract.RecipeEntry;
-import com.example.android.bakeme.data.db.RecipeProvider;
 
 import java.util.ArrayList;
 
@@ -27,7 +24,7 @@ public class WidgetUtils {
             favRecipe = null;
         } else {
             csr.moveToFirst();
-            RecipeUtils.getRecipeDataFromCursor(csr, favRecipe);
+            RecipeUtils.getRecipeList(csr, favRecipe);
         }
         return favRecipe;
     }

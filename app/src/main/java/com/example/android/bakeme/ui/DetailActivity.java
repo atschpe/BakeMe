@@ -257,7 +257,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
                 RecipeUtils.getIngredientList(data, ingredientsList);
                 break;
             case RecipeUtils.STEPS_DETAIL_LOADER:
-                RecipeUtils.getSteps(data, stepsList);
+                RecipeUtils.getStepsList(data, stepsList);
                 break;
         }
         data.close();
@@ -284,14 +284,15 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
     }
 
     @Override
-    public void onIngredientClick(Ingredients ingredients, int ingredientPostion, boolean isChecked) {
+    public void onIngredientClick(Ingredients selectedIngredient, int ingredientPosition,
+                                  boolean isChecked) {
         if (isChecked) {
-            ingredients.setChecked(true);
+            selectedIngredient.setChecked(true);
         } else {
-            ingredients.setChecked(false);
+            selectedIngredient.setChecked(false);
         }
         //update the db and then restart the loader.
-        RecipeUtils.updateCheckedDb(selectedRecipe.getName(), ingredients, this);
+        RecipeUtils.updateCheckedDb(selectedRecipe.getName(), selectedIngredient, this);
         getSupportLoaderManager().restartLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
                 this);
         IngredientsService.startHandleActionUpdateWidget(this);

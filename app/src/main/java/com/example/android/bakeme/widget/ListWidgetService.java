@@ -46,7 +46,7 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             String selection = IngredientsEntry.INGREDIENTS_CHECKED + "=?";
-            String [] selectionArgs = new String[]{String.valueOf(IngredientsEntry.CHECKED_FALSE)};
+            String [] selectionArgs = new String[]{String.valueOf(IngredientsEntry.CHECKED_TRUE)};
             String sortOrder = IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE;
             csr = ctxt.getContentResolver().query(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                     null, selection, selectionArgs, sortOrder);

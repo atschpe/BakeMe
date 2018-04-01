@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
             Timber.v("Cursor is empty");
         } else {
             recipeList = new ArrayList<>();
-            RecipeUtils.getRecipeDataFromCursor(data, recipeList);
+            RecipeUtils.getRecipeList(data, recipeList);
             Timber.v(String.valueOf(data.getCount()));
             data.close();
             setAdapter(this, recipeList, this);
