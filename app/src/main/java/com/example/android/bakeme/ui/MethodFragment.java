@@ -443,7 +443,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
         if (args != null) {
             stepId = args.getLong(RecipeUtils.SELECTED_STEP);
         }
-        String selection = StepsEntry.STEPS_ASSOCIATED_RECIPE + "=?";
+        String selection = StepsEntry.STEPS_ID + "=?";
         String[] selectionArgs = new String[]{String.valueOf(stepId)};
 
         return new CursorLoader(getActivity(), StepsEntry.CONTENT_URI_STEPS, null,
@@ -462,6 +462,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
             String thumbnail = data.getString(data.getColumnIndex(StepsEntry.STEPS_THUMB));
 
             step = new Steps(id, shortDescription, description, video, thumbnail);
+            Timber.v("loaded step: " +step.getId());
         }
     }
 
@@ -515,7 +516,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
 
     private void updateStepText() {
         if (!step.getDescription().isEmpty()) {
-            Timber.v("update text – step: "+ step);
+            Timber.v("update text – step: "+ step.getId());
             recipeStep.setText(step.getDescription());
         } else {
             recipeStep.setText(R.string.no_detail_step_available);
