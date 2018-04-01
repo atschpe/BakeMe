@@ -171,7 +171,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             MethodActivity.setSelectedRecipe(selectedRecipe);
             MethodActivity.setStepsList(stepsList);
             Intent openMethod = new Intent(this, MethodActivity.class);
-            Bundle recipeBundle = new Bundle();
+//            Bundle recipeBundle = new Bundle();
 
 //            //recipeBundle.putParcelableArrayList(RecipeUtils.STEP_LIST, stepsList);
 //            recipeBundle.putParcelable(RecipeUtils.SELECTED_RECIPE, selectedRecipe);
