@@ -3,6 +3,8 @@ package com.example.android.bakeme.ui;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -165,14 +167,18 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             fragMan.beginTransaction().replace(R.id.detail_fragment_container2, methodFrag)
                     .addToBackStack(null).commit();
         } else {
+            MethodActivity.setStep(step);
+            MethodActivity.setSelectedRecipe(selectedRecipe);
+            MethodActivity.setStepsList(stepsList);
             Intent openMethod = new Intent(this, MethodActivity.class);
             Bundle recipeBundle = new Bundle();
 
-            recipeBundle.putParcelableArrayList(RecipeUtils.STEP_LIST, stepsList);
-            recipeBundle.putParcelable(RecipeUtils.SELECTED_RECIPE, selectedRecipe);
-            recipeBundle.putParcelable(RecipeUtils.SELECTED_STEP, step);
-
-            openMethod.putExtra(RecipeUtils.RECIPE_BUNDLE, recipeBundle);
+//            //recipeBundle.putParcelableArrayList(RecipeUtils.STEP_LIST, stepsList);
+//            recipeBundle.putParcelable(RecipeUtils.SELECTED_RECIPE, selectedRecipe);
+//            recipeBundle.putParcelable(RecipeUtils.SELECTED_STEP, step);
+//
+//            //openMethod.putParcelableArrayListExtra(RecipeUtils.STEP_LIST, stepsList);
+//            openMethod.putExtra(RecipeUtils.RECIPE_BUNDLE, recipeBundle);
             startActivity(openMethod);
         }
     }

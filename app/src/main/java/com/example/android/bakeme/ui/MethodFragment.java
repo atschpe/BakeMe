@@ -290,8 +290,15 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     @Override
     public void onPause() {
         super.onPause();
-        releasePlayer();
+        exoPlayer.setPlayWhenReady(false);
         videoSession.setActive(false);
+        playWhenReady = exoPlayer.getPlayWhenReady();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        exoPlayer.setPlayWhenReady(true);
         playWhenReady = exoPlayer.getPlayWhenReady();
     }
 

@@ -16,21 +16,34 @@ public class MethodActivity extends AppCompatActivity {
 
     private MethodFragment methodFrag;
     private FragmentManager fragMan;
-    private Recipe selectedRecipe;
-    private Steps step;
-    private ArrayList<Steps> stepsList;
+    private static Recipe selectedRecipe;
+
+    public static void setSelectedRecipe(Recipe selectedRecipe) {
+        MethodActivity.selectedRecipe = selectedRecipe;
+    }
+
+    public static void setStep(Steps step) {
+        MethodActivity.step = step;
+    }
+
+    public static void setStepsList(ArrayList<Steps> stepsList) {
+        MethodActivity.stepsList = stepsList;
+    }
+
+    private static Steps step;
+    private static ArrayList<Steps> stepsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_method);
-
-        Intent recipeReceived = getIntent();
-        Bundle recipeBundle = recipeReceived.getBundleExtra(RecipeUtils.RECIPE_BUNDLE);
-
-        selectedRecipe = recipeBundle.getParcelable(RecipeUtils.SELECTED_RECIPE);
-        step = recipeBundle.getParcelable(RecipeUtils.SELECTED_STEP);
-        stepsList = recipeBundle.getParcelableArrayList(RecipeUtils.STEP_LIST);
+//
+//        Intent recipeReceived = getIntent();
+//        Bundle recipeBundle = recipeReceived.getBundleExtra(RecipeUtils.RECIPE_BUNDLE);
+//
+//        selectedRecipe = recipeBundle.getParcelable(RecipeUtils.SELECTED_RECIPE);
+//        step = recipeBundle.getParcelable(RecipeUtils.SELECTED_STEP);
+//        stepsList = getIntent().getParcelableArrayListExtra(RecipeUtils.STEP_LIST);
 
         methodFrag = new MethodFragment();
         fragMan = getSupportFragmentManager();
