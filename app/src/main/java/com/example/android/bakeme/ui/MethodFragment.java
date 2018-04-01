@@ -76,9 +76,11 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     private SimpleExoPlayer exoPlayer;
     private MediaSessionCompat videoSession;
     private PlaybackStateCompat.Builder stateBuilder;
-    long playerCurrentPosition; // position handling: https://stackoverflow.com/a/45482017/7601437
     private static final String TAG = MethodFragment.class.getSimpleName();
-    //private Handler handler;
+    private boolean playWhenReady;
+    private static final String PLAYER_READY = "player ready";
+    private long playerCurrentPosition;
+    private static final String PLAYER_POSITION = "player position";
 
     //passed on data & setters to do so.
     private Recipe recipe;
@@ -87,7 +89,6 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
     // check whether device is landscape mode (single pane)
     private boolean landMode;
-    private final static String CURRENT_POSITION = "current player position";
 
     public void setStepsList(ArrayList<Steps> stepsList) {
         this.stepsList = stepsList;
@@ -116,21 +117,23 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
                 && !getResources().getBoolean(R.bool.isTablet);
 
         playerCurrentPosition = C.TIME_UNSET;
-        ;
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(RecipeUtils.STEP_LIST)) {
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.STEP_LIST))) {
                 stepsList = savedInstanceState.getParcelableArrayList(String.valueOf(
                         RecipeUtils.STEP_LIST));
             }
-            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_STEP)) {
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.SELECTED_STEP))) {
                 step = savedInstanceState.getParcelable(String.valueOf(RecipeUtils.SELECTED_STEP));
             }
-            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_RECIPE)) {
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.SELECTED_RECIPE))) {
                 recipe = savedInstanceState.getParcelable(String.valueOf(
                         RecipeUtils.SELECTED_RECIPE));
             }
-            if (savedInstanceState.containsKey(CURRENT_POSITION)) {
-                playerCurrentPosition = savedInstanceState.getLong(CURRENT_POSITION);
+            if (savedInstanceState.containsKey(PLAYER_READY)) {
+                playWhenReady = savedInstanceState.getBoolean(PLAYER_READY);
+            }
+            if (savedInstanceState.containsKey(PLAYER_POSITION)) {
+                playerCurrentPosition = savedInstanceState.getLong(PLAYER_POSITION);
             }
         }
 
@@ -254,7 +257,8 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
         outState.putParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST), stepsList);
         outState.putParcelable(String.valueOf(RecipeUtils.SELECTED_RECIPE), recipe);
         outState.putParcelable(String.valueOf(RecipeUtils.SELECTED_STEP), step);
-        outState.putLong(CURRENT_POSITION, playerCurrentPosition);
+        outState.putBoolean(PLAYER_READY, playWhenReady);
+        outState.putLong(PLAYER_POSITION, playerCurrentPosition);
         super.onSaveInstanceState(outState);
     }
 
@@ -281,15 +285,15 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        videoSession.setActive(false);
         releasePlayer();
+        videoSession.setActive(false);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        playWhenReady = exoPlayer.getPlayWhenReady();
         playerCurrentPosition = exoPlayer.getCurrentPosition();
-        exoPlayer.setPlayWhenReady(false);
         releasePlayer();
     }
 
@@ -351,7 +355,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
             // Prepare the MediaSource and start playing
             if (!step.getVideo().isEmpty()) {
                 exoPlayer.prepare(getMediaSource());
-                exoPlayer.setPlayWhenReady(true);
+                exoPlayer.setPlayWhenReady(playWhenReady);
                 videoThumbnailIv.setVisibility(View.INVISIBLE);
             } else {
                 videoThumbnailIv.setVisibility(View.VISIBLE);
@@ -412,6 +416,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
         @Override
         public void onPause() {
             exoPlayer.setPlayWhenReady(false);
+            playerCurrentPosition = exoPlayer.getCurrentPosition();
         }
 
         @Override
