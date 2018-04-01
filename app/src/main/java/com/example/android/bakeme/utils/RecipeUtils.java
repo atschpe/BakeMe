@@ -64,7 +64,14 @@ public class RecipeUtils {
             Recipe receivedRecipe = recipes.get(i);
 
             receivedRecipe.setFavourited(false); //initially all recipes are unfavourited.
-            getRecipeValues(singleRecipe, receivedRecipe);
+            singleRecipe.put(RecipeEntry.RECIPE_ID, receivedRecipe.getId());
+            singleRecipe.put(RecipeEntry.RECIPE_IMAGE, receivedRecipe.getImage());
+            singleRecipe.put(RecipeEntry.RECIPE_NAME, receivedRecipe.getName());
+            singleRecipe.put(RecipeEntry.RECIPE_SERVINGS, receivedRecipe.getServings());
+
+            int favValue = getCheckValue(receivedRecipe.isFavourited(), RecipeEntry.FAVOURITED_TRUE,
+                    RecipeEntry.FAVOURITED_FALSE);
+            singleRecipe.put(RecipeEntry.RECIPE_FAVOURITED, favValue);
 
             ctxt.getContentResolver().insert(RecipeEntry.CONTENT_URI_RECIPE, singleRecipe);
         }
@@ -84,7 +91,18 @@ public class RecipeUtils {
             Ingredients receivedIngredients = ingredientsList.get(i);
 
             receivedIngredients.setChecked(false); //initially all ingredients are unchecked
-            getIngredientValues(recipeName, setOfIngredients, receivedIngredients);
+            setOfIngredients.put(IngredientsEntry.INGREDIENTS_INGREDIENT, receivedIngredients
+                    .getIngredient());
+            setOfIngredients.put(IngredientsEntry.INGREDIENTS_MEASURE,
+                    receivedIngredients.getMeasure());
+            setOfIngredients.put(IngredientsEntry.INGREDIENTS_QUANTITY, receivedIngredients
+                    .getQuantity());
+            setOfIngredients.put(IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE,
+                    recipeName);
+
+            int checkValue = getCheckValue(receivedIngredients.isChecked(),
+                    IngredientsEntry.CHECKED_TRUE, IngredientsEntry.CHECKED_FALSE);
+            setOfIngredients.put(IngredientsEntry.INGREDIENTS_CHECKED, checkValue);
 
             ctxt.getContentResolver().insert(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                     setOfIngredients);
@@ -131,7 +149,9 @@ public class RecipeUtils {
 
         //store changed favourite selection to the db.
         ContentValues singleRecipe = new ContentValues();
-        getRecipeValues(singleRecipe, selectedRecipe);
+        singleRecipe.put(RecipeEntry.RECIPE_FAVOURITED, getCheckValue(selectedRecipe.isFavourited(),
+                RecipeEntry.FAVOURITED_TRUE, RecipeEntry.FAVOURITED_FALSE));
+        //getRecipeValues(singleRecipe, selectedRecipe);
         ctxt.getContentResolver().update(uri, singleRecipe, null, null);
     }
 
@@ -148,56 +168,22 @@ public class RecipeUtils {
 
         //store changed checked state to the db.
         ContentValues singleIngredient = new ContentValues();
-        getIngredientValues(recipeName, singleIngredient, selectedIngredient);
+        singleIngredient.put(IngredientsEntry.INGREDIENTS_CHECKED,
+                getCheckValue(selectedIngredient.isChecked(), IngredientsEntry.CHECKED_TRUE,
+                        IngredientsEntry.CHECKED_FALSE));
+        //getIngredientValues(recipeName, singleIngredient, selectedIngredient);
         ctxt.getContentResolver().update(uri, singleIngredient, null, null);
     }
 
-    // –––––– preparing the ContentValues ready for inserting/updating the db ––––––
-
-    /** Recipe
-     *
-     * @param singleRecipe the ContentValues ready to receive the data
-     * @param receivedRecipe the recipe in question to be insterted/updated
-     */
-    public static void getRecipeValues(ContentValues singleRecipe, Recipe receivedRecipe) {
-        singleRecipe.put(RecipeEntry.RECIPE_ID, receivedRecipe.getId());
-        singleRecipe.put(RecipeEntry.RECIPE_IMAGE, receivedRecipe.getImage());
-        singleRecipe.put(RecipeEntry.RECIPE_NAME, receivedRecipe.getName());
-        singleRecipe.put(RecipeEntry.RECIPE_SERVINGS, receivedRecipe.getServings());
-
+    //get the corresponding int value for the boolean
+    public static int getCheckValue(boolean favourited, int favouritedTrue, int favouritedFalse) {
         int favValue; //convert boolean to int value for db
-        if (receivedRecipe.isFavourited()) {
-            favValue = RecipeEntry.FAVOURITED_TRUE;
+        if (favourited) {
+            favValue = favouritedTrue;
         } else {
-            favValue = RecipeEntry.FAVOURITED_FALSE;
+            favValue = favouritedFalse;
         }
-        singleRecipe.put(RecipeEntry.RECIPE_FAVOURITED, favValue);
-    }
-
-    /** Ingredients
-     *
-     * @param recipeName reference to the associated recipe
-     * @param setOfIngredients the ContentValues ready to receive the data
-     * @param receivedIngredients the recipe in question to be insterted/updated
-     */
-    private static void getIngredientValues(String recipeName, ContentValues setOfIngredients,
-                                            Ingredients receivedIngredients) {
-        setOfIngredients.put(IngredientsEntry.INGREDIENTS_INGREDIENT, receivedIngredients
-                .getIngredient());
-        setOfIngredients.put(IngredientsEntry.INGREDIENTS_MEASURE,
-                receivedIngredients.getMeasure());
-        setOfIngredients.put(IngredientsEntry.INGREDIENTS_QUANTITY, receivedIngredients
-                .getQuantity());
-        setOfIngredients.put(IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE,
-                recipeName);
-
-        int checkValue; //convert boolean to int value for db
-        if (receivedIngredients.isChecked()) {
-            checkValue = IngredientsEntry.CHECKED_TRUE;
-        } else {
-            checkValue = IngredientsEntry.CHECKED_FALSE;
-        }
-        setOfIngredients.put(IngredientsEntry.INGREDIENTS_CHECKED, checkValue);
+        return favValue;
     }
 
     // –––––– Getting the data from the cursor ––––––

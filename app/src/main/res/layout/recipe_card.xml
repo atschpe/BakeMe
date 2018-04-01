@@ -47,6 +47,7 @@
         <CheckBox
             android:id="@+id/recipe_favourite_cb"
             style="@style/favButton"
+            android:contentDescription="@string/recipe_card_favourite_button"
             app:layout_constraintEnd_toEndOf="@+id/card_image_iv"
             app:layout_constraintTop_toTopOf="@+id/card_image_iv" />
 

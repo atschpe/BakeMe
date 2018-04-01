@@ -89,6 +89,7 @@ public class ListWidgetService extends RemoteViewsService {
             // Fill in the onClick PendingIntent Template using the Id for each item individually
             Bundle extras = new Bundle();
             extras.putParcelable(EXTRA_INGREDIENT, currentIngredient);
+            extras.putLong(EXTRA_ID, id);
             Intent fillInIntent = new Intent();
             fillInIntent.putExtras(extras);
 

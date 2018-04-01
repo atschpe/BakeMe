@@ -47,9 +47,11 @@ public class IngredientsService extends IntentService {
             final String action = intent.getAction();
             if (action.equals(ACTION_REMOVE_INGREDIENTS)) {
                 Bundle getData = intent.getExtras();
-                if (getData != null && getData.containsKey(ListWidgetService.EXTRA_INGREDIENT)) {
+                if (getData != null && getData.containsKey(ListWidgetService.EXTRA_INGREDIENT) &&
+                getData.containsKey(ListWidgetService.EXTRA_ID)) {
                     Ingredients currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
-                    handleActionRemoveIngredients(currentIngredients);
+                    long ingredientId = getData.getLong(ListWidgetService.EXTRA_ID);
+                    handleActionRemoveIngredients(currentIngredients, ingredientId);
                 }
             }
             if (action.equals(ACTION_UPDATE_WIDGET)) {
@@ -60,8 +62,9 @@ public class IngredientsService extends IntentService {
 
     // Set checked to '0' and update the ingredient in the db. Updating the widget will then make it
     // disappear from the list.
-    private void handleActionRemoveIngredients(Ingredients currentIngredients) {
+    private void handleActionRemoveIngredients(Ingredients currentIngredients, long ingredientId) {
         currentIngredients.setChecked(false);
+        currentIngredients.setId(ingredientId);
         RecipeUtils.updateCheckedDb(currentIngredients.getAssociatedRecipe(), currentIngredients,
                 this);
 

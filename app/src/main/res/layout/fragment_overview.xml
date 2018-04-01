@@ -10,6 +10,7 @@
 
         <CheckBox
             android:id="@+id/overview_favourite_cb"
+            android:contentDescription="@string/recipe_overview_favourite_button"
             style="@style/favButton"
             android:layout_marginEnd="@dimen/half_margin"
             android:layout_marginRight="@dimen/half_margin"

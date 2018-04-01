@@ -1,28 +1,30 @@
 package com.example.android.bakeme;
 
 import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.Matchers.not;
 
-import com.example.android.bakeme.ui.DetailActivity;
+import com.example.android.bakeme.testHelpers.MyViewAction;
+import com.example.android.bakeme.testHelpers.RecyclerViewMatcher;
 import com.example.android.bakeme.ui.MainActivity;
 
-import org.hamcrest.Matchers;
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,9 +37,14 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTester {
 
-    String recipeTitle = "Nutella Pie";
+    private String ingredient = "2 cup Graham Cracker crumbs";
 
     private RecipeIdlingResource idlingResource;
+
+    // Convenience helper: https://spin.atomicobject.com/2016/04/15/espresso-testing-recyclerviews/
+    public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+        return new RecyclerViewMatcher(recyclerViewId);
+    }
 
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule
@@ -49,13 +56,16 @@ public class MainActivityTester {
         IdlingRegistry.getInstance().register(idlingResource);
     }
 
-    //Simulate clicking on recipe card to open DetailActivity
+    @Test
+    //Simulate clicking on recipe card to open DetailActivity √
     public void clickRvItemToOpenDetailTest() {
 
-        onData(anything()).inAdapterView(withId(R.id.recipe_overview_rv)).atPosition(0)
-                .perform(click());
+        onView(withId(R.id.recipe_overview_rv)).perform(RecyclerViewActions
+                .actionOnItemAtPosition(0, click()));
 
-        onView(withId(android.R.id.title)).check(matches(withText(recipeTitle)));
+        onView(withRecyclerView(R.id.ingredient_rv)
+                .atPositionOnView(0, R.id.ingredient_tv))
+                .check(matches(withText(ingredient)));
     }
 
     // Simulates favouriting a recipe and checking that
@@ -63,18 +73,23 @@ public class MainActivityTester {
     // (*)the ingredient checkboxes are revealed
     @Test
     public void favouriteRecipeInDetailTest() {
+        //in MainActivity: ensure fav button is not checked before checking it and ensure it
+        // registered being checked
+        onView(withRecyclerView(R.id.recipe_overview_rv).atPositionOnView(0,
+                R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
+        onView(withId(R.id.recipe_overview_rv)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0,
+                        MyViewAction.clickChildViewWithId(R.id.recipe_favourite_cb)));
+        onView(withRecyclerView(R.id.recipe_overview_rv).atPositionOnView(0,
+                R.id.recipe_favourite_cb)).check(matches(isChecked()));
 
-//        public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
-//            return new RecyclerViewMatcher(recyclerViewId);
-//        }
-//
-//        onView(withRecyclerView()
-        onView(withId(R.id.recipe_favourite_cb)).perform(RecyclerViewActions.actionOnItemAtPosition(0, (click())));
-                //.check(matches(isChecked()));
-        onView(withId(R.id.ingredient_cb)).check(matches(isDisplayed()));
+        //in DetailActivity: ensure the fav button is active and ingredient checkboxes are visible
+        onView(withId(R.id.recipe_overview_rv)).perform(RecyclerViewActions
+                .actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.overview_favourite_cb)).check(matches(isChecked()));
+        onView(withRecyclerView(R.id.ingredient_rv).atPositionOnView(0,
+                R.id.ingredient_cb)).check(matches(isDisplayed()));
 
-        onData(Matchers.anything()).inAdapterView(withId(R.id.ingredient_cb))
-                .check(matches(isChecked()));
     }
 
     // Simulates unfavouriting a recipe and checking that
@@ -82,12 +97,19 @@ public class MainActivityTester {
     // (*)the ingredient checkboxes are hidden
     @Test
     public void unFavouriteRecipeInDetailTest() {
-        onData(withId(R.id.recipe_favourite_cb)).check(matches(isChecked()));
-        onData(withId(R.id.recipe_favourite_cb)).perform(click()).check(matches(isNotChecked()));
-        onView(withId(R.id.ingredient_cb)).check(matches(not(isDisplayed())));
+        onView(withRecyclerView(R.id.recipe_overview_rv).atPositionOnView(0,
+                R.id.recipe_favourite_cb)).check(matches(isChecked()));
+        onView(withId(R.id.recipe_overview_rv)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0,
+                        MyViewAction.clickChildViewWithId(R.id.recipe_favourite_cb)));
+        onView(withRecyclerView(R.id.recipe_overview_rv).atPositionOnView(0,
+                R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
 
-        onData(Matchers.anything()).inAdapterView(withId(R.id.overview_favourite_cb))
-                .check(matches(isNotChecked()));
+        onView(withId(R.id.recipe_overview_rv)).perform(RecyclerViewActions
+                .actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.overview_favourite_cb)).check(matches(isNotChecked()));
+        onView(withRecyclerView(R.id.ingredient_rv).atPositionOnView(0,
+                R.id.ingredient_cb)).check(matches(not(isDisplayed())));
     }
 
     @After

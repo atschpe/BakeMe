@@ -1,9 +1,11 @@
 package com.example.android.bakeme;
 
 import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.android.bakeme.testHelpers.RecyclerViewMatcher;
 import com.example.android.bakeme.ui.DetailActivity;
 
 import org.junit.After;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
@@ -29,6 +32,11 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 public class DetailActivityTester {
+
+    // Convenience helper: https://spin.atomicobject.com/2016/04/15/espresso-testing-recyclerviews/
+    public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+        return new RecyclerViewMatcher(recyclerViewId);
+    }
 
     String description = "Recipe Introduction";
 
@@ -46,11 +54,12 @@ public class DetailActivityTester {
 
     //Simulates clicking on a step to open the method fragment
     @Test
-    public void clickRecipeToOpeMethodTest() {
-        onData(anything()).inAdapterView(withId(R.id.recipe_text_tv)).atPosition(0)
-                .perform(click()); //Click on first step of the recipe
+    public void clickRecipeToOpenMethodTest() {
 
-        // check first step if right text is displayed.
+
+        onView(withId(R.id.recipe_steps_rv)).perform(RecyclerViewActions
+                .actionOnItemAtPosition(0, click()));
+
         onView(withId(R.id.recipe_step_tv)).check(matches(withText(description)));
     }
 
@@ -63,8 +72,12 @@ public class DetailActivityTester {
         onView(withId(R.id.overview_favourite_cb)).perform(click()).check(matches(isChecked()));
         onView(withId(R.id.ingredient_cb)).check(matches(isDisplayed()));
 
-        onData(anything()).inAdapterView(withId(R.id.recipe_favourite_cb))
-                .check(matches(isChecked()));
+        onView(withRecyclerView(R.id.ingredient_rv).atPositionOnView(0,
+                R.id.ingredient_cb)).check(matches(isDisplayed()));
+
+        pressBack();
+        onView(withRecyclerView(R.id.recipe_overview_rv).atPositionOnView(0,
+                R.id.recipe_favourite_cb)).check(matches(isChecked()));
     }
 
     // Simulates unfavouriting a recipe and checking that
@@ -76,8 +89,9 @@ public class DetailActivityTester {
         onView(withId(R.id.overview_favourite_cb)).perform(click()).check(matches(isNotChecked()));
         onView(withId(R.id.ingredient_cb)).check(matches(not(isDisplayed())));
 
-        onData(anything()).inAdapterView(withId(R.id.recipe_favourite_cb))
-                .check(matches(isNotChecked()));
+        pressBack();
+        onView(withRecyclerView(R.id.recipe_overview_rv).atPositionOnView(0,
+                R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
     }
 
     @After

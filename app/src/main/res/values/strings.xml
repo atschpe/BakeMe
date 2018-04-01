@@ -53,4 +53,6 @@
     <string name="add_widget">Add widget</string>
     <string name="ingredient_acquired">ingredient acquired</string>
     <string name="widget_title">Shopping list for BakeMe</string>
+    <string name="recipe_card_favourite_button">Recipe card favourite button</string>
+    <string name="recipe_overview_favourite_button">Recipe overview favourite button</string>
 </resources>
