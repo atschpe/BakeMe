@@ -154,12 +154,17 @@ public class RecipeProvider extends ContentProvider {
         int match = getMatch(uri);
         switch (match) { //we only need to update single recipe and ingredient items
             case RECIPE_ENTRY:
+                selection = RecipeEntry.RECIPE_ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
                 int countRecipe = dbWriter.update(RecipeEntry.TABLE_RECIPE, values, selection,
                         selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 Timber.v("recipe update: " + countRecipe);
                 return countRecipe;
             case INGREDIENTS_ENTRY:
+                Timber.v("Ingredients' uri: " + uri);
+                selection = IngredientsEntry.INGREDIENTS_ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
                 int countIngredient = dbWriter.update(IngredientsEntry.TABLE_INGREDIENTS, values,
                         selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);

@@ -125,18 +125,15 @@ public class RecipeUtils {
         //create uri referencing the recipe's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(RecipeEntry.CONTENT_URI_RECIPE,
                 selectedRecipe.getId());
-        String selection = RecipeEntry.RECIPE_ID + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(selectedRecipe.getId())};
 
         //store changed favourite selection to the db.
         ContentValues singleRecipe = new ContentValues();
         getRecipeValues(singleRecipe, selectedRecipe);
-        ctxt.getContentResolver().update(uri, singleRecipe, selection, selectionArgs);
+        ctxt.getContentResolver().update(uri, singleRecipe, null, null);
     }
 
     /** Ingredients
-     *
-     * @param recipeName of the associated recipe
+     *  @param recipeName of the associated recipe
      * @param selectedIngredient the selected ingredient to be updated
      * @param ctxt of the activity calling this method
      */
@@ -144,13 +141,11 @@ public class RecipeUtils {
         //create uri referencing the ingredient's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                 selectedIngredient.getId());
-        String selection = IngredientsEntry.INGREDIENTS_ID + "=?";
-        String[] selectionArgs = new String[] {String.valueOf(selectedIngredient.getId())};
 
         //store changed checked state to the db.
         ContentValues singleIngredient = new ContentValues();
         getIngredientValues(recipeName, singleIngredient, selectedIngredient);
-        ctxt.getContentResolver().update(uri, singleIngredient, selection, selectionArgs);
+        ctxt.getContentResolver().update(uri, singleIngredient, null, null);
     }
 
     // –––––– preparing the ContentValues ready for inserting/updating the db ––––––
@@ -183,7 +178,6 @@ public class RecipeUtils {
      */
     private static void getIngredientValues(String recipeName, ContentValues setOfIngredients,
                                             Ingredients receivedIngredients) {
-        setOfIngredients.put(IngredientsEntry.INGREDIENTS_ID, receivedIngredients.getId());
         setOfIngredients.put(IngredientsEntry.INGREDIENTS_INGREDIENT, receivedIngredients
                 .getIngredient());
         setOfIngredients.put(IngredientsEntry.INGREDIENTS_MEASURE,

@@ -41,10 +41,6 @@ public class RecipeContract {
         //favourite ints (for boolean)
         public static final int FAVOURITED_TRUE = 1;
         public static final int FAVOURITED_FALSE = 0;
-
-        public static boolean isRecipeFavourite (int favourite) {
-            return favourite == FAVOURITED_TRUE;
-        }
     }
 
     public static final class IngredientsEntry implements BaseColumns {
@@ -59,8 +55,7 @@ public class RecipeContract {
                 = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTH + PATH_INGREDIENTS;
 
         public static final String TABLE_INGREDIENTS = "ingredients";
-        public static final String INGREDIENTS_ID = "id";
-        public static final String INGREDIENTS_GLOBAL_ID = BaseColumns._ID;
+        public static final String INGREDIENTS_ID = BaseColumns._ID;
         public static final String INGREDIENTS_INGREDIENT = "ingredient";
         public static final String INGREDIENTS_MEASURE = "measure";
         public static final String INGREDIENTS_QUANTITY = "quantity";
@@ -70,10 +65,6 @@ public class RecipeContract {
         //checked ints (for boolean)
         public static final int CHECKED_TRUE = 1;
         public static final int CHECKED_FALSE = 0;
-
-        public static boolean isIngredientChecked (int check) {
-            return check == CHECKED_TRUE;
-        }
     }
 
     public static final class StepsEntry implements BaseColumns {

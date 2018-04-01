@@ -42,8 +42,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_RECIPE_TABLE);
 
         final String SQL_CREATE_INGREDIENTS_TABLE = CREATE + IngredientsEntry.TABLE_INGREDIENTS + START
-                + IngredientsEntry.INGREDIENTS_GLOBAL_ID + INT_AUTO + COMMA
-                + IngredientsEntry.INGREDIENTS_ID + INT_REQ + COMMA
+                + IngredientsEntry.INGREDIENTS_ID + INT_AUTO + COMMA
                 + IngredientsEntry.INGREDIENTS_INGREDIENT + TEXT_REQ + COMMA
                 + IngredientsEntry.INGREDIENTS_MEASURE + TEXT_REQ + COMMA
                 + IngredientsEntry.INGREDIENTS_QUANTITY + REAL_REQ + COMMA

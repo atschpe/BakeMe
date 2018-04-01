@@ -63,7 +63,7 @@ public class IngredientAdapter
 
     @Override
     public void onBindViewHolder(IngredientAdapter.IngredientViewHolder holder, int position) {
-        final Ingredients currentItem = this.ingredientsList.get(position);
+        final Ingredients currentItem = ingredientsList.get(position);
 
         holder.ingredientTv.setText(currentItem.toString());
 

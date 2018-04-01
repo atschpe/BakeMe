@@ -46,7 +46,7 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             String selection = IngredientsEntry.INGREDIENTS_CHECKED + "=?";
-            String [] selectionArgs = new String[]{String.valueOf(IngredientsEntry.CHECKED_TRUE)};
+            String[] selectionArgs = new String[]{String.valueOf(IngredientsEntry.CHECKED_TRUE)};
             String sortOrder = IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE;
             csr = ctxt.getContentResolver().query(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                     null, selection, selectionArgs, sortOrder);
@@ -70,34 +70,39 @@ public class ListWidgetService extends RemoteViewsService {
             RemoteViews views = new RemoteViews(ctxt.getPackageName(),
                     R.layout.widget_ingredient_item);
             csr.moveToPosition(position);
-                String recipeName = csr.getString(csr.getColumnIndex(Ingredients
-                        .INGREDIENTS_ASSOCIATED_RECIPE));
-                long id = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ID));
-                String ingredient
-                        = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
-                String measure
-                        = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
-                double quantity
-                        = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
+            String recipeName = csr.getString(csr.getColumnIndex(Ingredients
+                    .INGREDIENTS_ASSOCIATED_RECIPE));
+            long id = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ID));
+            String ingredient
+                    = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
+            String measure
+                    = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
+            double quantity
+                    = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
 
-                //only show the recipe name on the first ingredient in the list.
-                if (recipeName.equals(prevRecipeName)) {
-                    views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
-                } else {
-                    views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
-                    views.setTextViewText(R.id.widget_recipe_tv, recipeName);
-                    prevRecipeName = recipeName;
-                }
+            //only show the recipe name on the first ingredient in the list.
+            if (recipeName.equals(prevRecipeName)) {
+                views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
+            } else {
+                views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
+                views.setTextViewText(R.id.widget_recipe_tv, recipeName);
+                prevRecipeName = recipeName;
+            }
 
-                views.setTextViewText(R.id.widget_ingredient_tv, ingredient);
+            views.setTextViewText(R.id.widget_ingredient_tv, ingredient);
 
-                // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
-                Bundle extras = new Bundle();
-                extras.putLong(EXTRA_ID, id);
-                extras.putString(EXTRA_RECIPE_NAME, recipeName);
-                Intent fillInIntent = new Intent();
-                fillInIntent.putExtras(extras);
-                views.setOnClickFillInIntent(R.id.widget_ingredient_tv, fillInIntent);
+            // Fill in the onClick PendingIntent Template using the Id for each item individually
+            Bundle extras = new Bundle();
+            extras.putLong(EXTRA_ID, id);
+            extras.putString(EXTRA_RECIPE_NAME, recipeName);
+            Intent fillInIntent = new Intent();
+            fillInIntent.putExtras(extras);
+
+            //This clicking on the text will open the overviewFragment
+            views.setOnClickFillInIntent(R.id.widget_ingredient_tv, fillInIntent);
+
+            //activating the checkbox will make the ingredient disappear
+            views.setOnClickFillInIntent(R.id.widget_ingredient_cb, fillInIntent);
 
             return views;
         }
