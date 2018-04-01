@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/floured_bench"
+    android:scaleType="centerCrop">
 
     <TextView
         android:id="@+id/widget_title"
@@ -14,6 +16,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:padding="@dimen/half_margin"
         android:id="@+id/shopping_list_empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +27,7 @@
         android:visibility="gone"/>
 
     <ListView
+        android:background="@drawable/rounded_background"
         android:id="@+id/bakewidget_ingredientList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

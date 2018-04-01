@@ -45,7 +45,7 @@ public class BakeWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        IngredientsService.startHandleActionUpdateWidget(ctxt);
+       // IngredientsService.startHandleActionUpdateWidget(ctxt);
     }
 
     @Override

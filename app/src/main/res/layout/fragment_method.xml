@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
+    android:background="@drawable/floured_bench"
     tools:context="com.example.android.bakeme.ui.MainActivity">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
@@ -30,12 +30,13 @@
 
     <TextView
         android:id="@+id/recipe_step_tv"
+        style="@style/text"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginBottom="@dimen/margin"
         android:layout_marginEnd="@dimen/margin"
         android:layout_marginStart="@dimen/margin"
-        android:background="@android:color/white"
+        android:background="@drawable/rounded_background"
         android:gravity="center"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

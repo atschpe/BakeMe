@@ -6,11 +6,12 @@
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/text"
         android:id="@+id/recipe_text_tv"
         android:layout_width="0dp"
         android:layout_height="16dp"
         android:layout_marginEnd="@dimen/margin"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/margin"
         app:layout_constraintBottom_toBottomOf="@+id/stepNo_tv"
         app:layout_constraintEnd_toStartOf="@+id/goToStep_iv"
         app:layout_constraintStart_toEndOf="@+id/stepNo_tv"
@@ -26,11 +27,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/recipe_text_tv"
         app:srcCompat="@android:drawable/ic_menu_view"
-        android:tint="@color/colorAccent"
+        android:tint="@color/colorPrimaryDark"
         android:layout_marginRight="@dimen/margin"
         android:contentDescription="@string/go_to_step_iv" />
 
     <TextView
+        style="@style/text"
         android:id="@+id/stepNo_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -17,4 +17,17 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
+    <style name="text">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="labels" parent="text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/half_margin</item>
+        <item name="android:background">@drawable/rounded_background</item>
+    </style>
+
 </resources>
