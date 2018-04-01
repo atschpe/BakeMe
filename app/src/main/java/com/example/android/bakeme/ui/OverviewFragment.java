@@ -13,6 +13,8 @@ import android.widget.CompoundButton;
 
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe;
+import com.example.android.bakeme.data.Recipe.Ingredients;
+import com.example.android.bakeme.data.Recipe.Steps;
 import com.example.android.bakeme.data.adapter.IngredientAdapter;
 import com.example.android.bakeme.data.adapter.StepAdapter;
 import com.example.android.bakeme.utils.RecipeUtils;
@@ -30,8 +32,8 @@ import timber.log.Timber;
 public class OverviewFragment extends Fragment {
 
     // lists for the recipe in question.
-    ArrayList<Recipe.Ingredients> ingredientsList;
-    ArrayList<Recipe.Steps> stepsList;
+    ArrayList<Ingredients> ingredientsList;
+    ArrayList<Steps> stepsList;
     boolean isFavourited;
     Recipe selectedRecipe;
 
@@ -79,12 +81,12 @@ public class OverviewFragment extends Fragment {
         }
 
         //setup favourite button
-        if (isFavourited) {
+        if (selectedRecipe.isFavourited()) {
            favButtonCb.setChecked(true);
-           Timber.v("favourite = true");
+           Timber.v("boolean – button setup: favourite = true");
         } else {
             favButtonCb.setChecked(false);
-            Timber.v("favourite = false");
+            Timber.v("boolean – button setup: favourite = false");
         }
 
         favButtonCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -113,16 +115,17 @@ public class OverviewFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void setIngredientsList(ArrayList<Recipe.Ingredients> ingredientsList) {
+    public void setIngredientsList(ArrayList<Ingredients> ingredientsList) {
         this.ingredientsList = ingredientsList;
     }
 
-    public void setStepsList(ArrayList<Recipe.Steps> stepsList) {
+    public void setStepsList(ArrayList<Steps> stepsList) {
         this.stepsList = stepsList;
     }
 
     public void setFavourited(boolean favourited) {
         isFavourited = favourited;
+        Timber.v("favourite boolean has been set.");
     }
 
     public void setSelectedRecipe(Recipe selectedRecipe) {

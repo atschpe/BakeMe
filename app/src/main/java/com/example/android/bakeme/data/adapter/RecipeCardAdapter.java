@@ -85,7 +85,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         if (!currentRecipe.getImage().isEmpty()) {
             recipeImage = currentRecipe.getImage();
 
-            //if there is no image, get the last thumbnail in the list
+            //todo: if there is no image, get the last thumbnail in the list
         }
 
         Picasso.with(ctxt).load(recipeImage)

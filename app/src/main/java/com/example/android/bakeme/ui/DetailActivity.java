@@ -147,6 +147,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         overviewFrag.setIngredientsList(ingredientsList);
         overviewFrag.setStepsList(stepsList);
         overviewFrag.setFavourited(isFavourited);
+        Timber.v("set boolean for favourited");
         overviewFrag.setSelectedRecipe(selectedRecipe);
 
         fragMan.beginTransaction().add(R.id.detail_fragment_container1, overviewFrag)
@@ -199,6 +200,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             case RecipeUtils.RECIPE_DETAIL_LOADER:
                 data.moveToFirst();
                 isFavourited = data.getInt(data.getColumnIndex(RECIPE_FAVOURITED)) != 0;
+                selectedRecipe.setFavourited(isFavourited);
                 Timber.v("Onloadfinished – favourited: " + isFavourited);
                 break;
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
