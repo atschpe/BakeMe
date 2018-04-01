@@ -66,19 +66,10 @@ public class BakeWidget extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.shopping_list_empty, pendingIntent);
         }
 
-        // Set the IngredientRemover intent to launch when clicked
-        Bundle getData = intent.getExtras();
-        Ingredients currentIngredients = null;
-        if (getData != null && getData.containsKey(ListWidgetService.EXTRA_ID)) {
-            Timber.v("BakeWidget: Bundle accessed");
-            currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
-        }
-
         //set Intent Template to remove clicked ingredient
         Intent removeIngredientIntent = new Intent(ctxt, IngredientsService.class);
         removeIngredientIntent.setAction(IngredientsService.ACTION_REMOVE_INGREDIENTS);
-        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_INGREDIENT, currentIngredients);
-        PendingIntent appPendingIntent = PendingIntent.getActivity(ctxt, 0,
+        PendingIntent appPendingIntent = PendingIntent.getService(ctxt, 0,
                 removeIngredientIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.bakewidget_ingredientList, appPendingIntent);
 

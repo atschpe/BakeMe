@@ -51,7 +51,8 @@ public class IngredientsService extends IntentService {
                 if (getData != null && getData.containsKey(ListWidgetService.EXTRA_ID)) {
                     currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
                 }
-                handleActionRemoveIngredients(currentIngredients);
+                if (currentIngredients != null) {
+                handleActionRemoveIngredients(currentIngredients);}
             } if (action.equals(ACTION_UPDATE_WIDGET)) {
                 handleActionUpdateWidget();
             }
@@ -60,7 +61,6 @@ public class IngredientsService extends IntentService {
 
     //set checked to '0'
     private void handleActionRemoveIngredients(Ingredients currentIngredients) {
-        Timber.v("handleActionRemoveIngredients called");
         currentIngredients.setChecked(false);
         RecipeUtils.updateCheckedDb(currentIngredients.getAssociatedRecipe(), currentIngredients,
                 getBaseContext());

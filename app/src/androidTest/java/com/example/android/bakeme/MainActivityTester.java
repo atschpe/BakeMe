@@ -1,6 +1,7 @@
 package com.example.android.bakeme;
 
 import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -62,9 +63,9 @@ public class MainActivityTester {
     // (*)the ingredient checkboxes are revealed
     @Test
     public void favouriteRecipeInDetailTest() {
-        onData(withId(R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
-        onData(withId(R.id.recipe_favourite_cb)).perform(click())
-                .check(matches(isChecked()));
+        onView(withId(R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
+        onView(withId(R.id.recipe_favourite_cb)).perform(RecyclerViewActions.actionOnItemAtPosition(0, (click())));
+                //.check(matches(isChecked()));
         onView(withId(R.id.ingredient_cb)).check(matches(isDisplayed()));
 
         onData(Matchers.anything()).inAdapterView(withId(R.id.ingredient_cb))
