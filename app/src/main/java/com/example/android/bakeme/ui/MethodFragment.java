@@ -115,16 +115,17 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
                 == Configuration.ORIENTATION_LANDSCAPE
                 && !getResources().getBoolean(R.bool.isTablet);
 
-        playerCurrentPosition = C.TIME_UNSET;;
+        playerCurrentPosition = C.TIME_UNSET;
+        ;
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(RecipeUtils.STEP_LIST)){
+            if (savedInstanceState.containsKey(RecipeUtils.STEP_LIST)) {
                 stepsList = savedInstanceState.getParcelableArrayList(String.valueOf(
                         RecipeUtils.STEP_LIST));
             }
-            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_STEP)){
+            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_STEP)) {
                 step = savedInstanceState.getParcelable(String.valueOf(RecipeUtils.SELECTED_STEP));
             }
-            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_RECIPE)){
+            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_RECIPE)) {
                 recipe = savedInstanceState.getParcelable(String.valueOf(
                         RecipeUtils.SELECTED_RECIPE));
             }
@@ -434,9 +435,11 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
     //Release ExoPlayer when it is no longer needed.
     private void releasePlayer() {
-        exoPlayer.stop();
-        exoPlayer.release();
-        exoPlayer = null;
+        if (exoPlayer != null) {
+            exoPlayer.stop();
+            exoPlayer.release();
+            exoPlayer = null;
+        }
     }
 
     private void updateStepText() {
