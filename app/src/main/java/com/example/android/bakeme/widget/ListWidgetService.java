@@ -45,8 +45,8 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             if (csr != null) csr.close();
-            String selection = Ingredients.INGREDIENTS_CHECKED + ">?";
-            String[] selectionArgs = new String[]{"0"};
+            String selection = Ingredients.INGREDIENTS_CHECKED + "=?";
+            String[] selectionArgs = new String[]{"1"};
             csr = getContentResolver().query(RecipeProvider.CONTENT_URI_INGREDIENTS, null,
                     selection, selectionArgs, Ingredients.INGREDIENTS_ASSOCIATED_RECIPE);
             Timber.v(String.valueOf(csr));
