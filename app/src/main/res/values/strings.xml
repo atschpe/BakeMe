@@ -5,7 +5,6 @@
     <string name="go_to_step_iv">go to step</string>
     <string name="thumbnail_of_video">Thumbnail of video</string>
     <string name="tablet_tag">sw600dp</string>
-    <string name="widget_title">Shopping list for </string>
     <string name="favourite_menu">Favourite</string>
 
     <!-- Exoplayer-->
@@ -21,6 +20,8 @@
     <string name="recipe_card_image_contDescrip">Recipe card image</string>
     <string name="widget_title_contenDescrip">BakeMe app, shopping list widget</string>
     <string name="favourited_recipe">favouriteFlag recipe</string>
+    <string name="separator_widget_contentDescrip">list separator</string>
+    <string name="bakeground_widget_contDescrip">BakeMe app icon in the background.</string>
 
     <!-- toasts and other messages -->
     <string name="landscape_instruction"> &lt; previous step | swipe right &gt;</string>
@@ -29,9 +30,11 @@
     <string name="no_internet">There is currently not internet connection.</string>
     <string name="no_detail_step_available">No details have been provided for this step.</string>
     <string name="favourite_snack_message">Select the ingredients for your shopping list.</string>
-    <string name="favourite_info_dialog">You can select ingredients by ticking their checkboxes. These ingredients will be listed in the BakeMe widget, which you can install on your home screen. As you shop for your ingredients you can the remove each ingredient from the list once acquired by swiping them off the list. Once the list is empty you know you are ready to start baking.</string>
+    <string name="favourite_info_dialog">You can select ingredients by ticking their checkboxes, which will then be displayed as a shopping list in the BakeMe widget. As you shop for your ingredients you can the remove each ingredient from the list once acquired by swiping them off the list.</string>
     <string name="favourite_title_dialog">Time to go shopping</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
+    <string name="widget_all_available">You have all ingredients to make your  favourited recipe(s)!</string>
+    <string name="widget_no_recipes">You have not favourited any Recipes for your shopping list.</string>
 
     <!-- tags for intents, bundles and persistence -->
     <string name="INGREDIENT_LIST" translatable="false">ingredient list</string>
@@ -46,8 +49,4 @@
     <string name="associated_recipe">associatedRecipe</string>
     <string name="favourite_button">favourite button</string>
     <string name="unknown_uri">Unknown URI:</string>
-    <string name="widget_all_available">You have all ingredients to make the recipe!</string>
-    <string name="widget_no_recipes">You have not favourited any Recipes for your shopping list.</string>
-
-
 </resources>

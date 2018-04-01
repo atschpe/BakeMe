@@ -20,6 +20,7 @@ import com.example.android.bakeme.data.Recipe.Steps;
 import com.example.android.bakeme.data.adapter.IngredientAdapter;
 import com.example.android.bakeme.data.adapter.StepAdapter;
 import com.example.android.bakeme.utils.RecipeUtils;
+import com.example.android.bakeme.widget.IngredientsService;
 
 import java.util.ArrayList;
 
@@ -142,6 +143,7 @@ public class OverviewFragment extends Fragment {
                 loadManagerRestart.onLoaderRestarted();
                 ingredientAdapter.notifyDataSetChanged();
                 RecipeUtils.setFavIsUpdated(true);
+                IngredientsService.startHandleActionUpdateWidget(getActivity());
             }
         });
         return root;

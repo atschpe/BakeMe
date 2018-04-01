@@ -14,10 +14,12 @@ import com.example.android.bakeme.data.db.RecipeProvider;
 
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 public class ListWidgetService extends RemoteViewsService {
     private String EXTRA_ID = "extra_id";
     private String EXTRA_RECIPE_NAME = "extra_recipe_id";
-    private boolean recipeNameAlreadyUsed = false;
+    private String prevRecipeName;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -36,7 +38,8 @@ public class ListWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-
+            Timber.plant(new Timber.DebugTree());
+            Timber.v("Timber is working within the widget classes");
         }
 
         //Called when first launched and on any update made from within the app or widget
@@ -62,6 +65,7 @@ public class ListWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
+            Timber.v("getViewAt() is called");
             if (csr != null && csr.getCount() > 0) csr.close();
                 csr.moveToPosition(position);
             String recipeName = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE));
@@ -72,7 +76,9 @@ public class ListWidgetService extends RemoteViewsService {
             ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
 
             RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.widget_ingredient_item);
-            if (recipeNameAlreadyUsed) {
+
+            //only show the recipe name on the first ingredient in the list.
+            if (recipeName.equals(prevRecipeName)) {
                 views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
             } else {
                 views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);

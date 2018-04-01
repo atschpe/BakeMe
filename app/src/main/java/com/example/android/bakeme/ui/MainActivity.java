@@ -30,6 +30,8 @@ import com.example.android.bakeme.data.api.ApiInterface;
 import com.example.android.bakeme.data.db.RecipeProvider;
 import com.example.android.bakeme.databinding.ActivityMainBinding;
 import com.example.android.bakeme.utils.RecipeUtils;
+import com.example.android.bakeme.widget.BakeWidget;
+import com.example.android.bakeme.widget.IngredientsService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         RecipeUtils.updateFavDb(recipe, this);
         getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
                 this);
+        IngredientsService.startHandleActionUpdateWidget(this);
     }
 
     /**

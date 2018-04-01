@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/floured_bench"
     android:orientation="vertical"
     android:scaleType="centerCrop">
 
@@ -10,7 +9,6 @@
         android:id="@+id/bakewidget_ingredientList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin"
         android:background="@drawable/rounded_background"
         android:contentDescription="@string/widget_title_contenDescrip" />
 
@@ -34,7 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.1"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="@string/bakeground_widget_contDescrip" />
     </RelativeLayout>
 
 </FrameLayout>

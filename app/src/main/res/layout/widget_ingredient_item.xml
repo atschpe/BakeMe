@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxLines="4"
+    android:orientation="vertical"
     android:paddingEnd="@dimen/half_margin"
     android:paddingRight="@dimen/half_margin">
+
+    <View
+        android:id="@+id/widget_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/widget_recipe_tv"
+        style="@style/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/half_margin"
+        android:textStyle="bold"
+        tools:text="Recipe Title" />
 
     <TextView
         android:id="@+id/widget_ingredient_tv"
         style="@style/text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/half_margin"
-        android:layout_marginEnd="@dimen/half_margin"
-        android:layout_marginRight="@dimen/half_margin"
-        android:layout_marginTop="@dimen/half_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/widget_recipe_tv"
-        app:layout_constraintTop_toBottomOf="@+id/widget_recipe_tv"
-        tools:text="listed ingredient" />
-
-    <TextView
-        style="@style/text"
-        android:textStyle="bold"
-        android:id="@+id/widget_recipe_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/half_margin"
-        android:layout_marginStart="@dimen/half_margin"
-        android:layout_marginTop="@dimen/half_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Recipe Title" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_margin="@dimen/half_margin"
+        tools:text="listed ingredient" />
+
+</LinearLayout>

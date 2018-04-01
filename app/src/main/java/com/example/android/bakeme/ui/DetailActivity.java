@@ -25,6 +25,7 @@ import com.example.android.bakeme.data.db.RecipeDao;
 import com.example.android.bakeme.data.db.RecipeDatabase;
 import com.example.android.bakeme.data.db.RecipeProvider;
 import com.example.android.bakeme.utils.RecipeUtils;
+import com.example.android.bakeme.widget.IngredientsService;
 
 import java.util.ArrayList;
 
@@ -292,5 +293,6 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         RecipeUtils.updateCheckedDb(selectedRecipe.getName(), ingredients, this);
         getSupportLoaderManager().restartLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
                 this);
+        IngredientsService.startHandleActionUpdateWidget(this);
     }
 }

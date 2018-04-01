@@ -32,12 +32,11 @@ public class WidgetUtils {
         return favRecipeIds;
     }
 
-    public static ArrayList<Ingredients> getCheckedIngredients(long favRecipeId,
-                                                                      Context ctxt) {
+    public static ArrayList<Ingredients> getCheckedIngredients(Context ctxt) {
         ArrayList<Ingredients> checkedIngredientsList = new ArrayList<>();
 
-        String selection = Ingredients.INGREDIENTS_ASSOCIATED_RECIPE + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(favRecipeId)};
+        String selection = Ingredients.INGREDIENTS_CHECKED + "=?";
+        String[] selectionArgs = new String[]{String.valueOf("1")};
 
         Cursor csr = ctxt.getContentResolver().query(RecipeProvider.CONTENT_URI_INGREDIENTS,
                 null, selection, selectionArgs, null);
