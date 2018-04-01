@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Steps;
-import com.example.android.bakeme.data.db.RecipeContract;
 import com.example.android.bakeme.data.db.RecipeContract.StepsEntry;
 import com.example.android.bakeme.utils.RecipeUtils;
 import com.google.android.exoplayer2.C;
@@ -287,7 +285,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
         exoPlayer.stop();
         if (!step.getVideo().isEmpty()) {
             MediaSource mediaSource = getMediaSource();
-            exoPlayer.prepare(mediaSource);
+            exoPlayer.prepare(mediaSource,false, true);
             exoPlayer.setPlayWhenReady(true);
         } else {
             videoThumbnailIv.setVisibility(View.VISIBLE);
@@ -375,7 +373,10 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
 
             // Prepare the MediaSource and start playing
             if (!step.getVideo().isEmpty()) {
-                exoPlayer.prepare(getMediaSource());
+                if (playerCurrentPosition != C.TIME_UNSET) {
+                    exoPlayer.seekTo(playerCurrentPosition);
+                }
+                exoPlayer.prepare(getMediaSource(), false, true);
                 exoPlayer.setPlayWhenReady(playWhenReady);
                 videoThumbnailIv.setVisibility(View.INVISIBLE);
             } else {
