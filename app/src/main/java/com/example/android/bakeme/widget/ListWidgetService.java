@@ -79,12 +79,12 @@ public class ListWidgetService extends RemoteViewsService {
                         = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
                 double quantity
                         = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
-                ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
-
-                Ingredients currentIngredients = ingredientsList.get(position);
+//                ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
+//
+//                Ingredients currentIngredients = ingredientsList.get(position);
 
                 //only show the recipe name on the first ingredient in the list.
-                if (currentIngredients.getAssociatedRecipe().equals(prevRecipeName)) {
+                if (recipeName.equals(prevRecipeName)) {
                     views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
                 } else {
                     views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
@@ -92,8 +92,7 @@ public class ListWidgetService extends RemoteViewsService {
                     prevRecipeName = recipeName;
                 }
 
-                views.setTextViewText(R.id.widget_ingredient_tv, currentIngredients.toString());
-                Timber.v(currentIngredients.toString());
+                views.setTextViewText(R.id.widget_ingredient_tv, ingredient);
 
                 // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
                 Bundle extras = new Bundle();

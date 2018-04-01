@@ -31,37 +31,6 @@ import timber.log.Timber;
  */
 public class RecipeProvider extends ContentProvider {
 
-//    //authority & uri
-//    public static final String CONTENT_AUTH = "com.example.android.bakeme";
-//    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTH);
-//
-//    //paths for the tables
-//    public static final String PATH_RECIPE = "recipe";
-//    public static final String PATH_STEPS = "steps";
-//    public static final String PATH_INGREDIENTS = "ingredients";
-
-//    // table uris
-//    public static final Uri CONTENT_URI_RECIPE = BASE_CONTENT_URI.buildUpon()
-//            .appendPath(PATH_RECIPE).build();
-//    public static final Uri CONTENT_URI_STEPS = BASE_CONTENT_URI.buildUpon()
-//            .appendPath(PATH_STEPS).build();
-//    public static final Uri CONTENT_URI_INGREDIENTS = BASE_CONTENT_URI.buildUpon()
-//            .appendPath(PATH_INGREDIENTS).build();
-//
-//    //MIME types
-//    public static final String CONTENT_LIST_TYPE_RECIPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
-//            + CONTENT_AUTH + PATH_RECIPE;
-//    public static final String CONTENT_ITEM_TYPE_RECIPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
-//            + CONTENT_AUTH + PATH_RECIPE;
-//    public static final String CONTENT_LIST_TYPE_STEPS = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
-//            + CONTENT_AUTH + PATH_STEPS;
-//    public static final String CONTENT_ITEM_TYPE_STEPS = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
-//            + CONTENT_AUTH + PATH_STEPS;
-//    public static final String CONTENT_LIST_TYPE_INGREDIENTS = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
-//            + CONTENT_AUTH + PATH_INGREDIENTS;
-//    public static final String CONTENT_ITEM_TYPE_INGREDIENTS = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
-//            + CONTENT_AUTH + PATH_INGREDIENTS;
-
     private static final int RECIPE_LIST = 100; //match code for all recipes
     private static final int RECIPE_ENTRY = 101; // match code for one recipe
 
@@ -112,17 +81,14 @@ public class RecipeProvider extends ContentProvider {
             case RECIPE_LIST:
                 csr = dbReader.query(RecipeEntry.TABLE_RECIPE, projection, selection, selectionArgs,
                         null, null, sortOrder);
-                //csr = recipeDao.QueryAllRecipes();
                 break;
             case INGREDIENTS_LIST:
                 csr = dbReader.query(IngredientsEntry.TABLE_INGREDIENTS, projection,
                         selection, selectionArgs, null, null, sortOrder);
-                //csr = recipeDao.QueryAllIngredients(RecipeUtils.getCurrentRecipeName());
                 break;
             case STEPS_LIST:
                 csr = dbReader.query(StepsEntry.TABLE_STEPS, projection, selection, selectionArgs,
                         null, null, sortOrder);
-                //csr = recipeDao.QueryAllSteps(RecipeUtils.getCurrentRecipeName());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown uri, which cannot be queried: " + uri);
@@ -161,18 +127,15 @@ public class RecipeProvider extends ContentProvider {
         switch (match) {
             case RECIPE_LIST:
                 long recipeId = dbWriter.insert(RecipeEntry.TABLE_RECIPE, null, values);
-                //long recipeId = recipeDao.insertRecipe(Recipe.fromContentValues(values));
                 getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(uri, recipeId);
             case INGREDIENTS_LIST:
                 long ingredientsId = dbWriter.insert(IngredientsEntry.TABLE_INGREDIENTS,
                         null, values);
-                //long ingredientsId = recipeDao.insertIngredient(Ingredients.fromContentValues(values));
                 getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(uri, ingredientsId);
             case STEPS_LIST:
                 long stepsId = dbWriter.insert(StepsEntry.TABLE_STEPS, null, values);
-                //long stepsId = recipeDao.insertStep(Steps.fromContentValues(values));
                 getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(uri, stepsId);
             default:
@@ -191,18 +154,14 @@ public class RecipeProvider extends ContentProvider {
         int match = getMatch(uri);
         switch (match) { //we only need to update single recipe and ingredient items
             case RECIPE_ENTRY:
-                //Recipe recipe = Recipe.fromContentValues(values);
                 int countRecipe = dbWriter.update(RecipeEntry.TABLE_RECIPE, values, selection,
                         selectionArgs);
-                //int countRecipe = recipeDao.updateRecipe(recipe);
                 getContext().getContentResolver().notifyChange(uri, null);
                 Timber.v("recipe update: " + countRecipe);
                 return countRecipe;
             case INGREDIENTS_ENTRY:
-                //Ingredients ingredient = Ingredients.fromContentValues(values);
                 int countIngredient = dbWriter.update(IngredientsEntry.TABLE_INGREDIENTS, values,
                         selection, selectionArgs);
-                //int countIngredient = recipeDao.updateIngredient(ingredient);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return countIngredient;
             default:
