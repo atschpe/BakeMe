@@ -61,7 +61,7 @@ public class OverviewFragment extends Fragment {
         Timber.v("ingredients: %s", ingredientsList);
         Timber.v("steps: %s", stepsList);
 
-        //Setup Ingredient adapter
+        //Setup adapters
         if (ingredientsList != null) {
             ingredientAdapter = new IngredientAdapter(getActivity(), ingredientsList);
             ingredientRv.setAdapter(ingredientAdapter);
@@ -78,7 +78,8 @@ public class OverviewFragment extends Fragment {
             stepAdapter.notifyDataSetChanged();
         }
 
-        if (selectedRecipe.isFavourited()) {
+        //setup favourite button
+        if (isFavourited) {
            favButtonCb.setChecked(true);
            Timber.v("favourite = true");
         } else {

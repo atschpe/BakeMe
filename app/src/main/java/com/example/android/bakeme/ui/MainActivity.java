@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         return idlingResource;
     }
 
-    private static int RECIPE_LOADER = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                 setAdapter(this, recipeList, this);
             }
         } else {
-            getSupportLoaderManager().initLoader(RECIPE_LOADER, null,
+            getSupportLoaderManager().initLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
                     MainActivity.this);
         }
     }
@@ -90,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     @Override
     protected void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(RECIPE_LOADER,null, this);
-
+        getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER,null, this);
+        //TODO: cursor is empty when coming from onResume. why?
     }
 
     //Make sure we have internet before we load the data.
@@ -153,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                 }
             });
         } else {
-            getSupportLoaderManager().initLoader(RECIPE_LOADER, null,
+            getSupportLoaderManager().initLoader(RecipeUtils.RECIPE_MAIN_LOADER, null,
                     MainActivity.this);
         }
     }
@@ -196,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
             values.put(Recipe.RECIPE_FAVOURITED, R.integer.not_checked);
         }
         RecipeUtils.updateFavDb(recipe, this);
-        getSupportLoaderManager().restartLoader(RECIPE_LOADER, null, this);
+        getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null, this);
         recipeCardAdapter.notifyItemChanged(recipePosition);
     }
 

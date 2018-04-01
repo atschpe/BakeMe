@@ -20,6 +20,12 @@ import timber.log.Timber;
  */
 public class RecipeUtils {
 
+    //Loader constants
+    public static final int RECIPE_DETAIL_LOADER = 21;
+    public static final int INGREDIENTS_DETAIL_LOADER = 22;
+    public static final int STEPS_DETAIL_LOADER = 23;
+    public static int RECIPE_MAIN_LOADER = 11;
+
     public static long getCurrentRecipeId() {
         return currentRecipeId;
     }
