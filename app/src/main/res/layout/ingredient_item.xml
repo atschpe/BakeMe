@@ -24,6 +24,7 @@
         tools:text="listed ingredient" />
 
     <CheckBox
+        android:theme="@style/check"
         android:id="@+id/ingredient_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

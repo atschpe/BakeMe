@@ -28,6 +28,10 @@
     <string name="swiper_last_step_toast">This is the last step of this recipe.</string>
     <string name="no_internet">There is currently not internet connection.</string>
     <string name="no_detail_step_available">No details have been provided for this step.</string>
+    <string name="favourite_snack_message">Select the ingredients for your shopping list.</string>
+    <string name="favourite_info_dialog">You can select ingredients by ticking their checkboxes. These ingredients will be listed in the BakeMe widget, which you can install on your home screen. As you shop for your ingredients you can the remove each ingredient from the list once acquired by swiping them off the list. Once the list is empty you know you are ready to start baking.</string>
+    <string name="favourite_title_dialog">Time to go shopping</string>
+    <string name="ok">Ok</string>
 
     <!-- tags for intents, bundles and persistence -->
     <string name="INGREDIENT_LIST" translatable="false">ingredient list</string>
@@ -42,9 +46,7 @@
     <string name="associated_recipe">associatedRecipe</string>
     <string name="favourite_button">favourite button</string>
     <string name="unknown_uri">Unknown URI:</string>
-    <string name="favourite_snack_message">Select the ingredients for your shopping list.</string>
-    <string name="favourite_info_dialog">You can select ingredients by ticking their checkboxes. These ingredients will be listed in the BakeMe widget, which you can install on your home screen. As you shop for your ingredients you can the remove each ingredient from the list once acquired by swiping them off the list. Once the list is empty you know you are ready to start baking.</string>
-    <string name="favourite_title_dialog">Time to go shopping</string>
-    <string name="ok">Ok</string>
+    <string name="widget_all_available">You have all ingredients to make the recipe!</string>
+
 
 </resources>

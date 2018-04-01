@@ -2,35 +2,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/floured_bench"
+    android:orientation="vertical"
     android:scaleType="centerCrop">
 
-    <TextView
-        android:id="@+id/widget_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        tools:text="@string/widget_title"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:padding="@dimen/half_margin"
-        android:id="@+id/shopping_list_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:background="@color/colorAccent"
-        android:textColor="@color/colorPrimaryDark"
-        tools:text="You have all ingredients to make the recipe!"
-        android:visibility="gone"/>
-
     <ListView
-        android:background="@drawable/rounded_background"
         android:id="@+id/bakewidget_ingredientList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin"
+        android:background="@drawable/rounded_background"
         android:contentDescription="@string/widget_title_contenDescrip" />
+
+    <RelativeLayout
+        android:id="@+id/shopping_list_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/empty_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin"
+            android:background="@drawable/rounded_background"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/half_margin"
+            android:textColor="@color/colorPrimaryDark"
+            tools:text="@string/widget_all_available" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.1"
+            android:src="@drawable/ic_launcher_foreground" />
+    </RelativeLayout>
+
 </FrameLayout>

@@ -1,19 +1,14 @@
 package com.example.android.bakeme.widget;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.widget.RemoteViews;
 
 import com.example.android.bakeme.R;
-import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.ui.DetailActivity;
-
-import java.util.ArrayList;
 
 /**
  * Implementation of App Widget functionality.
@@ -22,11 +17,8 @@ public class BakeWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
 
-        String recipeTitle = null; //TODO: retrieve title of favourited recipe(s)
-        CharSequence widgetText = String.valueOf(R.string.widget_title) + recipeTitle;
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.bake_widget);
-        views.setTextViewText(R.id.widget_title, widgetText);
 
         // Set the ListWidgetService intent to act as the adapter for the GridView
         Intent listServiceIntent = new Intent(ctxt, ListWidgetService.class);
@@ -37,7 +29,9 @@ public class BakeWidget extends AppWidgetProvider {
         PendingIntent appPendingIntent = PendingIntent.getActivity(ctxt, 0,
                 openDetailAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.shopping_list_empty, appPendingIntent);
-        // Handle empty gardens
+        // Handle empty shopping list
+        String emptyText= String.valueOf(R.string.widget_all_available); //TODO: check whether all_available or no recipe has been favourited
+        views.setTextViewText(R.id.empty_tv, emptyText);
         views.setEmptyView(R.id.bakewidget_ingredientList, R.id.shopping_list_empty);
 
         // Instruct the widget manager to update the widget

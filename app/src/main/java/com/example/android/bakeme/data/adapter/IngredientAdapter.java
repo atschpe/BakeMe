@@ -74,6 +74,11 @@ public class IngredientAdapter
 
         if (offerCheckBoxes) {
             holder.ingredientCb.setVisibility(View.VISIBLE);
+            if(currentItem.isChecked()) {
+                holder.ingredientCb.setChecked(true);
+            } else {
+                holder.ingredientCb.setChecked(false);
+            }
         } else {
             holder.ingredientCb.setVisibility(View.GONE);
         }

@@ -246,8 +246,8 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
                                 .INGREDIENTS_MEASURE));
                         int quantity = data.getInt(data.getColumnIndex(Ingredients
                                 .INGREDIENTS_QUANTITY));
-                        int checked = data.getInt(data.getColumnIndex(Ingredients
-                                .INGREDIENTS_CHECKED));
+                        boolean checked = data.getInt(data.getColumnIndex(Ingredients
+                                .INGREDIENTS_CHECKED)) != 0;
                         ingredientsList.add(new Ingredients(id, ingredient, measure, quantity,
                                 checked));
                     }
