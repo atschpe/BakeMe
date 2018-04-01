@@ -3,7 +3,6 @@ package com.example.android.bakeme.widget;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +10,7 @@ import android.support.annotation.Nullable;
 
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe.Ingredients;
-import com.example.android.bakeme.data.db.RecipeContract;
-import com.example.android.bakeme.data.db.RecipeContract.IngredientsEntry;
-import com.example.android.bakeme.data.db.RecipeProvider;
 import com.example.android.bakeme.utils.RecipeUtils;
-
-import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -53,15 +47,11 @@ public class IngredientsService extends IntentService {
             final String action = intent.getAction();
             if (action.equals(ACTION_REMOVE_INGREDIENTS)) {
                 Bundle getData = intent.getExtras();
-                long ingredientId = 0;
-                String recipeName = null;
                 Ingredients currentIngredients = null;
                 if (getData != null && getData.containsKey(ListWidgetService.EXTRA_ID)) {
-                    ingredientId = getData.getLong(ListWidgetService.EXTRA_ID);
-                    recipeName = getData.getString(ListWidgetService.EXTRA_NAME);
-                    currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_LIST);
+                    currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
                 }
-                handleActionRemoveIngredients(ingredientId, recipeName, currentIngredients);
+                handleActionRemoveIngredients(currentIngredients);
             } if (action.equals(ACTION_UPDATE_WIDGET)) {
                 handleActionUpdateWidget();
             }
@@ -69,12 +59,11 @@ public class IngredientsService extends IntentService {
     }
 
     //set checked to '0'
-    private void handleActionRemoveIngredients(long ingredientId, String recipeName,
-                                               Ingredients currentIngredients) {
+    private void handleActionRemoveIngredients(Ingredients currentIngredients) {
         Timber.v("handleActionRemoveIngredients called");
         currentIngredients.setChecked(false);
-        currentIngredients.setId(ingredientId);
-        RecipeUtils.updateCheckedDb(recipeName, currentIngredients, getBaseContext());
+        RecipeUtils.updateCheckedDb(currentIngredients.getAssociatedRecipe(), currentIngredients,
+                getBaseContext());
 
         AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetMan.getAppWidgetIds(new ComponentName(this,

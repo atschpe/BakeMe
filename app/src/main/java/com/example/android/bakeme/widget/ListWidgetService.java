@@ -18,7 +18,7 @@ import timber.log.Timber;
 public class ListWidgetService extends RemoteViewsService {
     public static String EXTRA_ID = "extra_id";
     public static String EXTRA_NAME = "extra_name";
-    public static String EXTRA_LIST = "extra_pojo";
+    public static String EXTRA_INGREDIENT = "extra_pojo";
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -81,18 +81,14 @@ public class ListWidgetService extends RemoteViewsService {
                     = csr.getDouble(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_QUANTITY));
 
             //set data to the Ingredient POJO, so to use the toString() method.
-            ArrayList<Ingredients> ingredients = new ArrayList<>();
-            ingredients.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
+            Ingredients currentIngredient = new Ingredients(id, ingredient, measure, quantity,
+                    recipeName);
 
-            Ingredients currentIngredient = ingredients.get(0);
-
-            views.setTextViewText(R.id.widget_ingredient_tv, ingredients.toString());
+            views.setTextViewText(R.id.widget_ingredient_tv, currentIngredient.toString());
 
             // Fill in the onClick PendingIntent Template using the Id for each item individually
             Bundle extras = new Bundle();
-            extras.putLong(EXTRA_ID, id);
-            extras.putString (EXTRA_NAME, recipeName);
-            extras.putParcelable(EXTRA_LIST, currentIngredient);
+            extras.putParcelable(EXTRA_INGREDIENT, currentIngredient);
             Intent fillInIntent = new Intent();
             fillInIntent.putExtras(extras);
 

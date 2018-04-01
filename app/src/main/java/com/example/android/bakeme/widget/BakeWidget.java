@@ -15,8 +15,6 @@ import com.example.android.bakeme.ui.MainActivity;
 import com.example.android.bakeme.utils.RecipeUtils;
 import com.example.android.bakeme.utils.WidgetUtils;
 
-import java.util.ArrayList;
-
 import timber.log.Timber;
 
 /**
@@ -70,22 +68,16 @@ public class BakeWidget extends AppWidgetProvider {
 
         // Set the IngredientRemover intent to launch when clicked
         Bundle getData = intent.getExtras();
-        long ingredientId = 0;
-        String recipeName = null;
         Ingredients currentIngredients = null;
         if (getData != null && getData.containsKey(ListWidgetService.EXTRA_ID)) {
             Timber.v("BakeWidget: Bundle accessed");
-            ingredientId = getData.getLong(ListWidgetService.EXTRA_ID);
-            recipeName = getData.getString(ListWidgetService.EXTRA_NAME);
-            currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_LIST);
+            currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
         }
 
         //set Intent Template to remove clicked ingredient
         Intent removeIngredientIntent = new Intent(ctxt, IngredientsService.class);
         removeIngredientIntent.setAction(IngredientsService.ACTION_REMOVE_INGREDIENTS);
-        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_ID, ingredientId);
-        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_NAME, recipeName);
-        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_LIST, currentIngredients);
+        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_INGREDIENT, currentIngredients);
         PendingIntent appPendingIntent = PendingIntent.getActivity(ctxt, 0,
                 removeIngredientIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.bakewidget_ingredientList, appPendingIntent);

@@ -14,6 +14,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.Matchers.not;
 
@@ -61,8 +62,8 @@ public class MainActivityTester {
     // (*)the ingredient checkboxes are revealed
     @Test
     public void favouriteRecipeInDetailTest() {
-        onView(withId(R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
-        onView(withId(R.id.recipe_favourite_cb)).perform(click())
+        onData(withId(R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
+        onData(withId(R.id.recipe_favourite_cb)).perform(click())
                 .check(matches(isChecked()));
         onView(withId(R.id.ingredient_cb)).check(matches(isDisplayed()));
 
@@ -75,8 +76,8 @@ public class MainActivityTester {
     // (*)the ingredient checkboxes are hidden
     @Test
     public void unFavouriteRecipeInDetailTest() {
-        onView(withId(R.id.recipe_favourite_cb)).check(matches(isChecked()));
-        onView(withId(R.id.recipe_favourite_cb)).perform(click()).check(matches(isNotChecked()));
+        onData(withId(R.id.recipe_favourite_cb)).check(matches(isChecked()));
+        onData(withId(R.id.recipe_favourite_cb)).perform(click()).check(matches(isNotChecked()));
         onView(withId(R.id.ingredient_cb)).check(matches(not(isDisplayed())));
 
         onData(Matchers.anything()).inAdapterView(withId(R.id.overview_favourite_cb))
