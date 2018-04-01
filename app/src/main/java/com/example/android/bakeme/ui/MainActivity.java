@@ -187,11 +187,10 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     @Override
     public void onFavClick(Recipe recipe, int recipePosition, boolean isChecked) {
-        ContentValues values = new ContentValues();
         if (isChecked) {
-            values.put(Recipe.RECIPE_FAVOURITED, R.integer.is_checked);
+            recipe.setFavourited(true);
         } else {
-            values.put(Recipe.RECIPE_FAVOURITED, R.integer.not_checked);
+            recipe.setFavourited(false);
         }
         RecipeUtils.updateFavDb(recipe, this);
         getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null, this);
