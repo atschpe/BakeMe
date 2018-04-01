@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 public class WidgetUtils {
 
-    public static ArrayList<Long> getFavouritedRecipes(Context ctxt) {
-        ArrayList<Long> favRecipeIds = new ArrayList<>();
+    public static ArrayList<Recipe> getFavouritedRecipes(Context ctxt) {
+        ArrayList<Recipe> favRecipe = new ArrayList<>();
 
         String selection = Recipe.RECIPE_FAVOURITED + "=?";
         String[] selectionArgs = new String[]{"1"};
@@ -21,15 +21,12 @@ public class WidgetUtils {
         Cursor csr = ctxt.getContentResolver().query(RecipeProvider.CONTENT_URI_RECIPE,
                 null, selection, selectionArgs, null);
         if (csr == null) {
-            favRecipeIds = null;
+            favRecipe = null;
         } else {
             csr.moveToFirst();
-            while (csr.moveToNext()) {
-                long favRecipeId = csr.getLong(csr.getColumnIndex(Recipe.RECIPE_ID));
-                favRecipeIds.add(favRecipeId);
-            }
+            RecipeUtils.getRecipeDataFromCursor(csr, favRecipe);
         }
-        return favRecipeIds;
+        return favRecipe;
     }
 
     public static ArrayList<Ingredients> getCheckedIngredients(Context ctxt) {

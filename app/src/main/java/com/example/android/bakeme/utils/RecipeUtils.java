@@ -16,6 +16,12 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.example.android.bakeme.data.Recipe.RECIPE_FAVOURITED;
+import static com.example.android.bakeme.data.Recipe.RECIPE_ID;
+import static com.example.android.bakeme.data.Recipe.RECIPE_IMAGE;
+import static com.example.android.bakeme.data.Recipe.RECIPE_NAME;
+import static com.example.android.bakeme.data.Recipe.RECIPE_SERVINGS;
+
 /**
  * Methods enabling the storing of the recipe information.
  */
@@ -63,7 +69,7 @@ public class RecipeUtils {
         }
     }
 
-    private static void getRecipeValues(ContentValues singleRecipe, Recipe receivedRecipe) {
+    public static void getRecipeValues(ContentValues singleRecipe, Recipe receivedRecipe) {
         singleRecipe.put(Recipe.RECIPE_ID, receivedRecipe.getId());
         singleRecipe.put(Recipe.RECIPE_IMAGE, receivedRecipe.getImage());
         singleRecipe.put(Recipe.RECIPE_NAME, receivedRecipe.getName());
@@ -174,5 +180,16 @@ public class RecipeUtils {
                 stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
         }
         return stepsList;
+    }
+
+    public static void getRecipeDataFromCursor(Cursor data, ArrayList<Recipe> recipeList) {
+        while (data.moveToNext()) {
+            int id = data.getInt(data.getColumnIndex(RECIPE_ID));
+            String image = data.getString((data.getColumnIndex(RECIPE_IMAGE)));
+            String name = data.getString(data.getColumnIndex(RECIPE_NAME));
+            int servings = data.getInt(data.getColumnIndex(RECIPE_SERVINGS));
+            boolean favourited = data.getInt(data.getColumnIndex(RECIPE_FAVOURITED)) != 0;
+            recipeList.add(new Recipe(id, image, name, servings, favourited));
+        }
     }
 }

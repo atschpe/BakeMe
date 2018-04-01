@@ -39,17 +39,18 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public void onCreate() {
             Timber.plant(new Timber.DebugTree());
-            Timber.v("Timber is working within the widget classes");
         }
 
         //Called when first launched and on any update made from within the app or widget
         @Override
         public void onDataSetChanged() {
             if (csr != null) csr.close();
-            String selection = Ingredients.INGREDIENTS_CHECKED + "=?";
-            String[] selectionArgs = new String[]{"1"};
+            String selection = Ingredients.INGREDIENTS_CHECKED + ">?";
+            String[] selectionArgs = new String[]{"0"};
             csr = getContentResolver().query(RecipeProvider.CONTENT_URI_INGREDIENTS, null,
                     selection, selectionArgs, Ingredients.INGREDIENTS_ASSOCIATED_RECIPE);
+            Timber.v(String.valueOf(csr));
+            Timber.v(String.valueOf(csr.getCount()));
         }
 
         @Override
@@ -66,35 +67,38 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             Timber.v("getViewAt() is called");
-            if (csr != null && csr.getCount() > 0) csr.close();
-                csr.moveToPosition(position);
-            String recipeName = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE));
-            long id = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ID));
-            String ingredient = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
-            String measure = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
-            double quantity = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
-            ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
-
             RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.widget_ingredient_item);
+            if (csr != null && csr.getCount() > 0) {
+                csr.moveToPosition(position);
+                String recipeName = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE));
+                long id = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ID));
+                String ingredient = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
+                String measure = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
+                double quantity = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
+                ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
 
-            //only show the recipe name on the first ingredient in the list.
-            if (recipeName.equals(prevRecipeName)) {
-                views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
-            } else {
-                views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
-                views.setTextViewText(R.id.widget_recipe_tv, recipeName);
-                prevRecipeName = recipeName;
+
+                //only show the recipe name on the first ingredient in the list.
+                if (recipeName.equals(prevRecipeName)) {
+                    views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
+                } else {
+                    views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
+                    views.setTextViewText(R.id.widget_recipe_tv, recipeName);
+                    prevRecipeName = recipeName;
+                }
+
+                views.setTextViewText(R.id.widget_ingredient_tv, ingredientsList.toString());
+
+                // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
+                Bundle extras = new Bundle();
+                extras.putLong(EXTRA_ID, id);
+                extras.putString(EXTRA_RECIPE_NAME, recipeName);
+                Intent fillInIntent = new Intent();
+                fillInIntent.putExtras(extras);
+                views.setOnClickFillInIntent(R.id.widget_ingredient_tv, fillInIntent);
             }
 
-            views.setTextViewText(R.id.widget_ingredient_tv, ingredientsList.toString());
-
-            // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
-            Bundle extras = new Bundle();
-            extras.putLong(EXTRA_ID, id);
-            extras.putString(EXTRA_RECIPE_NAME, recipeName);
-            Intent fillInIntent = new Intent();
-            fillInIntent.putExtras(extras);
-            views.setOnClickFillInIntent(R.id.widget_ingredient_tv, fillInIntent);
+            csr.close();
 
             return views;
         }

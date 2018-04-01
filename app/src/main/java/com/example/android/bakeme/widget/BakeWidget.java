@@ -47,7 +47,7 @@ public class BakeWidget extends AppWidgetProvider {
 
         Intent intent = null;
         int requestCode = 0;
-        if (nothingFavourited) {
+        if (nothingFavourited) { //TODO: debug to get the right acitivity to show up
             //Open MainActivity when clicked
             intent = new Intent(ctxt, MainActivity.class);
             requestCode = RecipeUtils.FAV_UNCHANGED_FLAG;

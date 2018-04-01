@@ -266,17 +266,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         if (data == null) {
             mainBinder.alertView.alertTv.setText(R.string.no_recipes);
         } else {
-            while (data.moveToNext()) {
-                int id = data.getInt(data.getColumnIndex(RECIPE_ID));
-                String image = data.getString((data.getColumnIndex(RECIPE_IMAGE)));
-                String name = data.getString(data.getColumnIndex(RECIPE_NAME));
-                int servings = data.getInt(data.getColumnIndex(RECIPE_SERVINGS));
-                boolean favourited = data.getInt(data.getColumnIndex(RECIPE_FAVOURITED)) != 0;
-                recipeList.add(new Recipe(id, image, name, servings, favourited));
-            }
+            RecipeUtils.getRecipeDataFromCursor(data, recipeList);
             data.close();
             setAdapter(this, recipeList, this);
-            Timber.v("recipeList: %s", recipeList.size());
         }
     }
 
