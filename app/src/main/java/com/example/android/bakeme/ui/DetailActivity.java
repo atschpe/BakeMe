@@ -3,8 +3,7 @@ package com.example.android.bakeme.ui;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -13,7 +12,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.android.bakeme.R;
@@ -171,14 +169,6 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             MethodActivity.setSelectedRecipe(selectedRecipe);
             MethodActivity.setStepsList(stepsList);
             Intent openMethod = new Intent(this, MethodActivity.class);
-//            Bundle recipeBundle = new Bundle();
-
-//            //recipeBundle.putParcelableArrayList(RecipeUtils.STEP_LIST, stepsList);
-//            recipeBundle.putParcelable(RecipeUtils.SELECTED_RECIPE, selectedRecipe);
-//            recipeBundle.putParcelable(RecipeUtils.SELECTED_STEP, step);
-//
-//            //openMethod.putParcelableArrayListExtra(RecipeUtils.STEP_LIST, stepsList);
-//            openMethod.putExtra(RecipeUtils.RECIPE_BUNDLE, recipeBundle);
             startActivity(openMethod);
         }
     }
