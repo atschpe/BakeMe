@@ -250,17 +250,21 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
                     int favValue = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_FAVOURITED));
                     isFavourited = favValue == RecipeEntry.FAVOURITED_TRUE;
                     selectedRecipe.setFavourited(isFavourited);
-
                 }
                 break;
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
-                RecipeUtils.getIngredientList(data, ingredientsList);
+                if (data != null && data.getCount() > 0) {
+                    RecipeUtils.getIngredientList(data, ingredientsList);
+                }
                 break;
             case RecipeUtils.STEPS_DETAIL_LOADER:
-                RecipeUtils.getStepsList(data, stepsList);
+                if (data != null && data.getCount() > 0) {
+                    RecipeUtils.getStepsList(data, stepsList);
+                }
                 break;
         }
-        data.close();
+        //not closing cursor, as Loader takes care of this:
+        // https://developer.android.com/guide/components/loaders.html#onLoadFinished
 
         if (loaderIsRestarted) {
             overviewFrag.setSelectedRecipe(selectedRecipe);
