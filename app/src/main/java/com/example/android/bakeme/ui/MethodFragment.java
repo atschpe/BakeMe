@@ -280,8 +280,8 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        releasePlayer();
         videoSession.setActive(false);
+        releasePlayer();
     }
 
     @Override
