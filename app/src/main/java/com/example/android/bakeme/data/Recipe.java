@@ -358,6 +358,13 @@ public class Recipe implements Parcelable {
             associatedRecipe = in.readString();
         }
 
+        public Ingredients(long id, String ingredient, String measure, double quantity) {
+            this.id = id;
+            this.ingredient = ingredient;
+            this.measure = measure;
+            this.quantity = quantity;
+        }
+
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(ingredient);

@@ -87,7 +87,7 @@ public class IngredientAdapter
 
     public class IngredientViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.widget_ingredient_tv)
+        @BindView(R.id.ingredient_tv)
         TextView ingredientTv;
         @BindView(R.id.ingredient_cb)
         CheckBox ingredientCb;

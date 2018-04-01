@@ -33,6 +33,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/margin"
             android:layout_marginRight="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
             android:background="@drawable/rounded_background"
             android:scrollbarSize="5dp"
             android:scrollbars="vertical"

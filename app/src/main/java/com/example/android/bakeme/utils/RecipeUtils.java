@@ -16,6 +16,8 @@ import com.example.android.bakeme.data.db.RecipeContract.StepsEntry;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Methods enabling the storing and retrieving of the recipe information.
  */
@@ -125,6 +127,7 @@ public class RecipeUtils {
         //create uri referencing the recipe's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(RecipeEntry.CONTENT_URI_RECIPE,
                 selectedRecipe.getId());
+        Timber.v("uri: " + uri);
 
         //store changed favourite selection to the db.
         ContentValues singleRecipe = new ContentValues();
@@ -137,7 +140,8 @@ public class RecipeUtils {
      * @param selectedIngredient the selected ingredient to be updated
      * @param ctxt of the activity calling this method
      */
-    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredient, Context ctxt) {
+    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredient,
+                                       Context ctxt) {
         //create uri referencing the ingredient's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                 selectedIngredient.getId());
@@ -198,6 +202,23 @@ public class RecipeUtils {
 
     // –––––– Getting the data from the cursor ––––––
 
+    /** Recipe
+     *
+     * @param data is the cursor from which the data will be extracted
+     * @param recipeList will hold the data for the adapter
+     */
+    public static void getRecipeList(Cursor data, ArrayList<Recipe> recipeList) {
+        while (data.moveToNext()) {
+            int id = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_ID));
+            String image = data.getString((data.getColumnIndex(RecipeEntry.RECIPE_IMAGE)));
+            String name = data.getString(data.getColumnIndex(RecipeEntry.RECIPE_NAME));
+            int servings = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_SERVINGS));
+            int favValue = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_FAVOURITED));
+            boolean favourited = favValue == RecipeEntry.FAVOURITED_TRUE;
+            recipeList.add(new Recipe(id, image, name, servings, favourited));
+        }
+    }
+
     /** Ingredients
      *
      * @param data is the cursor from which the data will be extracted
@@ -206,9 +227,8 @@ public class RecipeUtils {
      */
     public static ArrayList<Ingredients> getIngredientList(Cursor data,
                                                            ArrayList<Ingredients> ingredientsList) {
-        data.moveToFirst();
         while (data.moveToNext()) {
-            long id = data.getLong(data.getColumnIndex(Ingredients.INGREDIENTS_ID));
+            long id = data.getLong(data.getColumnIndex(IngredientsEntry.INGREDIENTS_ID));
             String ingredient = data.getString(data.getColumnIndex(IngredientsEntry
                     .INGREDIENTS_INGREDIENT));
             String measure = data.getString(data.getColumnIndex(IngredientsEntry
@@ -230,7 +250,6 @@ public class RecipeUtils {
      * @return the stepsList for further processing by the adapter.
      */
     public static ArrayList<Steps> getStepsList(Cursor data, ArrayList<Steps> stepsList) {
-        data.moveToFirst();
         while (data.moveToNext()) {
             long id = data.getLong(data.getColumnIndex(StepsEntry.STEPS_ID));
             String shortDescrip
@@ -242,22 +261,5 @@ public class RecipeUtils {
             stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
         }
         return stepsList;
-    }
-
-    /** Recipe
-     *
-     * @param data is the cursor from which the data will be extracted
-     * @param recipeList will hold the data for the adapter
-     */
-    public static void getRecipeList(Cursor data, ArrayList<Recipe> recipeList) {
-        while (data.moveToNext()) {
-            int id = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_ID));
-            String image = data.getString((data.getColumnIndex(RecipeEntry.RECIPE_IMAGE)));
-            String name = data.getString(data.getColumnIndex(RecipeEntry.RECIPE_NAME));
-            int servings = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_SERVINGS));
-            int favValue = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_FAVOURITED));
-            boolean favourited = favValue == RecipeEntry.FAVOURITED_TRUE;
-            recipeList.add(new Recipe(id, image, name, servings, favourited));
-        }
     }
 }

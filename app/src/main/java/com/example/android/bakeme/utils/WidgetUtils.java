@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class WidgetUtils {
 
     public static ArrayList<Recipe> getFavouritedRecipes(Context ctxt) {
-        ArrayList<Recipe> favRecipe = new ArrayList<>();
+        ArrayList<Recipe> favouritedRecipeList = new ArrayList<>();
 
         String selection = RecipeEntry.RECIPE_FAVOURITED + "=?";
         String[] selectionArgs = new String[]{String.valueOf(RecipeEntry.FAVOURITED_TRUE)};
@@ -21,12 +21,14 @@ public class WidgetUtils {
         Cursor csr = ctxt.getContentResolver().query(RecipeEntry.CONTENT_URI_RECIPE,
                 null, selection, selectionArgs, null);
         if (csr == null) {
-            favRecipe = null;
+            favouritedRecipeList = null;
         } else {
             csr.moveToFirst();
-            RecipeUtils.getRecipeList(csr, favRecipe);
+            while (csr.moveToNext()) {
+                RecipeUtils.getRecipeList(csr, favouritedRecipeList);
+            }
         }
-        return favRecipe;
+        return favouritedRecipeList;
     }
 
     public static ArrayList<Ingredients> getCheckedIngredients(Context ctxt) {

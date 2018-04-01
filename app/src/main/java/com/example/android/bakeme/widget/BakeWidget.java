@@ -1,19 +1,21 @@
 package com.example.android.bakeme.widget;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.example.android.bakeme.R;
+import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.ui.DetailActivity;
 import com.example.android.bakeme.ui.MainActivity;
 import com.example.android.bakeme.utils.RecipeUtils;
 import com.example.android.bakeme.utils.WidgetUtils;
+
+import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -22,7 +24,7 @@ import timber.log.Timber;
  */
 public class BakeWidget extends AppWidgetProvider {
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    //@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         Timber.plant(new Timber.DebugTree());
@@ -50,7 +52,7 @@ public class BakeWidget extends AppWidgetProvider {
 
         Intent intent = null;
         int requestCode = 0;
-        if (nothingFavourited) { //TODO: debug to get the right acitivity to show up
+        if (nothingFavourited) {
             //Open MainActivity when clicked
             intent = new Intent(ctxt, MainActivity.class);
             requestCode = RecipeUtils.FAV_UNCHANGED_FLAG;
@@ -66,14 +68,27 @@ public class BakeWidget extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.shopping_list_empty, pendingIntent);
         }
 
-        // handle clicks to open the correct BakeMe activity.
-        if (!nothingFavourited && !nothingChecked) {
-            // Set the PlantDetailActivity intent to launch when clicked
-            intent = new Intent(ctxt, DetailActivity.class);
-            PendingIntent appPendingIntent = PendingIntent.getActivity(ctxt, 0,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            views.setPendingIntentTemplate(R.id.bakewidget_ingredientList, appPendingIntent);
+        // Set the IngredientRemover intent to launch when clicked
+        Bundle getData = intent.getExtras();
+        long ingredientId = 0;
+        String recipeName = null;
+        Ingredients currentIngredients = null;
+        if (getData != null && getData.containsKey(ListWidgetService.EXTRA_ID)) {
+            Timber.v("BakeWidget: Bundle accessed");
+            ingredientId = getData.getLong(ListWidgetService.EXTRA_ID);
+            recipeName = getData.getString(ListWidgetService.EXTRA_NAME);
+            currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_LIST);
         }
+
+        //set Intent Template to remove clicked ingredient
+        Intent removeIngredientIntent = new Intent(ctxt, IngredientsService.class);
+        removeIngredientIntent.setAction(IngredientsService.ACTION_REMOVE_INGREDIENTS);
+        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_ID, ingredientId);
+        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_NAME, recipeName);
+        removeIngredientIntent.putExtra(ListWidgetService.EXTRA_LIST, currentIngredients);
+        PendingIntent appPendingIntent = PendingIntent.getActivity(ctxt, 0,
+                removeIngredientIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.bakewidget_ingredientList, appPendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

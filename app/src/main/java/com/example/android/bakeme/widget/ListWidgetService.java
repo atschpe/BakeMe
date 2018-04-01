@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -17,9 +16,9 @@ import java.util.ArrayList;
 import timber.log.Timber;
 
 public class ListWidgetService extends RemoteViewsService {
-    private String EXTRA_ID = "extra_id";
-    private String EXTRA_RECIPE_NAME = "extra_recipe_id";
-    private String prevRecipeName;
+    public static String EXTRA_ID = "extra_id";
+    public static String EXTRA_NAME = "extra_name";
+    public static String EXTRA_LIST = "extra_pojo";
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -65,44 +64,40 @@ public class ListWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
+            Timber.v("getAtView called");
             if (csr == null || csr.getCount() == 0) return null;
 
             RemoteViews views = new RemoteViews(ctxt.getPackageName(),
                     R.layout.widget_ingredient_item);
             csr.moveToPosition(position);
-            String recipeName = csr.getString(csr.getColumnIndex(Ingredients
-                    .INGREDIENTS_ASSOCIATED_RECIPE));
-            long id = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ID));
+            String recipeName
+                    = csr.getString(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE));
+            long id = csr.getLong(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_ID));
             String ingredient
-                    = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
+                    = csr.getString(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_INGREDIENT));
             String measure
-                    = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
+                    = csr.getString(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_MEASURE));
             double quantity
-                    = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
+                    = csr.getDouble(csr.getColumnIndex(IngredientsEntry.INGREDIENTS_QUANTITY));
 
-            //only show the recipe name on the first ingredient in the list.
-            if (recipeName.equals(prevRecipeName)) {
-                views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
-            } else {
-                views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
-                views.setTextViewText(R.id.widget_recipe_tv, recipeName);
-                prevRecipeName = recipeName;
-            }
+            //set data to the Ingredient POJO, so to use the toString() method.
+            ArrayList<Ingredients> ingredients = new ArrayList<>();
+            ingredients.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
 
-            views.setTextViewText(R.id.widget_ingredient_tv, ingredient);
+            Ingredients currentIngredient = ingredients.get(0);
+
+            views.setTextViewText(R.id.widget_ingredient_tv, ingredients.toString());
 
             // Fill in the onClick PendingIntent Template using the Id for each item individually
             Bundle extras = new Bundle();
             extras.putLong(EXTRA_ID, id);
-            extras.putString(EXTRA_RECIPE_NAME, recipeName);
+            extras.putString (EXTRA_NAME, recipeName);
+            extras.putParcelable(EXTRA_LIST, currentIngredient);
             Intent fillInIntent = new Intent();
             fillInIntent.putExtras(extras);
 
-            //This clicking on the text will open the overviewFragment
+            //Preparing all data for the click event
             views.setOnClickFillInIntent(R.id.widget_ingredient_tv, fillInIntent);
-
-            //activating the checkbox will make the ingredient disappear
-            views.setOnClickFillInIntent(R.id.widget_ingredient_cb, fillInIntent);
 
             return views;
         }

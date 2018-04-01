@@ -76,7 +76,7 @@ public class RecipeProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        Cursor csr = null;
+        Cursor csr;
         switch (getMatch(uri)) {
             case RECIPE_LIST:
                 csr = dbReader.query(RecipeEntry.TABLE_RECIPE, projection, selection, selectionArgs,

@@ -1,39 +1,50 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/rounded_background"
     android:scaleType="centerCrop">
 
-    <ListView
-        android:id="@+id/bakewidget_ingredientList"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_background"
-        android:contentDescription="@string/widget_title_contenDescrip" />
+        style="@style/text"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/widget_title" />
 
     <RelativeLayout
-        android:id="@+id/shopping_list_empty"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/empty_tv"
+        <ListView
+            android:id="@+id/bakewidget_ingredientList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin"
-            android:background="@drawable/rounded_background"
-            android:gravity="center"
-            android:padding="@dimen/half_margin"
-            android:textColor="@color/colorPrimaryDark"
-            tools:text="@string/widget_all_available" />
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/widget_title_contenDescrip" />
 
-        <ImageView
+        <RelativeLayout
+            android:id="@+id/shopping_list_empty"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.1"
-            android:src="@drawable/ic_launcher_foreground"
-            android:contentDescription="@string/bakeground_widget_contDescrip" />
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/empty_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="@dimen/half_margin"
+                android:textColor="@color/colorPrimaryDark"
+                tools:text="@string/widget_all_available" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.1"
+                android:contentDescription="@string/bakeground_widget_contDescrip"
+                android:src="@drawable/ic_launcher_foreground" />
+        </RelativeLayout>
     </RelativeLayout>
-
-</FrameLayout>
+</LinearLayout>

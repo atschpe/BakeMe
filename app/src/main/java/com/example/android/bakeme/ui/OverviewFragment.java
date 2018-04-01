@@ -114,6 +114,7 @@ public class OverviewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 boolean checked = ((CheckBox)v).isChecked();
+                Timber.v("Recipe id: "+ selectedRecipe.getId());
                 if (checked) {
                     selectedRecipe.setFavourited(true);
                     isFavourited = true;

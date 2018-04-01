@@ -4,8 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.db.RecipeContract.RecipeEntry;
+
+import timber.log.Timber;
 
 import static com.example.android.bakeme.data.db.RecipeContract.*;
 
@@ -21,7 +22,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     private static final String CREATE = "CREATE TABLE ";
     private static final String START = " (";
     private static final String CLOSE = ");";
-    private static final String COMMA = " ,";
+    private static final String COMMA = ", ";
     private static final String INT_AUTO = " INTEGER PRIMARY KEY AUTOINCREMENT";
     private static final String INT_REQ = " INTEGER NOT NULL";
     private static final String INT = " INTEGER";
@@ -33,6 +34,8 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Timber.plant(new Timber.DebugTree());
+
         final String SQL_CREATE_RECIPE_TABLE = CREATE + RecipeEntry.TABLE_RECIPE + START
                 + RecipeEntry.RECIPE_ID + INT_REQ + COMMA
                 + RecipeEntry.RECIPE_IMAGE + TEXT + COMMA
@@ -40,6 +43,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 + RecipeEntry.RECIPE_FAVOURITED + BOO + COMMA
                 + RecipeEntry.RECIPE_SERVINGS + INT_REQ + CLOSE;
         db.execSQL(SQL_CREATE_RECIPE_TABLE);
+        Timber.v("Recipe Table: " + SQL_CREATE_RECIPE_TABLE);
 
         final String SQL_CREATE_INGREDIENTS_TABLE = CREATE + IngredientsEntry.TABLE_INGREDIENTS + START
                 + IngredientsEntry.INGREDIENTS_ID + INT_AUTO + COMMA
@@ -49,6 +53,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 + IngredientsEntry.INGREDIENTS_CHECKED + INT + COMMA
                 + IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE + TEXT + CLOSE;
         db.execSQL(SQL_CREATE_INGREDIENTS_TABLE);
+        Timber.v("Ingredients Table: " + SQL_CREATE_INGREDIENTS_TABLE);
 
         final String SQL_CREATE_STEPS_TABLE = CREATE + StepsEntry.TABLE_STEPS + START
                 + StepsEntry.STEPS_GLOBAL_ID+ INT_AUTO + COMMA
@@ -59,9 +64,11 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 + StepsEntry.STEPS_VIDEO + TEXT + COMMA
                 + StepsEntry.STEPS_ASSOCIATED_RECIPE + CLOSE;
         db.execSQL(SQL_CREATE_STEPS_TABLE);
+        Timber.v("Steps Table: " + SQL_CREATE_STEPS_TABLE);
     }
 
-    //TODO: make upgrade more dynamic (see comment on last project
+    //Depending on further developments of the api and the app DROP_TABLE would become an
+    // ALTER_TABLE, for added, altered or removed columns.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_TABLE + RecipeEntry.TABLE_RECIPE);

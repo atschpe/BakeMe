@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/half_margin">
 
     <TextView
-        android:id="@+id/widget_ingredient_tv"
+        android:id="@+id/ingredient_tv"
         style="@style/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:id="@+id/ingredient_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/widget_ingredient_tv"
+        app:layout_constraintBottom_toBottomOf="@+id/ingredient_tv"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/widget_ingredient_tv" />
+        app:layout_constraintTop_toTopOf="@+id/ingredient_tv" />
 </android.support.constraint.ConstraintLayout>
