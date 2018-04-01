@@ -12,11 +12,15 @@ import com.example.android.bakeme.utils.RecipeUtils;
 
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 public class MethodActivity extends AppCompatActivity {
 
     private MethodFragment methodFrag;
     private FragmentManager fragMan;
     private static Recipe selectedRecipe;
+    private static Steps step;
+    private static ArrayList<Steps> stepsList;
 
     public static void setSelectedRecipe(Recipe selectedRecipe) {
         MethodActivity.selectedRecipe = selectedRecipe;
@@ -30,13 +34,14 @@ public class MethodActivity extends AppCompatActivity {
         MethodActivity.stepsList = stepsList;
     }
 
-    private static Steps step;
-    private static ArrayList<Steps> stepsList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_method);
+
+        Timber.plant(new Timber.DebugTree());
+
+        Timber.v("step: " + step.getId());
 //
 //        Intent recipeReceived = getIntent();
 //        Bundle recipeBundle = recipeReceived.getBundleExtra(RecipeUtils.RECIPE_BUNDLE);

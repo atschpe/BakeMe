@@ -4,11 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -25,6 +30,8 @@ import android.widget.Toast;
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Steps;
+import com.example.android.bakeme.data.db.RecipeContract;
+import com.example.android.bakeme.data.db.RecipeContract.StepsEntry;
 import com.example.android.bakeme.utils.RecipeUtils;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -52,12 +59,13 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * {@link MethodFragment} is a {@link Fragment} showing the detailed step in question of the current
  * recipe selected.
  */
-public class MethodFragment extends Fragment implements ExoPlayer.EventListener {
+public class MethodFragment extends Fragment implements ExoPlayer.EventListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     //description views
     @BindView(R.id.nav_prev_bt)
@@ -165,6 +173,21 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
             setLandMode();
         } else {
             setPortMode();
+            navNextBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToNextStep();
+                }
+            });
+
+            navPrevBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToPrevStep();
+                }
+            });
+
+            updateNavButtons();
         }
 
         container.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
@@ -221,9 +244,12 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     }
 
     private void goToPrevStep() {
-        long stepId = step.getId() + 1;
-        Steps nextStep = recipe.getSteps().get((int) stepId);
-        setStep(nextStep);
+        long stepId = step.getId() - 1;
+        Timber.v("new step Id : "  + stepId);
+        Bundle args = new Bundle();
+        args.putLong(RecipeUtils.SELECTED_STEP, stepId);
+        getActivity().getSupportLoaderManager().initLoader(RecipeUtils.STEPS_METHOD_LOADER, args,
+                this);
         updateStepText();
         // Stop previous playback, prepare and play new
         startChosenVideo();
@@ -231,9 +257,13 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     }
 
     private void goToNextStep() {
-        long stepId = step.getId() - 1;
-        Steps prevStep = recipe.getSteps().get((int) stepId);
-        setStep(prevStep);
+        long stepId = step.getId() + 1;
+        Timber.v("new step Id : "  + stepId);
+        Bundle args = new Bundle();
+        args.putLong(RecipeUtils.SELECTED_STEP, stepId);
+        getActivity().getSupportLoaderManager().initLoader(RecipeUtils.STEPS_METHOD_LOADER, args,
+                this);
+
         updateStepText();
         // Stop previous playback, prepare and play new
         startChosenVideo();
@@ -388,11 +418,11 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if ((playbackState == ExoPlayer.STATE_READY) && playWhenReady) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
-                    exoPlayer.getCurrentPosition(), 1f);
+                    playerCurrentPosition, 1f);
             videoThumbnailIv.setVisibility(View.INVISIBLE); //hide thumbnail to play
         } else if ((playbackState == ExoPlayer.STATE_READY)) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
-                    exoPlayer.getCurrentPosition(), 1f);
+                    playerCurrentPosition, 1f);
             videoThumbnailIv.setVisibility(View.VISIBLE); // show thumbnail when paused
         }
         videoSession.setPlaybackState(stateBuilder.build());
@@ -404,6 +434,40 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
     @Override
     public void onPositionDiscontinuity() {
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        long stepId = 0;
+        if (args != null) {
+            stepId = args.getLong(RecipeUtils.SELECTED_STEP);
+        }
+        String selection = StepsEntry.STEPS_ASSOCIATED_RECIPE + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(stepId)};
+
+        return new CursorLoader(getActivity(), StepsEntry.CONTENT_URI_STEPS, null,
+                selection, selectionArgs, null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        if (data != null && data.getCount() > 0) {
+            data.moveToFirst();
+            long id = data.getLong(data.getColumnIndex(StepsEntry.STEPS_ID));
+            String shortDescription
+                    = data.getString(data.getColumnIndex(StepsEntry.STEPS_SHORT_DESCRIP));
+            String description = data.getString(data.getColumnIndex(StepsEntry.STEPS_DESCRIP));
+            String video = data.getString(data.getColumnIndex(StepsEntry.STEPS_VIDEO));
+            String thumbnail = data.getString(data.getColumnIndex(StepsEntry.STEPS_THUMB));
+
+            step = new Steps(id, shortDescription, description, video, thumbnail);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        //not needed
     }
 
     //Media Session Callbacks, where all external clients control the player.
@@ -451,6 +515,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
     private void updateStepText() {
         if (!step.getDescription().isEmpty()) {
+            Timber.v("update text – step: "+ step);
             recipeStep.setText(step.getDescription());
         } else {
             recipeStep.setText(R.string.no_detail_step_available);

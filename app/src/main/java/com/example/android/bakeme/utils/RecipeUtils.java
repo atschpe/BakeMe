@@ -28,6 +28,7 @@ public class RecipeUtils {
     public static final int INGREDIENTS_DETAIL_LOADER = 22;
     public static final int STEPS_DETAIL_LOADER = 23;
     public static final int RECIPE_MAIN_LOADER = 11;
+    public static final int STEPS_METHOD_LOADER = 33;
 
     public static final String INGREDIENT_LIST = "ingredient list";
     public static final String STEP_LIST = "step list";
@@ -42,6 +43,7 @@ public class RecipeUtils {
 
     private static boolean favIsUpdated;
     private static String currentRecipeName;
+
 
     //keep track of when the user (un)favourites a recipe
     public static boolean isFavIsUpdated() {
