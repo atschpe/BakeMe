@@ -8,13 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="navigationButtons">
+    <style name="button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="navigationButtons" parent="button">
         <item name="android:tint">@color/colorAccent</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
+    </style>
+
+    <style name="favButton" parent="button">
+        <item name="android:button">@drawable/favourite_selector</item>
+        <item name="android:contentDescription">@string/favourite_button</item>
     </style>
 
     <style name="text">

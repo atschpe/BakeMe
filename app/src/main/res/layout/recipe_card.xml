@@ -5,7 +5,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/floured_bench">
 
         <ImageView
             android:id="@+id/card_image_iv"
@@ -19,18 +20,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_foreground"/>
+            tools:src="@drawable/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/card_name_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#80ffffff"
+            android:alpha="0.75"
+            android:background="@color/colorAccent"
             android:gravity="center_horizontal"
             android:padding="@dimen/margin"
+            android:textColor="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="@+id/card_image_iv"
-            app:layout_constraintEnd_toEndOf="@+id/card_image_iv"
-            app:layout_constraintStart_toStartOf="@+id/card_image_iv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="Recipe Name" />
 
         <TextView
@@ -43,16 +46,12 @@
 
         <CheckBox
             android:id="@+id/recipe_favourite_cb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/favButton"
             android:layout_marginEnd="@dimen/margin"
+            android:layout_marginRight="@dimen/margin"
             app:layout_constraintBottom_toBottomOf="@+id/card_name_tv"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@android:color/transparent"
-            app:layout_constraintTop_toTopOf="@+id/card_name_tv"
-            android:button="@drawable/favourite_selector"
-            android:layout_marginRight="@dimen/margin"
-            android:contentDescription="@string/favourited_recipe"/>
+            app:layout_constraintTop_toTopOf="@+id/card_name_tv" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

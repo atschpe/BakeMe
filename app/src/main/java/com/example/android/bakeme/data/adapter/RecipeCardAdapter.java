@@ -75,9 +75,6 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     public void onBindViewHolder(final RecipeCardHolder holder, int position) {
         final Recipe currentRecipe = this.recipeList.get(position);
 
-        long recipeId = currentRecipe.getId();
-        List<Steps> currentStep = currentRecipe.getSteps();
-
         //currently there are no images available in the api, but assuming it would be updated at
         //some point this code will display the image or a thumbnail.
         String recipeImage = null;
@@ -144,13 +141,6 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
-//            favouriteCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    Recipe currentRecipe = recipeList.get(getAdapterPosition());
-//                     recipeClicker.onFavClick(currentRecipe, getAdapterPosition(), isChecked);
-//                }
-//            });
 
             favouriteCb.setOnClickListener(new View.OnClickListener() {
                 @Override

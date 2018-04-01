@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     protected void onResume() {
         super.onResume();
         getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER,null, this);
-        //TODO: cursor is empty when coming from onResume. why?
+        //TODO: cursor is empty in onLoadFinished() when coming from onResume. why?
     }
 
     //Make sure we have internet before we load the data.
@@ -163,12 +163,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         //set up adapter and RecyclerView.
         recipeCardAdapter = new RecipeCardAdapter(ctxt, recipeList, clicker);
         mainBinder.recipeOverviewRv.setAdapter(recipeCardAdapter);
+        mainBinder.recipeOverviewRv.setHasFixedSize(true);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mainBinder.recipeOverviewRv.setLayoutManager(new LinearLayoutManager(this));
         } else {
             mainBinder.recipeOverviewRv.setLayoutManager(new GridLayoutManager(this, 2));
         }
-
         recipeCardAdapter.notifyDataSetChanged();
     }
 
@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         }
         RecipeUtils.updateFavDb(recipe, this);
         getSupportLoaderManager().restartLoader(RecipeUtils.RECIPE_MAIN_LOADER, null, this);
-        recipeCardAdapter.notifyItemChanged(recipePosition);
     }
 
     /**
