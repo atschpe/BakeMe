@@ -58,20 +58,14 @@ public class IngredientsService extends IntentService {
         }
     }
 
-    //set checked to '0'
+    // Set checked to '0' and update the ingredient in the db. Updating the widget will then make it
+    // disappear from the list.
     private void handleActionRemoveIngredients(Ingredients currentIngredients) {
         currentIngredients.setChecked(false);
         RecipeUtils.updateCheckedDb(currentIngredients.getAssociatedRecipe(), currentIngredients,
-                getBaseContext());
+                this);
 
-        AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
-        int[] appWidgetIds = appWidgetMan.getAppWidgetIds(new ComponentName(this,
-                BakeWidget.class));
-        //Now update all widgets
-        BakeWidget.updateBakeWidgets(this, appWidgetMan, appWidgetIds);
-        //update data for listView
-        appWidgetMan.notifyAppWidgetViewDataChanged(appWidgetIds,
-                R.id.bakewidget_ingredientList);
+        startHandleActionUpdateWidget(this);
     }
 
     private void handleActionUpdateWidget() {
