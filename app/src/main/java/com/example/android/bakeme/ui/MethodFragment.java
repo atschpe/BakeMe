@@ -248,12 +248,8 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
         Timber.v("new step Id : "  + stepId);
         Bundle args = new Bundle();
         args.putLong(RecipeUtils.SELECTED_STEP, stepId);
-        getActivity().getSupportLoaderManager().initLoader(RecipeUtils.STEPS_METHOD_LOADER, args,
+        getActivity().getSupportLoaderManager().restartLoader(RecipeUtils.STEPS_METHOD_LOADER, args,
                 this);
-        updateStepText();
-        // Stop previous playback, prepare and play new
-        startChosenVideo();
-        updateNavButtons();
     }
 
     private void goToNextStep() {
@@ -261,13 +257,8 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
         Timber.v("new step Id : "  + stepId);
         Bundle args = new Bundle();
         args.putLong(RecipeUtils.SELECTED_STEP, stepId);
-        getActivity().getSupportLoaderManager().initLoader(RecipeUtils.STEPS_METHOD_LOADER, args,
+        getActivity().getSupportLoaderManager().restartLoader(RecipeUtils.STEPS_METHOD_LOADER, args,
                 this);
-
-        updateStepText();
-        // Stop previous playback, prepare and play new
-        startChosenVideo();
-        updateNavButtons();
     }
 
     //Ensure that the previous and next button only show when there is something to navigate to
@@ -463,6 +454,11 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener,
 
             step = new Steps(id, shortDescription, description, video, thumbnail);
             Timber.v("loaded step: " +step.getId());
+
+            updateStepText();
+            // Stop previous playback, prepare and play new
+            startChosenVideo();
+            updateNavButtons();
         }
     }
 
