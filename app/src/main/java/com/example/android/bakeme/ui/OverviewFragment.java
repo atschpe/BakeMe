@@ -1,5 +1,6 @@
 package com.example.android.bakeme.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +31,25 @@ import timber.log.Timber;
  * selected recipe.
  */
 public class OverviewFragment extends Fragment {
+
+    LoadManagerRestarter loadManagerRestarter;
+
+    // Container Activity must implement this interface to track restart calls for the loader.
+    public interface LoadManagerRestarter {
+        void onLoaderRestarted();
+    }
+
+    @Override
+    public void onAttach(Context ctxt) {
+        super.onAttach(ctxt);
+        // ensure DetailActivity has implemented the LoadManagerRestarter
+        try {
+           loadManagerRestarter = (LoadManagerRestarter) ctxt;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(ctxt.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
     // lists for the recipe in question.
     ArrayList<Ingredients> ingredientsList;
@@ -101,8 +121,9 @@ public class OverviewFragment extends Fragment {
                     isFavourited = false;
                     ingredientAdapter.setOfferCheckBoxes(false);
                 }
-                ingredientAdapter.notifyDataSetChanged();
                 RecipeUtils.updateFavDb(selectedRecipe, getActivity());
+                loadManagerRestarter.onLoaderRestarted();
+                ingredientAdapter.notifyDataSetChanged();
             }
         });
         return root;

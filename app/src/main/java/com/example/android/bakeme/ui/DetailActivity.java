@@ -30,7 +30,7 @@ import timber.log.Timber;
 import static com.example.android.bakeme.data.Recipe.RECIPE_FAVOURITED;
 
 public class DetailActivity extends AppCompatActivity implements StepAdapter.StepClickHandler,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, OverviewFragment.LoadManagerRestarter {
 
     Recipe selectedRecipe;
     OverviewFragment overviewFrag;
@@ -94,9 +94,12 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         }
 
         //set up the loadermangers to retrieve the needed data
-        getSupportLoaderManager().initLoader(RecipeUtils.RECIPE_DETAIL_LOADER, null, this);
-        getSupportLoaderManager().initLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null, this);
-        getSupportLoaderManager().initLoader(RecipeUtils.STEPS_DETAIL_LOADER, null, this);
+        getSupportLoaderManager().initLoader(RecipeUtils.RECIPE_DETAIL_LOADER, null,
+                this);
+        getSupportLoaderManager().initLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
+                this);
+        getSupportLoaderManager().initLoader(RecipeUtils.STEPS_DETAIL_LOADER, null,
+                this);
 
         getSupportActionBar().setTitle(selectedRecipe.getName());
 
@@ -251,5 +254,12 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
     //not needed
+    }
+
+    @Override
+    public void onLoaderRestarted() {
+        getSupportLoaderManager().restartLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
+                this);
+        overviewFrag.setSelectedRecipe();
     }
 }
