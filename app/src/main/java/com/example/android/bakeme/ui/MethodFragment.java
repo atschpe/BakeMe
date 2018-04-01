@@ -289,12 +289,14 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     public void onPause() {
         super.onPause();
         playerCurrentPosition = exoPlayer.getCurrentPosition();
+        exoPlayer.setPlayWhenReady(false);
         releasePlayer();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        exoPlayer.setPlayWhenReady(true);
         initializePlayer();
     }
 
