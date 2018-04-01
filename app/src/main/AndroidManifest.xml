@@ -42,7 +42,7 @@
         <provider
             android:name=".data.db.RecipeProvider"
             android:authorities="com.example.android.bakeme"
-            android:exported="false" />
+            android:exported="true" />
 
         <service android:name=".widget.IngredientsService" />
         <service

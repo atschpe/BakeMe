@@ -35,7 +35,7 @@ public class DetailActivityTester {
     private RecipeIdlingResource idlingResource;
 
     @Rule
-    private ActivityTestRule<DetailActivity> activityTestRule
+    public ActivityTestRule<DetailActivity> activityTestRule
             = new ActivityTestRule<>(DetailActivity.class);
 
     @Before

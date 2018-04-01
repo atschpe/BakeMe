@@ -3,12 +3,14 @@ package com.example.android.bakeme.utils;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.Recipe.Steps;
 import com.example.android.bakeme.data.db.RecipeProvider;
+import com.example.android.bakeme.ui.DetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,5 +139,39 @@ public class RecipeUtils {
         ContentValues singleIngredients = new ContentValues();
         getIngredientValues(recipeId, singleIngredients, selectedIngredients);
         ctxt.getContentResolver().update(uri, singleIngredients, null, null);
+    }
+
+    public static ArrayList<Ingredients> getIngredientList(Cursor data,
+                                                           ArrayList<Ingredients> ingredientsList) {
+        data.moveToFirst();
+        while (data.moveToNext()) {
+                long id = data.getLong(data.getColumnIndex(Ingredients.INGREDIENTS_ID));
+                String ingredient = data.getString(data.getColumnIndex(Ingredients
+                        .INGREDIENTS_INGREDIENT));
+                String measure = data.getString(data.getColumnIndex(Ingredients
+                        .INGREDIENTS_MEASURE));
+                int quantity = data.getInt(data.getColumnIndex(Ingredients
+                        .INGREDIENTS_QUANTITY));
+                boolean checked = data.getInt(data.getColumnIndex(Ingredients
+                        .INGREDIENTS_CHECKED)) != 0;
+                ingredientsList.add(new Ingredients(id, ingredient, measure, quantity,
+                        checked));
+        }
+        return ingredientsList;
+    }
+
+    public static ArrayList<Steps> getSteps(Cursor data, ArrayList<Steps> stepsList) {
+        data.moveToFirst();
+        while (data.moveToNext()) {
+                long id = data.getLong(data.getColumnIndex(Steps.STEPS_ID));
+                String shortDescrip
+                        = data.getString(data.getColumnIndex(Steps.STEPS_SHORT_DESCRIP));
+                String descrip
+                        = data.getString(data.getColumnIndex(Steps.STEPS_DESCRIP));
+                String video = data.getString(data.getColumnIndex(Steps.STEPS_VIDEO));
+                String thumb = data.getString(data.getColumnIndex(Steps.STEPS_THUMB));
+                stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
+        }
+        return stepsList;
     }
 }

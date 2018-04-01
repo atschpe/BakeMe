@@ -229,16 +229,16 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
                 break;
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
                 uri = RecipeProvider.CONTENT_URI_INGREDIENTS;
-                //selection = Ingredients.INGREDIENTS_ASSOCIATED_RECIPE + "=?";
-                //selectionArgs = new String[]{String.valueOf(selectedRecipeId)};
+                selection = Ingredients.INGREDIENTS_ASSOCIATED_RECIPE + "=?";
+                selectionArgs = new String[]{String.valueOf(selectedRecipeId)};
                 break;
             case RecipeUtils.STEPS_DETAIL_LOADER:
                 uri = RecipeProvider.CONTENT_URI_STEPS;
-                //selection = Steps.STEPS_ASSOCIATED_RECIPE + "=?";
-                //selectionArgs = new String[]{String.valueOf(selectedRecipeId)};
+                selection = Steps.STEPS_ASSOCIATED_RECIPE + "=?";
+                selectionArgs = new String[]{String.valueOf(selectedRecipeId)};
                 break;
         }
-        return new CursorLoader(this, uri, projection, null, null,
+        return new CursorLoader(this, uri, projection, selection, selectionArgs,
                 null);
     }
 
@@ -249,44 +249,12 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
                 data.moveToFirst();
                 isFavourited = data.getInt(data.getColumnIndex(RECIPE_FAVOURITED)) != 0;
                 selectedRecipe.setFavourited(isFavourited);
-                Timber.v("Onloadfinished – favourited: " + isFavourited);
                 break;
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
-                data.moveToFirst();
-                while (data.moveToNext()) {
-                    long recipeId = data.getLong(data.getColumnIndex(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE));
-                    Timber.v("onLoadfinished, ingredients – recipe id: " + recipeId);
-                    if (recipeId == selectedRecipe.getId()) {
-                        long id = data.getLong(data.getColumnIndex(Ingredients.INGREDIENTS_ID));
-                        String ingredient = data.getString(data.getColumnIndex(Ingredients
-                                .INGREDIENTS_INGREDIENT));
-                        String measure = data.getString(data.getColumnIndex(Ingredients
-                                .INGREDIENTS_MEASURE));
-                        int quantity = data.getInt(data.getColumnIndex(Ingredients
-                                .INGREDIENTS_QUANTITY));
-                        boolean checked = data.getInt(data.getColumnIndex(Ingredients
-                                .INGREDIENTS_CHECKED)) != 0;
-                        ingredientsList.add(new Ingredients(id, ingredient, measure, quantity,
-                                checked));
-                    }
-                }
+                RecipeUtils.getIngredientList(data, ingredientsList);
                 break;
             case RecipeUtils.STEPS_DETAIL_LOADER:
-                data.moveToFirst();
-                while (data.moveToNext()) {
-                    long recipeId = data.getLong(data.getColumnIndex(Steps.STEPS_ASSOCIATED_RECIPE));
-                    Timber.v("onLoadfinished, steps – recipe id: " + recipeId);
-                    if (recipeId == selectedRecipe.getId()) {
-                        long id = data.getLong(data.getColumnIndex(Steps.STEPS_ID));
-                        String shortDescrip
-                                = data.getString(data.getColumnIndex(Steps.STEPS_SHORT_DESCRIP));
-                        String descrip
-                                = data.getString(data.getColumnIndex(Steps.STEPS_DESCRIP));
-                        String video = data.getString(data.getColumnIndex(Steps.STEPS_VIDEO));
-                        String thumb = data.getString(data.getColumnIndex(Steps.STEPS_THUMB));
-                        stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
-                    }
-                }
+                RecipeUtils.getSteps(data, stepsList);
                 break;
         }
         data.close();
@@ -298,7 +266,6 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             //keep track of each loader finishing so the fragments start with all data on hand.
             loaderHasFinished();
         }
-
 
     }
 
