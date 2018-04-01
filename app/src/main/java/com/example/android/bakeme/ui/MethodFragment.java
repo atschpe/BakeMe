@@ -58,6 +58,7 @@ import butterknife.ButterKnife;
  */
 public class MethodFragment extends Fragment implements ExoPlayer.EventListener {
 
+    private static final String PLAYER_STATE = "play when ready";
     //description views
     @BindView(R.id.nav_prev_bt)
     ImageButton navPrevBt;
@@ -75,6 +76,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     private SimpleExoPlayer exoPlayer;
     private MediaSessionCompat videoSession;
     private PlaybackStateCompat.Builder stateBuilder;
+    boolean playWhenReady;
     private static final String TAG = MethodFragment.class.getSimpleName();
     //private Handler handler;
 
@@ -113,16 +115,17 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
                 && !getResources().getBoolean(R.bool.isTablet);
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.STEP_LIST))) {
-                stepsList = savedInstanceState.getParcelableArrayList(String.valueOf(
-                        RecipeUtils.STEP_LIST));
+            if (savedInstanceState.containsKey(RecipeUtils.STEP_LIST)) {
+                stepsList = savedInstanceState.getParcelableArrayList(RecipeUtils.STEP_LIST);
             }
-            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.SELECTED_STEP))) {
-                step = savedInstanceState.getParcelable(String.valueOf(RecipeUtils.SELECTED_STEP));
+            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_STEP)) {
+                step = savedInstanceState.getParcelable(RecipeUtils.SELECTED_STEP);
             }
-            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.SELECTED_RECIPE))) {
-                recipe = savedInstanceState.getParcelable(String.valueOf(
-                        RecipeUtils.SELECTED_RECIPE));
+            if (savedInstanceState.containsKey(RecipeUtils.SELECTED_RECIPE)) {
+                recipe = savedInstanceState.getParcelable(RecipeUtils.SELECTED_RECIPE);
+            }
+            if (savedInstanceState.containsKey(PLAYER_STATE)) {
+                playWhenReady = savedInstanceState.getBoolean(PLAYER_STATE);
             }
         }
 
@@ -243,9 +246,10 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST), stepsList);
-        outState.putParcelable(String.valueOf(RecipeUtils.SELECTED_RECIPE), recipe);
-        outState.putParcelable(String.valueOf(RecipeUtils.SELECTED_STEP), step);
+        outState.putParcelableArrayList(RecipeUtils.STEP_LIST, stepsList);
+        outState.putParcelable(RecipeUtils.SELECTED_RECIPE, recipe);
+        outState.putParcelable(RecipeUtils.SELECTED_STEP, step);
+        outState.putBoolean(PLAYER_STATE, playWhenReady);
         super.onSaveInstanceState(outState);
     }
 
@@ -274,6 +278,21 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
         super.onDestroy();
         releasePlayer();
         videoSession.setActive(false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        releasePlayer();
+        videoSession.setActive(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        releasePlayer();
+        videoSession.setActive(false);
+        playWhenReady = exoPlayer.getPlayWhenReady();
     }
 
     //Initializes the Media Session to be enabled with media buttons, transport controls, callbacks
@@ -327,7 +346,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
             // Prepare the MediaSource and start playing
             if (!step.getVideo().isEmpty()) {
                 exoPlayer.prepare(getMediaSource());
-                exoPlayer.setPlayWhenReady(true);
+                exoPlayer.setPlayWhenReady(playWhenReady);
                 videoThumbnailIv.setVisibility(View.INVISIBLE);
             } else {
                 videoThumbnailIv.setVisibility(View.VISIBLE);
@@ -359,6 +378,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if ((playbackState == ExoPlayer.STATE_READY) && playWhenReady) {
+            this.playWhenReady = playWhenReady;
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
                     exoPlayer.getCurrentPosition(), 1f);
             videoThumbnailIv.setVisibility(View.INVISIBLE); //hide thumbnail to play

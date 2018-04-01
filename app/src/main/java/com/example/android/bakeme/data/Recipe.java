@@ -1,5 +1,6 @@
 package com.example.android.bakeme.data;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -141,7 +142,7 @@ public class Recipe implements Parcelable {
         public static final String STEPS_VIDEO = "videoURL";
         public static final String STEPS_DESCRIP = "description";
         public static final String STEPS_SHORT_DESCRIP = "shortDescription";
-        public static final String STEPS_ASSOCIATED_RECIPE = ASSOCIATED_RECIPE;
+        public static final String STEPS_ASSOCIATED_RECIPE = ASSOCIATED_RECIPE ;
 
         @Expose
         @SerializedName(STEPS_THUMB)
@@ -168,7 +169,9 @@ public class Recipe implements Parcelable {
         private long globalId;
 
 
-        //@Ignore
+        public Steps() {
+        }
+
         public Steps(long id, String shortDescription, String description, String video,
                      String thumbnail) {
             this.id = id;
@@ -178,7 +181,7 @@ public class Recipe implements Parcelable {
             this.thumbnail = thumbnail;
         }
 
-        Steps(Parcel in) {
+        protected Steps(Parcel in) {
             thumbnail = in.readString();
             video = in.readString();
             description = in.readString();
@@ -204,20 +207,56 @@ public class Recipe implements Parcelable {
             return thumbnail;
         }
 
+        public void setThumbnail(String thumbnail) {
+            this.thumbnail = thumbnail;
+        }
+
         public String getVideo() {
             return video;
+        }
+
+        public void setVideo(String video) {
+            this.video = video;
         }
 
         public String getDescription() {
             return description;
         }
 
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
         public String getShortDescription() {
             return shortDescription;
         }
 
+        public void setShortDescription(String shortDescription) {
+            this.shortDescription = shortDescription;
+        }
+
         public long getId() {
             return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getAssociatedRecipe() {
+            return associatedRecipe;
+        }
+
+        public void setAssociatedRecipe(String associatedRecipe) {
+            this.associatedRecipe = associatedRecipe;
+        }
+
+        public long getGlobalId() {
+            return globalId;
+        }
+
+        public void setGlobalId(long globalId) {
+            this.globalId = globalId;
         }
 
         @Override

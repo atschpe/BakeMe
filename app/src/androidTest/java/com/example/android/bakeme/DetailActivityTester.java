@@ -11,6 +11,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.testHelpers.RecyclerViewMatcher;
 import com.example.android.bakeme.ui.DetailActivity;
+import com.example.android.bakeme.utils.RecipeUtils;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import org.hamcrest.core.AllOf;
@@ -57,7 +58,7 @@ public class DetailActivityTester {
             selectedRecipe = new Recipe(1, "", "Nutella Pie", 8, false);
 
             Intent testIntent = new Intent(ctxt, DetailActivity.class);
-            testIntent.putExtra(String.valueOf(R.string.SELECTED_RECIPE), selectedRecipe);
+            testIntent.putExtra(RecipeUtils.SELECTED_RECIPE, selectedRecipe);
             return testIntent;
         }
     };

@@ -83,6 +83,18 @@ public class OverviewFragment extends Fragment {
                 false);
         ButterKnife.bind(this, root);
 
+        if (savedInstanceState != null) {
+            if(savedInstanceState.containsKey(RecipeUtils.STEP_LIST)) {
+                stepsList = savedInstanceState.getParcelableArrayList(RecipeUtils.STEP_LIST);
+            }
+            if ( savedInstanceState.containsKey(RecipeUtils.INGREDIENT_LIST)) {
+                ingredientsList = savedInstanceState.getParcelableArrayList(RecipeUtils.INGREDIENT_LIST);
+            }
+            if ( savedInstanceState.containsKey(RecipeUtils.RECIPE_KEY)) {
+                selectedRecipe = savedInstanceState.getParcelable(RecipeUtils.RECIPE_KEY);
+            }
+        }
+
         //Setup adapters
         if (ingredientsList != null) {
             ingredientAdapter = new IngredientAdapter((DetailActivity) getActivity());
@@ -148,9 +160,9 @@ public class OverviewFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST), stepsList);
-        outState.putParcelableArrayList(String.valueOf(RecipeUtils.INGREDIENT_LIST),
-                ingredientsList);
+        outState.putParcelableArrayList(RecipeUtils.STEP_LIST, stepsList);
+        outState.putParcelableArrayList(RecipeUtils.INGREDIENT_LIST, ingredientsList);
+        outState.putParcelable(RecipeUtils.RECIPE_KEY, selectedRecipe);
         super.onSaveInstanceState(outState);
     }
 

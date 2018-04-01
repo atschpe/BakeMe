@@ -16,7 +16,6 @@ public class MethodActivity extends AppCompatActivity {
 
     private MethodFragment methodFrag;
     private FragmentManager fragMan;
-
     private Recipe selectedRecipe;
     private Steps step;
     private ArrayList<Steps> stepsList;
@@ -27,12 +26,11 @@ public class MethodActivity extends AppCompatActivity {
         setContentView(R.layout.activity_method);
 
         Intent recipeReceived = getIntent();
-        Bundle recipeBundle = recipeReceived.getBundleExtra(String.valueOf(
-                RecipeUtils.RECIPE_BUNDLE));
+        Bundle recipeBundle = recipeReceived.getBundleExtra(RecipeUtils.RECIPE_BUNDLE);
 
-        selectedRecipe = recipeBundle.getParcelable(String.valueOf(RecipeUtils.SELECTED_RECIPE));
-        step = recipeBundle.getParcelable(String.valueOf(RecipeUtils.SELECTED_STEP));
-        stepsList = recipeBundle.getParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST));
+        selectedRecipe = recipeBundle.getParcelable(RecipeUtils.SELECTED_RECIPE);
+        step = recipeBundle.getParcelable(RecipeUtils.SELECTED_STEP);
+        stepsList = recipeBundle.getParcelableArrayList(RecipeUtils.STEP_LIST);
 
         methodFrag = new MethodFragment();
         fragMan = getSupportFragmentManager();
