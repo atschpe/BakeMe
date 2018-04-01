@@ -4,15 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.android.bakeme.data.db.RecipeContract.RecipeEntry;
-
 import timber.log.Timber;
 
 import static com.example.android.bakeme.data.db.RecipeContract.*;
 
-public class RecipeDbHelper extends SQLiteOpenHelper {
+class RecipeDbHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "recipe.db";
+    private static final String DATABASE_NAME = "recipe.db";
     private static final int DATABASE_VERSION = 1;
 
     public RecipeDbHelper(Context ctxt) {

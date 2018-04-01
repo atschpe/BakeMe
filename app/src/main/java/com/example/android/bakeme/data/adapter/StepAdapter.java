@@ -35,8 +35,8 @@ public class StepAdapter
         void onClick(Steps step);
     }
 
-    Context ctxt;
-    ArrayList<Steps> stepsList;
+    private Context ctxt;
+    private ArrayList<Steps> stepsList;
 
     public StepAdapter(StepClickHandler stepClicker) {
         this.stepClicker = stepClicker;
@@ -77,7 +77,7 @@ public class StepAdapter
         @BindView(R.id.stepNo_tv)
         TextView stepNoTv;
 
-        public StepViewHolder(View itemView) {
+        StepViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);

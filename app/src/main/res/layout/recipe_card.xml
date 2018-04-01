@@ -57,7 +57,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/card_image_iv"
             app:layout_constraintTop_toTopOf="@+id/card_image_iv"
-            android:src="@drawable/ic_serving"/>
+            android:contentDescription="@string/servings_icon"
+            android:src="@drawable/ic_serving" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

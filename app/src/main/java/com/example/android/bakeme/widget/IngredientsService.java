@@ -12,27 +12,18 @@ import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.utils.RecipeUtils;
 
-import timber.log.Timber;
-
 public class IngredientsService extends IntentService {
 
     final static String ACTION_REMOVE_INGREDIENTS = "com.example.android.bakeme.action.remove_ingredient";
-    final static String ACTION_UPDATE_WIDGET = "com.example.android.bakeme.action.update_widget";
+    private final static String ACTION_UPDATE_WIDGET = "com.example.android.bakeme.action.update_widget";
 
-    final static String INGREDIENTS_ID = "ingredients_id";
+    private final static String INGREDIENTS_ID = "ingredients_id";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
     public IngredientsService() {
         super("IngredientsService");
-    }
-
-    public static void startHandleRemoveIngredients(Context ctxt, long ingredientId) {
-        Intent removalIntent = new Intent(ctxt, IngredientsService.class);
-        removalIntent.setAction(ACTION_REMOVE_INGREDIENTS);
-        removalIntent.putExtra(INGREDIENTS_ID, ingredientId);
-        ctxt.startService(removalIntent);
     }
 
     public static void startHandleActionUpdateWidget(Context ctxt) {
@@ -65,7 +56,7 @@ public class IngredientsService extends IntentService {
     private void handleActionRemoveIngredients(Ingredients currentIngredients, long ingredientId) {
         currentIngredients.setChecked(false);
         currentIngredients.setId(ingredientId);
-        RecipeUtils.updateCheckedDb(currentIngredients.getAssociatedRecipe(), currentIngredients,
+        RecipeUtils.updateCheckedDb(currentIngredients,
                 this);
 
         startHandleActionUpdateWidget(this);

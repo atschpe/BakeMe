@@ -1,8 +1,6 @@
 package com.example.android.bakeme.data.db;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -12,21 +10,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.example.android.bakeme.data.Recipe;
-import com.example.android.bakeme.data.Recipe.Ingredients;
-import com.example.android.bakeme.data.Recipe.Steps;
 import com.example.android.bakeme.data.db.RecipeContract.IngredientsEntry;
 import com.example.android.bakeme.data.db.RecipeContract.RecipeEntry;
 import com.example.android.bakeme.data.db.RecipeContract.StepsEntry;
-import com.example.android.bakeme.utils.RecipeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 
 /**
- * {@link RecipeProvider} is a {@link ContentProvider} communicating between the acitivities and the
+ * {@link RecipeProvider} is a {@link ContentProvider} communicating between the activities and the
  * db.
  */
 public class RecipeProvider extends ContentProvider {

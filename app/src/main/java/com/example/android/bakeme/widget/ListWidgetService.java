@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import timber.log.Timber;
 
 public class ListWidgetService extends RemoteViewsService {
-    public static String EXTRA_ID = "extra_id";
-    public static String EXTRA_NAME = "extra_name";
-    public static String EXTRA_INGREDIENT = "extra_pojo";
+    public static final String EXTRA_ID = "extra_id";
+    public static final String EXTRA_INGREDIENT = "extra_pojo";
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -27,17 +26,15 @@ public class ListWidgetService extends RemoteViewsService {
 
     private class ListRemoteViewFactory implements RemoteViewsFactory {
 
-        Context ctxt;
+        final Context ctxt;
         Cursor csr;
-        ArrayList<Ingredients> ingredientsList;
 
-        public ListRemoteViewFactory(Context applicationContext) {
+        ListRemoteViewFactory(Context applicationContext) {
             this.ctxt = applicationContext;
         }
 
         @Override
         public void onCreate() {
-            ingredientsList = new ArrayList<>();
             Timber.plant(new Timber.DebugTree());
         }
 

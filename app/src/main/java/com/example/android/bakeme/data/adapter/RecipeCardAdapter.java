@@ -46,7 +46,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     public interface RecipeClickHandler {
         void onClick(Recipe recipe);
 
-        void onFavClick(Recipe recipe, int recipePosition, boolean isChecked);
+        void onFavClick(Recipe recipe, boolean isChecked);
     }
 
     /**
@@ -146,7 +146,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
                 public void onClick(View v) {
                     Recipe currentRecipe = recipeList.get(getAdapterPosition());
                     boolean checked = ((CheckBox)v).isChecked();
-                    recipeClicker.onFavClick(currentRecipe, getAdapterPosition(), checked);
+                    recipeClicker.onFavClick(currentRecipe, checked);
                 }
             });
         }

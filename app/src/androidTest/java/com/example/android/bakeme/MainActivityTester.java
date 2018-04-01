@@ -1,18 +1,13 @@
 package com.example.android.bakeme;
 
 import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
@@ -24,7 +19,6 @@ import com.example.android.bakeme.testHelpers.MyViewAction;
 import com.example.android.bakeme.testHelpers.RecyclerViewMatcher;
 import com.example.android.bakeme.ui.MainActivity;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,7 +31,9 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTester {
 
-    private String ingredient = "2 cup Graham Cracker crumbs";
+    @Rule
+    public final ActivityTestRule<MainActivity> activityTestRule
+            = new ActivityTestRule<>(MainActivity.class);
 
     private RecipeIdlingResource idlingResource;
 
@@ -45,10 +41,7 @@ public class MainActivityTester {
     public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
         return new RecyclerViewMatcher(recyclerViewId);
     }
-
-    @Rule
-    public ActivityTestRule<MainActivity> activityTestRule
-            = new ActivityTestRule<>(MainActivity.class);
+    private final String ingredient = "2 cup Graham Cracker crumbs";
 
     @Before
     public void registerIdlingResource() {

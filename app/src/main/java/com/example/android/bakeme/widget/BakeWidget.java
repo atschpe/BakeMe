@@ -5,11 +5,9 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.example.android.bakeme.R;
-import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.ui.DetailActivity;
 import com.example.android.bakeme.ui.MainActivity;
 import com.example.android.bakeme.utils.RecipeUtils;
@@ -23,7 +21,7 @@ import timber.log.Timber;
 public class BakeWidget extends AppWidgetProvider {
 
     //@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
+    private static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         Timber.plant(new Timber.DebugTree());
 
@@ -57,7 +55,7 @@ public class BakeWidget extends AppWidgetProvider {
         } else if (nothingChecked) {
             // Open DetailActivity pointing to the first overview of the selected recipe when clicked
             intent = new Intent(ctxt, DetailActivity.class);
-            intent.putExtra(String.valueOf(R.string.SELECTED_RECIPE),
+            intent.putExtra(String.valueOf(RecipeUtils.SELECTED_RECIPE),
                     WidgetUtils.getFavouritedRecipes(ctxt).get(0));
         }
         if (intent != null) { // forgo NullPointerException on intent

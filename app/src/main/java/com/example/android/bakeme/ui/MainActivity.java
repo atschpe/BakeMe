@@ -45,15 +45,15 @@ import static com.example.android.bakeme.data.Recipe.*;
 public class MainActivity extends AppCompatActivity implements RecipeCardAdapter.RecipeClickHandler,
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    ActivityMainBinding mainBinder;
-    RecipeCardAdapter recipeCardAdapter;
-    ArrayList<Recipe> recipeList;
+    private final String DB_BOO = "api_boolean";
+    private ActivityMainBinding mainBinder;
+    private RecipeCardAdapter recipeCardAdapter;
 
     //keep track of changes made by user of their favourite recipes
     private boolean DB_IS_UPTODATE = false;
     private SharedPreferences.Editor sharedPrefEd;
     private SharedPreferences sharedPref;
-    private String DB_BOO = "api_boolean";
+    private ArrayList<Recipe> recipeList;
 
     // Idling resource for testing purposes only
     @Nullable
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         Timber.plant(new Timber.DebugTree());
 
-        //setup to keep track of whether the db is uptodate.
+        //setup to keep track of whether the db is upToDate.
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefEd = sharedPref.edit();
 
@@ -86,11 +86,11 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         //retrieve any persisted data if available or get from db or api
         if (savedInstanceState != null && savedInstanceState.containsKey(String
-                .valueOf(R.string.RECIPE_KEY))) {
+                .valueOf(RecipeUtils.RECIPE_KEY))) {
             mainBinder.alertView.progressPb.setVisibility(View.GONE);
             mainBinder.alertView.alertTv.setVisibility(View.GONE);
             recipeList = savedInstanceState.getParcelableArrayList(String
-                    .valueOf(R.string.RECIPE_KEY));
+                    .valueOf(RecipeUtils.RECIPE_KEY));
             if (recipeList != null) {
                 setAdapter(this, recipeList, this);
             }
@@ -104,14 +104,14 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         }
     }
 
-    public boolean isDbIsUpToDate() { //getter for DB boolean
+    private boolean isDbIsUpToDate() { //getter for DB boolean
         DB_IS_UPTODATE = sharedPref.getBoolean(DB_BOO,
                 getResources().getBoolean(R.bool.dbBoo_default));
         return DB_IS_UPTODATE;
     }
 
-    public void setDbIsUpToDate(boolean dbIsUptodate) { // setter for DB boolean
-        sharedPrefEd.putBoolean(DB_BOO, dbIsUptodate);
+    private void setDbIsUpToDate(boolean dbIsUpToDate) { // setter for DB boolean
+        sharedPrefEd.putBoolean(DB_BOO, dbIsUpToDate);
         sharedPrefEd.apply();
     }
 
@@ -219,13 +219,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     @Override
     public void onClick(Recipe selectedRecipe) {
         Intent openDetailActivity = new Intent(this, DetailActivity.class);
-        openDetailActivity.putExtra(String.valueOf(R.string.SELECTED_RECIPE), selectedRecipe);
+        openDetailActivity.putExtra(String.valueOf(RecipeUtils.SELECTED_RECIPE), selectedRecipe);
 
         startActivity(openDetailActivity);
     }
 
     @Override
-    public void onFavClick(Recipe recipe, int recipePosition, boolean isChecked) {
+    public void onFavClick(Recipe recipe, boolean isChecked) {
         if (isChecked) {
             recipe.setFavourited(true);
         } else {
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(String.valueOf(R.string.RECIPE_KEY), recipeList);
+        outState.putParcelableArrayList(String.valueOf(RecipeUtils.RECIPE_KEY), recipeList);
         super.onSaveInstanceState(outState);
     }
 

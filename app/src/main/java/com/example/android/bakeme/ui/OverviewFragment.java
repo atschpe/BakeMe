@@ -34,7 +34,7 @@ import timber.log.Timber;
  */
 public class OverviewFragment extends Fragment {
 
-    OnLoadManagerRestart loadManagerRestart;
+    private OnLoadManagerRestart loadManagerRestart;
 
     // Container Activity must implement this interface to track restart calls for the loader.
     public interface OnLoadManagerRestart {
@@ -54,15 +54,14 @@ public class OverviewFragment extends Fragment {
     }
 
     // lists for the recipe in question.
-    ArrayList<Ingredients> ingredientsList;
-    ArrayList<Steps> stepsList;
+    private ArrayList<Ingredients> ingredientsList;
+    private ArrayList<Steps> stepsList;
 
-    boolean isFavourited;
-    Recipe selectedRecipe;
+    private Recipe selectedRecipe;
 
     //Adapters for displaying the ingredients and steps of the recipe in question.
-    IngredientAdapter ingredientAdapter;
-    StepAdapter stepAdapter;
+    private IngredientAdapter ingredientAdapter;
+    private StepAdapter stepAdapter;
 
     //views
     @BindView(R.id.ingredient_rv)
@@ -117,7 +116,6 @@ public class OverviewFragment extends Fragment {
                 Timber.v("Recipe id: "+ selectedRecipe.getId());
                 if (checked) {
                     selectedRecipe.setFavourited(true);
-                    isFavourited = true;
                     ingredientAdapter.setOfferCheckBoxes(true);
                     Snackbar infoSnackbar = Snackbar.make(root, R.string.favourite_snack_message,
                             Snackbar.LENGTH_LONG);
@@ -134,7 +132,6 @@ public class OverviewFragment extends Fragment {
                     infoSnackbar.show();
                 } else {
                     selectedRecipe.setFavourited(false);
-                    isFavourited = false;
                     ingredientAdapter.setOfferCheckBoxes(false);
                 }
                 RecipeUtils.updateFavDb(selectedRecipe, getActivity());
@@ -149,8 +146,9 @@ public class OverviewFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(String.valueOf(R.string.STEP_LIST), stepsList);
-        outState.putParcelableArrayList(String.valueOf(R.string.INGREDIENT_LIST), ingredientsList);
+        outState.putParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST), stepsList);
+        outState.putParcelableArrayList(String.valueOf(RecipeUtils.INGREDIENT_LIST),
+                ingredientsList);
         super.onSaveInstanceState(outState);
     }
 
@@ -163,7 +161,6 @@ public class OverviewFragment extends Fragment {
     }
 
     public void setFavourited(boolean favourited) {
-        isFavourited = favourited;
         Timber.v("favourite boolean has been set.");
     }
 

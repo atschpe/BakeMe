@@ -28,10 +28,6 @@ public class IngredientAdapter
 
     private boolean offerCheckBoxes;
 
-    public boolean isOfferCheckBoxes() {
-        return offerCheckBoxes;
-    }
-
     public void setOfferCheckBoxes(boolean offerCheckBoxes) {
         this.offerCheckBoxes = offerCheckBoxes;
     }
@@ -48,7 +44,7 @@ public class IngredientAdapter
     }
 
     public interface IngredientClickHandler {
-        void onIngredientClick(Ingredients ingredients, int ingredientPostion, boolean isChecked);
+        void onIngredientClick(Ingredients ingredients, boolean isChecked);
 
     }
 
@@ -92,7 +88,7 @@ public class IngredientAdapter
         @BindView(R.id.ingredient_cb)
         CheckBox ingredientCb;
 
-        public IngredientViewHolder(View itemView) {
+        IngredientViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             ingredientCb.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +96,7 @@ public class IngredientAdapter
                 public void onClick(View v) {
                     Ingredients currentIngredient = ingredientsList.get(getAdapterPosition());
                     boolean checked = ((CheckBox) v).isChecked();
-                    ingredientClicker.onIngredientClick(currentIngredient, getAdapterPosition(),
+                    ingredientClicker.onIngredientClick(currentIngredient,
                             checked);
                 }
             });

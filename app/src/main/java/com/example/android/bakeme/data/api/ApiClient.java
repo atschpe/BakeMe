@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * {@link ApiClient} offers a built retrofit to access the api.
  */
 public class ApiClient {
-    public static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
+    private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
 
     private static Retrofit retrofit = null;
 

@@ -20,15 +20,15 @@ import retrofit2.Retrofit;
  */
 public class Recipe implements Parcelable {
 
-    static final String ASSOCIATED_RECIPE = "associatedRecipe";
+    private static final String ASSOCIATED_RECIPE = "associatedRecipe";
 
     // api keys
-    public static final String RECIPE_ID = "id";
-    public static final String RECIPE_IMAGE = "image";
-    public static final String RECIPE_SERVINGS = "servings";
-    public static final String RECIPE_STEPS = "steps";
-    public static final String RECIPE_INGREDIENTS = "ingredients";
-    public static final String RECIPE_NAME = "name";
+    private static final String RECIPE_ID = "id";
+    private static final String RECIPE_IMAGE = "image";
+    private static final String RECIPE_SERVINGS = "servings";
+    private static final String RECIPE_STEPS = "steps";
+    private static final String RECIPE_INGREDIENTS = "ingredients";
+    private static final String RECIPE_NAME = "name";
 
     @Expose
     @SerializedName(RECIPE_IMAGE)
@@ -64,10 +64,7 @@ public class Recipe implements Parcelable {
         this.favourited = favourited;
     }
 
-    public Recipe() {
-    }
-
-    protected Recipe(Parcel in) {
+    private Recipe(Parcel in) {
         image = in.readString();
         servings = in.readInt();
         name = in.readString();
@@ -91,48 +88,24 @@ public class Recipe implements Parcelable {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public int getServings() {
         return servings;
-    }
-
-    public void setServings(int servings) {
-        this.servings = servings;
     }
 
     public List<Steps> getSteps() {
         return steps;
     }
 
-    public void setSteps(List<Steps> steps) {
-        this.steps = steps;
-    }
-
     public List<Ingredients> getIngredients() {
         return ingredients;
-    }
-
-    public void setIngredients(List<Ingredients> ingredients) {
-        this.ingredients = ingredients;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public boolean isFavourited() {
@@ -195,9 +168,6 @@ public class Recipe implements Parcelable {
         private long globalId;
 
 
-        public Steps() {
-        }
-
         //@Ignore
         public Steps(long id, String shortDescription, String description, String video,
                      String thumbnail) {
@@ -208,7 +178,7 @@ public class Recipe implements Parcelable {
             this.thumbnail = thumbnail;
         }
 
-        protected Steps(Parcel in) {
+        Steps(Parcel in) {
             thumbnail = in.readString();
             video = in.readString();
             description = in.readString();
@@ -234,56 +204,20 @@ public class Recipe implements Parcelable {
             return thumbnail;
         }
 
-        public void setThumbnail(String thumbnail) {
-            this.thumbnail = thumbnail;
-        }
-
         public String getVideo() {
             return video;
-        }
-
-        public void setVideo(String video) {
-            this.video = video;
         }
 
         public String getDescription() {
             return description;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
         public String getShortDescription() {
             return shortDescription;
         }
 
-        public void setShortDescription(String shortDescription) {
-            this.shortDescription = shortDescription;
-        }
-
         public long getId() {
             return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getAssociatedRecipe() {
-            return associatedRecipe;
-        }
-
-        public void setAssociatedRecipe(String associatedRecipe) {
-            this.associatedRecipe = associatedRecipe;
-        }
-
-        public long getGlobalId() {
-            return globalId;
-        }
-
-        public void setGlobalId(long globalId) {
-            this.globalId = globalId;
         }
 
         @Override
@@ -305,11 +239,9 @@ public class Recipe implements Parcelable {
 
     public static class Ingredients implements Parcelable {
 
-        public static final String INGREDIENTS_ID = "id";
-        public static final String INGREDIENTS_INGREDIENT = "ingredient";
-        public static final String INGREDIENTS_MEASURE = "measure";
-        public static final String INGREDIENTS_QUANTITY = "quantity";
-        public static final String INGREDIENTS_ASSOCIATED_RECIPE = ASSOCIATED_RECIPE;
+        static final String INGREDIENTS_INGREDIENT = "ingredient";
+        static final String INGREDIENTS_MEASURE = "measure";
+        static final String INGREDIENTS_QUANTITY = "quantity";
 
         @Expose
         @SerializedName(INGREDIENTS_INGREDIENT)
@@ -329,9 +261,6 @@ public class Recipe implements Parcelable {
 
         private boolean checked = false;
 
-        public Ingredients() {
-        }
-
         public Ingredients(long id, String ingredient, String measure, double quantity,
                            boolean checked) {
             this.id = id;
@@ -350,19 +279,12 @@ public class Recipe implements Parcelable {
             this.associatedRecipe = associatedRecipe;
         }
 
-        protected Ingredients(Parcel in) {
+        Ingredients(Parcel in) {
             ingredient = in.readString();
             measure = in.readString();
             quantity = in.readDouble();
             checked = in.readByte() != 0;
             associatedRecipe = in.readString();
-        }
-
-        public Ingredients(long id, String ingredient, String measure, double quantity) {
-            this.id = id;
-            this.ingredient = ingredient;
-            this.measure = measure;
-            this.quantity = quantity;
         }
 
         @Override
@@ -395,24 +317,12 @@ public class Recipe implements Parcelable {
             return ingredient;
         }
 
-        public void setIngredient(String ingredient) {
-            this.ingredient = ingredient;
-        }
-
         public String getMeasure() {
             return measure;
         }
 
-        public void setMeasure(String measure) {
-            this.measure = measure;
-        }
-
         public double getQuantity() {
             return quantity;
-        }
-
-        public void setQuantity(double quantity) {
-            this.quantity = quantity;
         }
 
         public long getId() {

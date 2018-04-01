@@ -52,6 +52,7 @@
         android:src="@drawable/arrow_left"
         app:layout_constraintBottom_toBottomOf="@+id/recipe_step_tv"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="@dimen/margin"
         app:layout_constraintTop_toTopOf="@+id/recipe_step_tv" />
 
     <ImageButton

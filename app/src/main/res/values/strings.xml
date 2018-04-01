@@ -21,7 +21,11 @@
     <string name="widget_title_contenDescrip">BakeMe app, shopping list widget</string>
     <string name="favourited_recipe">favouriteFlag recipe</string>
     <string name="separator_widget_contentDescrip">list separator</string>
-    <string name="bakeground_widget_contDescrip">BakeMe app icon in the background.</string>
+    <string name="background_widget_contDescrip">BakeMe app icon in the background.</string>
+    <string name="recipe_card_favourite_button">Recipe card favourite button</string>
+    <string name="recipe_overview_favourite_button">Recipe overview favourite button</string>
+    <string name="servings_icon">Servings icon</string>
+    <string name="divider_line">divider line</string>
 
     <!-- toasts and other messages -->
     <string name="landscape_instruction"> &lt; previous step | swipe right &gt;</string>
@@ -34,25 +38,15 @@
     <string name="favourite_title_dialog">Time to go shopping</string>
     <string name="ok">OK</string>
     <string name="widget_all_available">You have all ingredients to make your  favourited recipe(s)!</string>
-    <string name="widget_no_recipes">You have not favourited any Recipes for your shopping list.</string>
-
-    <!-- tags for intents, bundles and persistence -->
-    <string name="INGREDIENT_LIST" translatable="false">ingredient list</string>
-    <string name="STEP_LIST" translatable="false">step list</string>
-    <string name="RECIPE_BUNDLE" translatable="false">recipe bundle</string>
-    <string name="SELECTED_STEP" translatable="false">selected step</string>
-    <string name="SELECTED_RECIPE" translatable="false">selected_recipe</string>
-    <string name="RECIPE_KEY" translatable="false">recipe_key</string>
+    <string name="widget_no_recipes">You have not favourited any Recipes for your shopping list.</string>>
     <string name="no_recipes">There are no recipe to be displayed.</string>
     <string name="ingredient_indicator">ingredients for</string>
     <string name="steps_indicator">steps for</string>
+
     <string name="associated_recipe">associatedRecipe</string>
     <string name="favourite_button">favourite button</string>
     <string name="unknown_uri">Unknown URI:</string>
-    <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="ingredient_acquired">ingredient acquired</string>
     <string name="widget_title">Shopping list for BakeMe</string>
-    <string name="recipe_card_favourite_button">Recipe card favourite button</string>
-    <string name="recipe_overview_favourite_button">Recipe overview favourite button</string>
 </resources>

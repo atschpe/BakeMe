@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:alpha="0.1"
-                android:contentDescription="@string/bakeground_widget_contDescrip"
+                android:contentDescription="@string/background_widget_contDescrip"
                 android:src="@drawable/ic_launcher_foreground" />
         </RelativeLayout>
     </RelativeLayout>

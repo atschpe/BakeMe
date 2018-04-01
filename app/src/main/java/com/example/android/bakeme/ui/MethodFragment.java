@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Steps;
+import com.example.android.bakeme.utils.RecipeUtils;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -70,19 +71,20 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     SimpleExoPlayerView exoPlayerView;
     @BindView(R.id.video_thumbnail_iv)
     ImageView videoThumbnailIv;
+
     private SimpleExoPlayer exoPlayer;
     private MediaSessionCompat videoSession;
     private PlaybackStateCompat.Builder stateBuilder;
     private static final String TAG = MethodFragment.class.getSimpleName();
-    Handler handler;
+    //private Handler handler;
 
     //passed on data & setters to do so.
-    Recipe recipe;
-    Steps step;
-    ArrayList<Steps> stepsList;
+    private Recipe recipe;
+    private Steps step;
+    private ArrayList<Steps> stepsList;
 
     // check whether device is landscape mode (single pane)
-    boolean landMode;
+    private boolean landMode;
 
     public void setStepsList(ArrayList<Steps> stepsList) {
         this.stepsList = stepsList;
@@ -97,7 +99,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     }
 
 
-    public MethodFragment() { //empty constructor as neded
+    public MethodFragment() { //empty constructor as needed
     }
 
     @Override
@@ -111,14 +113,16 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
                 && !getResources().getBoolean(R.bool.isTablet);
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(String.valueOf(R.string.STEP_LIST))) {
-                stepsList = savedInstanceState.getParcelableArrayList(String.valueOf(R.string.STEP_LIST));
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.STEP_LIST))) {
+                stepsList = savedInstanceState.getParcelableArrayList(String.valueOf(
+                        RecipeUtils.STEP_LIST));
             }
-            if (savedInstanceState.containsKey(String.valueOf(R.string.SELECTED_STEP))) {
-                step = savedInstanceState.getParcelable(String.valueOf(R.string.SELECTED_STEP));
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.SELECTED_STEP))) {
+                step = savedInstanceState.getParcelable(String.valueOf(RecipeUtils.SELECTED_STEP));
             }
-            if (savedInstanceState.containsKey(String.valueOf(R.string.SELECTED_RECIPE))) {
-                recipe = savedInstanceState.getParcelable(String.valueOf(R.string.SELECTED_RECIPE));
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.SELECTED_RECIPE))) {
+                recipe = savedInstanceState.getParcelable(String.valueOf(
+                        RecipeUtils.SELECTED_RECIPE));
             }
         }
 
@@ -126,7 +130,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
             updateStepText();
         }
 
-        handler = new Handler();
+        //handler = new Handler();
 
         String thumbnail = step.getThumbnail();
         //if there are not thumbnails set image to null so app icon is shown
@@ -236,9 +240,9 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelableArrayList(String.valueOf(R.string.STEP_LIST), stepsList);
-        outState.putParcelable(String.valueOf(R.string.SELECTED_RECIPE), recipe);
-        outState.putParcelable(String.valueOf(R.string.SELECTED_STEP), step);
+        outState.putParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST), stepsList);
+        outState.putParcelable(String.valueOf(RecipeUtils.SELECTED_RECIPE), recipe);
+        outState.putParcelable(String.valueOf(RecipeUtils.SELECTED_STEP), step);
         super.onSaveInstanceState(outState);
     }
 
@@ -300,7 +304,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     }
 
     //Initialize ExoPlayer.
-    public void initializePlayer() {
+    private void initializePlayer() {
         if (exoPlayer == null) {
             // Create an instance of the ExoPlayer.
             TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(new DefaultBandwidthMeter());
@@ -369,7 +373,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
     }
 
     //Media Session Callbacks, where all external clients control the player.
-    public class MySessionCallback extends MediaSessionCompat.Callback {
+    class MySessionCallback extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
             exoPlayer.setPlayWhenReady(true);
@@ -427,6 +431,7 @@ public class MethodFragment extends Fragment implements ExoPlayer.EventListener 
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            v.performClick();
             return gestureDetector.onTouchEvent(event);
         }
 

@@ -14,7 +14,7 @@ public class RecipeIdlingResource implements IdlingResource {
     private volatile ResourceCallback resourceCallback;
 
     //Control idleness through this boolean.
-    private AtomicBoolean isIdleNow = new AtomicBoolean(true);
+    private final AtomicBoolean isIdleNow = new AtomicBoolean(true);
 
     @Override
     public String getName() {

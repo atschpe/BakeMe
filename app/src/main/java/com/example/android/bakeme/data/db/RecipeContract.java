@@ -8,7 +8,7 @@ public class RecipeContract {
 
     //authority & uri
     public static final String CONTENT_AUTH = "com.example.android.bakeme";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTH);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTH);
 
     //paths for the tables
     public static final String PATH_RECIPE = "recipe";
@@ -16,7 +16,7 @@ public class RecipeContract {
     public static final String PATH_INGREDIENTS = "ingredients";
 
     //reused column name
-    static final String ASSOCIATED_RECIPE = "associatedRecipe";
+    private static final String ASSOCIATED_RECIPE = "associatedRecipe";
 
     public static final class RecipeEntry {
 

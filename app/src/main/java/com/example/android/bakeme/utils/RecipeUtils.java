@@ -27,13 +27,21 @@ public class RecipeUtils {
     public static final int RECIPE_DETAIL_LOADER = 21;
     public static final int INGREDIENTS_DETAIL_LOADER = 22;
     public static final int STEPS_DETAIL_LOADER = 23;
-    public static int RECIPE_MAIN_LOADER = 11;
+    public static final int RECIPE_MAIN_LOADER = 11;
+
+    public static final String INGREDIENT_LIST = "ingredient list";
+    public static final String STEP_LIST = "step list";
+    public static final String RECIPE_BUNDLE = "recipe bundle";
+    public static final String SELECTED_STEP = "selected step";
+    public static final String SELECTED_RECIPE = "selected_recipe";
+    public static final String RECIPE_KEY = "recipe_key";
 
     //Flag constants
-    public static int FAV_UPDATED_FLAG = 222;
-    public static int FAV_UNCHANGED_FLAG = 111;
+    public static final int FAV_UPDATED_FLAG = 222;
+    public static final int FAV_UNCHANGED_FLAG = 111;
 
     private static boolean favIsUpdated;
+    private static String currentRecipeName;
 
     //keep track of when the user (un)favourites a recipe
     public static boolean isFavIsUpdated() {
@@ -48,7 +56,7 @@ public class RecipeUtils {
         RecipeUtils.currentRecipeName = currentRecipeName;
     }
 
-    static String currentRecipeName;
+    // --Commented out by Inspection (28.04.18, 21:36):private static String currentRecipeName;
 
     // –––––– Insert the data to the respective tables ––––––
 
@@ -156,11 +164,10 @@ public class RecipeUtils {
     }
 
     /** Ingredients
-     *  @param recipeName of the associated recipe
      * @param selectedIngredient the selected ingredient to be updated
      * @param ctxt of the activity calling this method
      */
-    public static void updateCheckedDb(String recipeName, Ingredients selectedIngredient,
+    public static void updateCheckedDb(Ingredients selectedIngredient,
                                        Context ctxt) {
         //create uri referencing the ingredient's id as well as the selection arguments.
         Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
@@ -176,7 +183,7 @@ public class RecipeUtils {
     }
 
     //get the corresponding int value for the boolean
-    public static int getCheckValue(boolean favourited, int favouritedTrue, int favouritedFalse) {
+    private static int getCheckValue(boolean favourited, int favouritedTrue, int favouritedFalse) {
         int favValue; //convert boolean to int value for db
         if (favourited) {
             favValue = favouritedTrue;
@@ -211,8 +218,8 @@ public class RecipeUtils {
      * @param ingredientsList will hold the data for the adapter
      * @return the ingredientsList for further processing by the adapter.
      */
-    public static ArrayList<Ingredients> getIngredientList(Cursor data,
-                                                           ArrayList<Ingredients> ingredientsList) {
+    public static void getIngredientList(Cursor data,
+                                         ArrayList<Ingredients> ingredientsList) {
         while (data.moveToNext()) {
             long id = data.getLong(data.getColumnIndex(IngredientsEntry.INGREDIENTS_ID));
             String ingredient = data.getString(data.getColumnIndex(IngredientsEntry
@@ -226,7 +233,6 @@ public class RecipeUtils {
             ingredientsList.add(new Ingredients(id, ingredient, measure, quantity,
                     checked));
         }
-        return ingredientsList;
     }
 
     /** Steps
@@ -235,7 +241,7 @@ public class RecipeUtils {
      * @param stepsList will hold the data for the adapter
      * @return the stepsList for further processing by the adapter.
      */
-    public static ArrayList<Steps> getStepsList(Cursor data, ArrayList<Steps> stepsList) {
+    public static void getStepsList(Cursor data, ArrayList<Steps> stepsList) {
         while (data.moveToNext()) {
             long id = data.getLong(data.getColumnIndex(StepsEntry.STEPS_ID));
             String shortDescrip
@@ -246,6 +252,5 @@ public class RecipeUtils {
             String thumb = data.getString(data.getColumnIndex(StepsEntry.STEPS_THUMB));
             stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
         }
-        return stepsList;
     }
 }

@@ -36,22 +36,19 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         IngredientAdapter.IngredientClickHandler, LoaderManager.LoaderCallbacks<Cursor>,
         OverviewFragment.OnLoadManagerRestart {
 
-    Recipe selectedRecipe;
-    OverviewFragment overviewFrag;
-    MethodFragment methodFrag;
-    FragmentManager fragMan;
-
     //booleans to track layout & favouriting action
-    public static boolean twoPane;
+    private static boolean twoPane;
+    private static ArrayList<Ingredients> ingredientsList;
+    private static ArrayList<Steps> stepsList;
+    //variables to keep track of loaders finishing
+    private final int amountOfLoaders = 3;
+    private Recipe selectedRecipe;
     private boolean isFavourited;
     private boolean loaderIsRestarted = false;
-
-    static ArrayList<Ingredients> ingredientsList;
-    static ArrayList<Steps> stepsList;
-
-    //variables to keep track of loaders finishing
-    protected int amountOfLoaders = 3;
-    protected int completedLoaders = 0;
+    private OverviewFragment overviewFrag;
+    private MethodFragment methodFrag;
+    private FragmentManager fragMan;
+    private int completedLoaders = 0;
 
     // Idling resource for testing purposes only
     @Nullable
@@ -86,26 +83,26 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         fragMan = getSupportFragmentManager();
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(String.valueOf(R.string.SELECTED_RECIPE))) {
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.SELECTED_RECIPE))) {
                 selectedRecipe = savedInstanceState.getParcelable(String
-                        .valueOf(R.string.SELECTED_RECIPE));
+                        .valueOf(RecipeUtils.SELECTED_RECIPE));
             }
-            if (savedInstanceState.containsKey(String.valueOf(R.string.INGREDIENT_LIST))) {
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.INGREDIENT_LIST))) {
                 ingredientsList = savedInstanceState.getParcelableArrayList(String
-                        .valueOf(R.string.INGREDIENT_LIST));
+                        .valueOf(RecipeUtils.INGREDIENT_LIST));
             }
-            if (savedInstanceState.containsKey(String.valueOf(R.string.STEP_LIST))) {
+            if (savedInstanceState.containsKey(String.valueOf(RecipeUtils.STEP_LIST))) {
                 stepsList = savedInstanceState.getParcelableArrayList(String
-                        .valueOf(R.string.STEP_LIST));
+                        .valueOf(RecipeUtils.STEP_LIST));
             }
 
         } else {
             Intent recipeIntent = getIntent();
             Timber.v("recipe Intent: %s", recipeIntent);
             if (recipeIntent != null
-                    && recipeIntent.hasExtra(String.valueOf(R.string.SELECTED_RECIPE))) {
+                    && recipeIntent.hasExtra(String.valueOf(RecipeUtils.SELECTED_RECIPE))) {
                 selectedRecipe
-                        = recipeIntent.getParcelableExtra(String.valueOf(R.string.SELECTED_RECIPE));
+                        = recipeIntent.getParcelableExtra(String.valueOf(RecipeUtils.SELECTED_RECIPE));
             }
 
             overviewFrag = new OverviewFragment();
@@ -149,9 +146,10 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(String.valueOf(R.string.SELECTED_RECIPE), selectedRecipe);
-        outState.putParcelableArrayList(String.valueOf(R.string.INGREDIENT_LIST), ingredientsList);
-        outState.putParcelableArrayList(String.valueOf(R.string.STEP_LIST), stepsList);
+        outState.putParcelable(String.valueOf(RecipeUtils.SELECTED_RECIPE), selectedRecipe);
+        outState.putParcelableArrayList(String.valueOf(RecipeUtils.INGREDIENT_LIST),
+                ingredientsList);
+        outState.putParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST), stepsList);
         super.onSaveInstanceState(outState);
     }
 
@@ -169,17 +167,17 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             Intent openMethod = new Intent(this, MethodActivity.class);
             Bundle recipeBundle = new Bundle();
 
-            recipeBundle.putParcelableArrayList(String.valueOf(R.string.STEP_LIST), stepsList);
-            recipeBundle.putParcelable(String.valueOf(R.string.SELECTED_RECIPE), selectedRecipe);
-            recipeBundle.putParcelable(String.valueOf(R.string.SELECTED_STEP), step);
+            recipeBundle.putParcelableArrayList(String.valueOf(RecipeUtils.STEP_LIST), stepsList);
+            recipeBundle.putParcelable(String.valueOf(RecipeUtils.SELECTED_RECIPE), selectedRecipe);
+            recipeBundle.putParcelable(String.valueOf(RecipeUtils.SELECTED_STEP), step);
 
-            openMethod.putExtra(String.valueOf(R.string.RECIPE_BUNDLE), recipeBundle);
+            openMethod.putExtra(String.valueOf(RecipeUtils.RECIPE_BUNDLE), recipeBundle);
             startActivity(openMethod);
         }
     }
 
     // see: https://stackoverflow.com/a/11421298/7601437
-    public void loaderHasFinished() {
+    private void loaderHasFinished() {
         completedLoaders++;
         if (completedLoaders == amountOfLoaders) {
             setupFragments();
@@ -288,7 +286,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
     }
 
     @Override
-    public void onIngredientClick(Ingredients selectedIngredient, int ingredientPosition,
+    public void onIngredientClick(Ingredients selectedIngredient,
                                   boolean isChecked) {
         if (isChecked) {
             selectedIngredient.setChecked(true);
@@ -296,7 +294,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             selectedIngredient.setChecked(false);
         }
         //update the db and then restart the loader.
-        RecipeUtils.updateCheckedDb(selectedRecipe.getName(), selectedIngredient, this);
+        RecipeUtils.updateCheckedDb(selectedIngredient, this);
         getSupportLoaderManager().restartLoader(RecipeUtils.INGREDIENTS_DETAIL_LOADER, null,
                 this);
         IngredientsService.startHandleActionUpdateWidget(this);
