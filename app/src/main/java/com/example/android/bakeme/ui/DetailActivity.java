@@ -46,10 +46,10 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
     private boolean isFavourited;
     private boolean loaderIsRestarted = false;
 
-    //RecipeDao recipeDao;
-
     static ArrayList<Ingredients> ingredientsList;
     static ArrayList<Steps> stepsList;
+
+    //variables to keep track of loaders finishing
     protected int amountOfLoaders = 3;
     protected int completedLoaders = 0;
 
@@ -223,6 +223,8 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             case RecipeUtils.RECIPE_DETAIL_LOADER:
                 uri = RecipeEntry.CONTENT_URI_RECIPE;
                 projection = new String[]{RecipeEntry.RECIPE_FAVOURITED};
+                selection = RecipeEntry.RECIPE_NAME + "=?";
+                selectionArgs = new String[]{selectedRecipeName};
                 break;
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
                 uri = IngredientsEntry.CONTENT_URI_INGREDIENTS;
@@ -267,7 +269,6 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             //keep track of each loader finishing so the fragments start with all data on hand.
             loaderHasFinished();
         }
-
     }
 
     @Override
