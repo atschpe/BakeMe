@@ -28,9 +28,9 @@ public class BakeWidget extends AppWidgetProvider {
         Intent openDetailAppIntent = new Intent(ctxt, DetailActivity.class);
         PendingIntent appPendingIntent = PendingIntent.getActivity(ctxt, 0,
                 openDetailAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setPendingIntentTemplate(R.id.shopping_list_empty, appPendingIntent);
+        views.setPendingIntentTemplate(R.id.bakewidget_ingredientList, appPendingIntent);
         // Handle empty shopping list
-        String emptyText= String.valueOf(R.string.widget_all_available); //TODO: check whether all_available or no recipe has been favourited
+        String emptyText= ctxt.getString(R.string.widget_all_available); //TODO: check whether all_available or no recipe has been favourited
         views.setTextViewText(R.id.empty_tv, emptyText);
         views.setEmptyView(R.id.bakewidget_ingredientList, R.id.shopping_list_empty);
 

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.android.bakeme.R;
+import com.example.android.bakeme.RecipeIdlingResource;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.Recipe.Steps;
@@ -51,6 +53,22 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
     static ArrayList<Steps> stepsList;
     protected int amountOfLoaders = 3;
     protected int completedLoaders = 0;
+
+    // Idling resource for testing purposes only
+    @Nullable
+    private RecipeIdlingResource idlingResource;
+
+    /**
+     * Only called from test, creates and returns a new {@link RecipeIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public RecipeIdlingResource getIdlingResource() {
+        if (idlingResource == null) {
+            idlingResource = new RecipeIdlingResource();
+        }
+        return idlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
