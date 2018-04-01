@@ -47,13 +47,12 @@ public class IngredientsService extends IntentService {
             final String action = intent.getAction();
             if (action.equals(ACTION_REMOVE_INGREDIENTS)) {
                 Bundle getData = intent.getExtras();
-                Ingredients currentIngredients = null;
-                if (getData != null && getData.containsKey(ListWidgetService.EXTRA_ID)) {
-                    currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
+                if (getData != null && getData.containsKey(ListWidgetService.EXTRA_INGREDIENT)) {
+                    Ingredients currentIngredients = getData.getParcelable(ListWidgetService.EXTRA_INGREDIENT);
+                    handleActionRemoveIngredients(currentIngredients);
                 }
-                if (currentIngredients != null) {
-                handleActionRemoveIngredients(currentIngredients);}
-            } if (action.equals(ACTION_UPDATE_WIDGET)) {
+            }
+            if (action.equals(ACTION_UPDATE_WIDGET)) {
                 handleActionUpdateWidget();
             }
         }
@@ -68,12 +67,11 @@ public class IngredientsService extends IntentService {
         AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetMan.getAppWidgetIds(new ComponentName(this,
                 BakeWidget.class));
+        //Now update all widgets
+        BakeWidget.updateBakeWidgets(this, appWidgetMan, appWidgetIds);
         //update data for listView
         appWidgetMan.notifyAppWidgetViewDataChanged(appWidgetIds,
                 R.id.bakewidget_ingredientList);
-        //Now update all widgets
-        BakeWidget.updateBakeWidgets(this, appWidgetMan, appWidgetIds);
-
     }
 
     private void handleActionUpdateWidget() {

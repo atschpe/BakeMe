@@ -63,7 +63,12 @@ public class MainActivityTester {
     // (*)the ingredient checkboxes are revealed
     @Test
     public void favouriteRecipeInDetailTest() {
-        onView(withId(R.id.recipe_favourite_cb)).check(matches(isNotChecked()));
+
+//        public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+//            return new RecyclerViewMatcher(recyclerViewId);
+//        }
+//
+//        onView(withRecyclerView()
         onView(withId(R.id.recipe_favourite_cb)).perform(RecyclerViewActions.actionOnItemAtPosition(0, (click())));
                 //.check(matches(isChecked()));
         onView(withId(R.id.ingredient_cb)).check(matches(isDisplayed()));
