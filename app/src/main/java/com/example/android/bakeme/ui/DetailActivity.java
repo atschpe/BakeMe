@@ -209,8 +209,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
             methodFrag.setRecipe(selectedRecipe);
             methodFrag.setStepsList(stepsList);
 
-            fragMan.beginTransaction().add(R.id.detail_fragment_container2, methodFrag)
-                    .addToBackStack(null).commit();
+            fragMan.beginTransaction().add(R.id.detail_fragment_container2, methodFrag).commit();
         }
     }
 

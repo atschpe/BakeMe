@@ -45,14 +45,16 @@ public class MethodActivity extends AppCompatActivity {
 //        step = recipeBundle.getParcelable(RecipeUtils.SELECTED_STEP);
 //        stepsList = getIntent().getParcelableArrayListExtra(RecipeUtils.STEP_LIST);
 
+        if (savedInstanceState == null) {
+
         methodFrag = new MethodFragment();
         fragMan = getSupportFragmentManager();
 
-        methodFrag.setStep(step);
-        methodFrag.setRecipe(selectedRecipe);
-        methodFrag.setStepsList(stepsList);
+            methodFrag.setStep(step);
+            methodFrag.setRecipe(selectedRecipe);
+            methodFrag.setStepsList(stepsList);
 
-        fragMan.beginTransaction().add(R.id.method_container, methodFrag).addToBackStack(null)
-                .commit();
+            fragMan.beginTransaction().add(R.id.method_container, methodFrag).commit();
+        }
     }
 }
