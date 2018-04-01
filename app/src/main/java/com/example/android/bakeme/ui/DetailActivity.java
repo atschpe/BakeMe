@@ -21,9 +21,9 @@ import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.Recipe.Steps;
 import com.example.android.bakeme.data.adapter.IngredientAdapter;
 import com.example.android.bakeme.data.adapter.StepAdapter;
-import com.example.android.bakeme.data.db.RecipeDao;
-import com.example.android.bakeme.data.db.RecipeDatabase;
-import com.example.android.bakeme.data.db.RecipeProvider;
+import com.example.android.bakeme.data.db.RecipeContract.IngredientsEntry;
+import com.example.android.bakeme.data.db.RecipeContract.RecipeEntry;
+import com.example.android.bakeme.data.db.RecipeContract.StepsEntry;
 import com.example.android.bakeme.utils.RecipeUtils;
 import com.example.android.bakeme.widget.IngredientsService;
 
@@ -31,8 +31,6 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import timber.log.Timber;
-
-import static com.example.android.bakeme.data.Recipe.RECIPE_FAVOURITED;
 
 public class DetailActivity extends AppCompatActivity implements StepAdapter.StepClickHandler,
         IngredientAdapter.IngredientClickHandler, LoaderManager.LoaderCallbacks<Cursor>,
@@ -48,7 +46,7 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
     private boolean isFavourited;
     private boolean loaderIsRestarted = false;
 
-    RecipeDao recipeDao;
+    //RecipeDao recipeDao;
 
     static ArrayList<Ingredients> ingredientsList;
     static ArrayList<Steps> stepsList;
@@ -84,8 +82,6 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         //instantiate lists ready to retrieve the provided information for each.
         ingredientsList = new ArrayList<>();
         stepsList = new ArrayList<>();
-
-        recipeDao = RecipeDatabase.getRecipeDbInstance(this).recipeDao();
 
         fragMan = getSupportFragmentManager();
 
@@ -225,17 +221,17 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
         RecipeUtils.setCurrentRecipeName(selectedRecipeName);
         switch (id) {
             case RecipeUtils.RECIPE_DETAIL_LOADER:
-                uri = RecipeProvider.CONTENT_URI_RECIPE;
-                projection = new String[]{Recipe.RECIPE_FAVOURITED};
+                uri = RecipeEntry.CONTENT_URI_RECIPE;
+                projection = new String[]{RecipeEntry.RECIPE_FAVOURITED};
                 break;
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
-                uri = RecipeProvider.CONTENT_URI_INGREDIENTS;
-                selection = Ingredients.INGREDIENTS_ASSOCIATED_RECIPE + "=?";
+                uri = IngredientsEntry.CONTENT_URI_INGREDIENTS;
+                selection = IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE + "=?";
                 selectionArgs = new String[]{String.valueOf(selectedRecipeName)};
                 break;
             case RecipeUtils.STEPS_DETAIL_LOADER:
-                uri = RecipeProvider.CONTENT_URI_STEPS;
-                selection = Steps.STEPS_ASSOCIATED_RECIPE + "=?";
+                uri = StepsEntry.CONTENT_URI_STEPS;
+                selection = StepsEntry.STEPS_ASSOCIATED_RECIPE + "=?";
                 selectionArgs = new String[]{String.valueOf(selectedRecipeName)};
                 break;
         }
@@ -247,9 +243,13 @@ public class DetailActivity extends AppCompatActivity implements StepAdapter.Ste
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case RecipeUtils.RECIPE_DETAIL_LOADER:
-                data.moveToFirst();
-                isFavourited = data.getInt(data.getColumnIndex(RECIPE_FAVOURITED)) != 0;
-                selectedRecipe.setFavourited(isFavourited);
+                if (data != null && data.getCount() > 0) {
+                    data.moveToFirst();
+                    int favValue = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_FAVOURITED));
+                    isFavourited = favValue == RecipeEntry.FAVOURITED_TRUE;
+                    selectedRecipe.setFavourited(isFavourited);
+
+                }
                 break;
             case RecipeUtils.INGREDIENTS_DETAIL_LOADER:
                 RecipeUtils.getIngredientList(data, ingredientsList);

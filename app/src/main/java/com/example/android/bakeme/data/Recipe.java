@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.android.bakeme.data.db.RecipeContract;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -32,7 +33,7 @@ public class Recipe implements Parcelable {
 
     static final String ASSOCIATED_RECIPE = "associatedRecipe";
 
-    //db table
+    //db table as well as api keys
     public static final String TABLE_RECIPE = "recipes";
     public static final String RECIPE_ID = "id";
     public static final String RECIPE_IMAGE = "image";
@@ -52,15 +53,11 @@ public class Recipe implements Parcelable {
     @SerializedName(RECIPE_SERVINGS)
     private int servings;
 
-    @ColumnInfo(name = RECIPE_STEPS)
-    private String stepsTracker;
     @Ignore
     @Expose
     @SerializedName( RECIPE_STEPS)
     private List<Steps> steps;
 
-    @ColumnInfo(name = RECIPE_INGREDIENTS)
-    private String ingredientsTracker;
     @Ignore
     @Expose
     @SerializedName(RECIPE_INGREDIENTS)
@@ -79,7 +76,7 @@ public class Recipe implements Parcelable {
 
     //not part of the api, but used to track favourited recipes for the widget
     @ColumnInfo(name = RECIPE_FAVOURITED)
-    private boolean favourited;
+    private boolean favourited =false;
 
     @Ignore
     public Recipe(int id, String image, String name, int servings, boolean favourited) {
@@ -106,12 +103,6 @@ public class Recipe implements Parcelable {
         if (values.containsKey(RECIPE_SERVINGS)) {
             recipe.servings = values.getAsInteger(RECIPE_SERVINGS);
         }
-        if (values.containsKey(RECIPE_STEPS)) {
-            recipe.stepsTracker = values.getAsString(RECIPE_STEPS);
-        }
-        if (values.containsKey(RECIPE_INGREDIENTS)) {
-            recipe.ingredientsTracker = values.getAsString(RECIPE_INGREDIENTS);
-        }
         if (values.containsKey(RECIPE_NAME)) {
             recipe.name = values.getAsString(RECIPE_NAME);
         }
@@ -127,8 +118,6 @@ public class Recipe implements Parcelable {
         name = in.readString();
         id = in.readInt();
         favourited = in.readByte() != 0;
-        stepsTracker = in.readString();
-        ingredientsTracker = in.readString();
 
         //inner classes
         ingredients = new ArrayList<>();
@@ -206,22 +195,6 @@ public class Recipe implements Parcelable {
         this.favourited = favourited;
     }
 
-    public String getStepsTracker() {
-        return stepsTracker;
-    }
-
-    public void setStepsTracker(String stepsTracker) {
-        this.stepsTracker = stepsTracker;
-    }
-
-    public String getIngredientsTracker() {
-        return ingredientsTracker;
-    }
-
-    public void setIngredientsTracker(String ingredientsTracker) {
-        this.ingredientsTracker = ingredientsTracker;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -234,8 +207,6 @@ public class Recipe implements Parcelable {
         dest.writeString(name);
         dest.writeLong(id);
         dest.writeByte((byte) (favourited ? 1 : 0));
-        dest.writeString(stepsTracker);
-        dest.writeString(ingredientsTracker);
 
         //inner classes
         dest.writeList(ingredients);
@@ -457,7 +428,7 @@ public class Recipe implements Parcelable {
 
         //not part of the api, but used to track selected ingredients for the widget
         @ColumnInfo(name = INGREDIENTS_CHECKED)
-        private boolean checked;
+        private boolean checked = false;
 
         public Ingredients() {
         }

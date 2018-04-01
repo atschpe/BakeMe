@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe.Ingredients;
+import com.example.android.bakeme.data.db.RecipeContract;
+import com.example.android.bakeme.data.db.RecipeContract.IngredientsEntry;
 import com.example.android.bakeme.data.db.RecipeProvider;
 
 public class IngredientsService extends IntentService {
@@ -54,14 +56,14 @@ public class IngredientsService extends IntentService {
     //set checked to '0'
     private void handleActionRemoveIngredients() {
         ContentValues values = new ContentValues();
-        values.put(Ingredients.INGREDIENTS_CHECKED, R.integer.not_checked);
-        int updatedIngredient = getContentResolver().update(RecipeProvider.CONTENT_URI_INGREDIENTS,
+        values.put(IngredientsEntry.INGREDIENTS_CHECKED, IngredientsEntry.CHECKED_FALSE);
+        int updatedIngredient = getContentResolver().update(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                 values, null, null);
 
         AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetMan.getAppWidgetIds(new ComponentName(this,
                 BakeWidget.class));
-        //update data for listview
+        //update data for listView
         appWidgetMan.notifyAppWidgetViewDataChanged(appWidgetIds,
                 R.id.bakewidget_ingredientList);
         //Now update all widgets

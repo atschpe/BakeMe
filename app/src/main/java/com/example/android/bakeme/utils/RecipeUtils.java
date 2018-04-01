@@ -9,21 +9,15 @@ import android.net.Uri;
 import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.Recipe.Ingredients;
 import com.example.android.bakeme.data.Recipe.Steps;
-import com.example.android.bakeme.data.db.RecipeProvider;
+import com.example.android.bakeme.data.db.RecipeContract.IngredientsEntry;
+import com.example.android.bakeme.data.db.RecipeContract.RecipeEntry;
+import com.example.android.bakeme.data.db.RecipeContract.StepsEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
-import static com.example.android.bakeme.data.Recipe.RECIPE_FAVOURITED;
-import static com.example.android.bakeme.data.Recipe.RECIPE_ID;
-import static com.example.android.bakeme.data.Recipe.RECIPE_IMAGE;
-import static com.example.android.bakeme.data.Recipe.RECIPE_NAME;
-import static com.example.android.bakeme.data.Recipe.RECIPE_SERVINGS;
-
 /**
- * Methods enabling the storing of the recipe information.
+ * Methods enabling the storing and retrieving of the recipe information.
  */
 public class RecipeUtils {
 
@@ -48,6 +42,9 @@ public class RecipeUtils {
     }
 
     public static String getCurrentRecipeName() {
+//        if (currentRecipeName.isEmpty()) {
+//            currentRecipeName = null;
+//        }
         return currentRecipeName;
     }
 
@@ -57,57 +54,72 @@ public class RecipeUtils {
 
     static String currentRecipeName;
 
-    public static void writeRecipesToRoom(List<Recipe> recipes, Context ctxt) {
+    public static void writeRecipesToDb(List<Recipe> recipes, Context ctxt) {
         ContentValues singleRecipe = new ContentValues();
 
         for (int i = 0; i < recipes.size(); i++) {
             Recipe receivedRecipe = recipes.get(i);
 
+            receivedRecipe.setFavourited(false); //initially all recipes are unfavourited.
             getRecipeValues(singleRecipe, receivedRecipe);
 
-            ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_RECIPE, singleRecipe);
+            ctxt.getContentResolver().insert(RecipeEntry.CONTENT_URI_RECIPE, singleRecipe);
         }
     }
 
     public static void getRecipeValues(ContentValues singleRecipe, Recipe receivedRecipe) {
-        singleRecipe.put(Recipe.RECIPE_ID, receivedRecipe.getId());
-        singleRecipe.put(Recipe.RECIPE_IMAGE, receivedRecipe.getImage());
-        singleRecipe.put(Recipe.RECIPE_NAME, receivedRecipe.getName());
-        singleRecipe.put(Recipe.RECIPE_SERVINGS, receivedRecipe.getServings());
-        singleRecipe.put(Recipe.RECIPE_FAVOURITED, receivedRecipe.isFavourited());
+        singleRecipe.put(RecipeEntry.RECIPE_ID, receivedRecipe.getId());
+        singleRecipe.put(RecipeEntry.RECIPE_IMAGE, receivedRecipe.getImage());
+        singleRecipe.put(RecipeEntry.RECIPE_NAME, receivedRecipe.getName());
+        singleRecipe.put(RecipeEntry.RECIPE_SERVINGS, receivedRecipe.getServings());
+
+        int favValue; //convert boolean to int value for db
+        if (receivedRecipe.isFavourited()) {
+            favValue = RecipeEntry.FAVOURITED_TRUE;
+        } else {
+            favValue = RecipeEntry.FAVOURITED_FALSE;
+        }
+        singleRecipe.put(RecipeEntry.RECIPE_FAVOURITED, favValue);
     }
 
-    public static void writeIngredientsToRoom(ArrayList<Ingredients> ingredientsList,
-                                              String recipeName, Context ctxt) {
+    public static void writeIngredientsToDb(ArrayList<Ingredients> ingredientsList,
+                                            String recipeName, Context ctxt) {
         ContentValues setOfIngredients = new ContentValues();
 
         for (int i = 0; i < ingredientsList.size(); i++) {
             Ingredients receivedIngredients = ingredientsList.get(i);
 
+            receivedIngredients.setChecked(false); //initially all ingredients are unchecked
             getIngredientValues(recipeName, setOfIngredients, receivedIngredients);
 
-            ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_INGREDIENTS,
+            ctxt.getContentResolver().insert(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                     setOfIngredients);
         }
     }
 
     private static void getIngredientValues(String recipeName, ContentValues setOfIngredients,
                                             Ingredients receivedIngredients) {
-        setOfIngredients.put(Ingredients.INGREDIENTS_ID, receivedIngredients.getId());
-        setOfIngredients.put(Ingredients.INGREDIENTS_INGREDIENT, receivedIngredients
+        setOfIngredients.put(IngredientsEntry.INGREDIENTS_ID, receivedIngredients.getId());
+        setOfIngredients.put(IngredientsEntry.INGREDIENTS_INGREDIENT, receivedIngredients
                 .getIngredient());
-        setOfIngredients.put(Ingredients.INGREDIENTS_MEASURE,
+        setOfIngredients.put(IngredientsEntry.INGREDIENTS_MEASURE,
                 receivedIngredients.getMeasure());
-        setOfIngredients.put(Ingredients.INGREDIENTS_QUANTITY, receivedIngredients
+        setOfIngredients.put(IngredientsEntry.INGREDIENTS_QUANTITY, receivedIngredients
                 .getQuantity());
-        setOfIngredients.put(Ingredients.INGREDIENTS_CHECKED,
-                receivedIngredients.isChecked());
-        setOfIngredients.put(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE,
+        setOfIngredients.put(IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE,
                 recipeName);
+
+        int checkValue; //convert boolean to int value for db
+        if (receivedIngredients.isChecked()) {
+            checkValue = IngredientsEntry.CHECKED_TRUE;
+        } else {
+            checkValue = IngredientsEntry.CHECKED_FALSE;
+        }
+        setOfIngredients.put(IngredientsEntry.INGREDIENTS_CHECKED, checkValue);
     }
 
-    public static void writeStepsToRoom(ArrayList<Steps> stepsList, String recipeName,
-                                        Context ctxt) {
+    public static void writeStepsToDb(ArrayList<Steps> stepsList, String recipeName,
+                                      Context ctxt) {
         ContentValues setOfSteps = new ContentValues();
 
         for (int i = 0; i < stepsList.size(); i++) {
@@ -121,14 +133,14 @@ public class RecipeUtils {
             setOfSteps.put(Steps.STEPS_DESCRIP, receivedSteps.getDescription());
             setOfSteps.put(Steps.STEPS_ASSOCIATED_RECIPE, recipeName);
 
-            Uri inserted = ctxt.getContentResolver().insert(RecipeProvider.CONTENT_URI_STEPS,
+            Uri inserted = ctxt.getContentResolver().insert(StepsEntry.CONTENT_URI_STEPS,
                     setOfSteps);
         }
     }
 
     public static void updateFavDb(Recipe selectedRecipe, Context ctxt) {
         //create uri referencing the recipe's id
-        Uri uri = ContentUris.withAppendedId(RecipeProvider.CONTENT_URI_RECIPE,
+        Uri uri = ContentUris.withAppendedId(RecipeEntry.CONTENT_URI_RECIPE,
                 selectedRecipe.getId());
 
         //store changed favourite selection to the db.
@@ -139,7 +151,7 @@ public class RecipeUtils {
 
     public static void updateCheckedDb(String recipeName, Ingredients selectedIngredients, Context ctxt) {
         //create uri referencing the ingredient's id
-        Uri uri = ContentUris.withAppendedId(RecipeProvider.CONTENT_URI_INGREDIENTS,
+        Uri uri = ContentUris.withAppendedId(IngredientsEntry.CONTENT_URI_INGREDIENTS,
                 selectedIngredients.getId());
 
         //store changed checked state to the db.
@@ -153,14 +165,14 @@ public class RecipeUtils {
         data.moveToFirst();
         while (data.moveToNext()) {
                 long id = data.getLong(data.getColumnIndex(Ingredients.INGREDIENTS_ID));
-                String ingredient = data.getString(data.getColumnIndex(Ingredients
+                String ingredient = data.getString(data.getColumnIndex(IngredientsEntry
                         .INGREDIENTS_INGREDIENT));
-                String measure = data.getString(data.getColumnIndex(Ingredients
+                String measure = data.getString(data.getColumnIndex(IngredientsEntry
                         .INGREDIENTS_MEASURE));
-                int quantity = data.getInt(data.getColumnIndex(Ingredients
+                int quantity = data.getInt(data.getColumnIndex(IngredientsEntry
                         .INGREDIENTS_QUANTITY));
-                boolean checked = data.getInt(data.getColumnIndex(Ingredients
-                        .INGREDIENTS_CHECKED)) != 0;
+                boolean checked = data.getInt(data.getColumnIndex(IngredientsEntry
+                        .INGREDIENTS_CHECKED)) == IngredientsEntry.CHECKED_TRUE;
                 ingredientsList.add(new Ingredients(id, ingredient, measure, quantity,
                         checked));
         }
@@ -170,13 +182,13 @@ public class RecipeUtils {
     public static ArrayList<Steps> getSteps(Cursor data, ArrayList<Steps> stepsList) {
         data.moveToFirst();
         while (data.moveToNext()) {
-                long id = data.getLong(data.getColumnIndex(Steps.STEPS_ID));
+                long id = data.getLong(data.getColumnIndex(StepsEntry.STEPS_ID));
                 String shortDescrip
-                        = data.getString(data.getColumnIndex(Steps.STEPS_SHORT_DESCRIP));
+                        = data.getString(data.getColumnIndex(StepsEntry.STEPS_SHORT_DESCRIP));
                 String descrip
-                        = data.getString(data.getColumnIndex(Steps.STEPS_DESCRIP));
-                String video = data.getString(data.getColumnIndex(Steps.STEPS_VIDEO));
-                String thumb = data.getString(data.getColumnIndex(Steps.STEPS_THUMB));
+                        = data.getString(data.getColumnIndex(StepsEntry.STEPS_DESCRIP));
+                String video = data.getString(data.getColumnIndex(StepsEntry.STEPS_VIDEO));
+                String thumb = data.getString(data.getColumnIndex(StepsEntry.STEPS_THUMB));
                 stepsList.add(new Steps(id, shortDescrip, descrip, video, thumb));
         }
         return stepsList;
@@ -184,11 +196,13 @@ public class RecipeUtils {
 
     public static void getRecipeDataFromCursor(Cursor data, ArrayList<Recipe> recipeList) {
         while (data.moveToNext()) {
-            int id = data.getInt(data.getColumnIndex(RECIPE_ID));
-            String image = data.getString((data.getColumnIndex(RECIPE_IMAGE)));
-            String name = data.getString(data.getColumnIndex(RECIPE_NAME));
-            int servings = data.getInt(data.getColumnIndex(RECIPE_SERVINGS));
-            boolean favourited = data.getInt(data.getColumnIndex(RECIPE_FAVOURITED)) != 0;
+            int id = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_ID));
+            String image = data.getString((data.getColumnIndex(RecipeEntry.RECIPE_IMAGE)));
+            String name = data.getString(data.getColumnIndex(RecipeEntry.RECIPE_NAME));
+            int servings = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_SERVINGS));
+            //TODO: data returns -1 on column ?!
+            int favValue = data.getInt(data.getColumnIndex(RecipeEntry.RECIPE_FAVOURITED));
+            boolean favourited = favValue == RecipeEntry.FAVOURITED_TRUE;
             recipeList.add(new Recipe(id, image, name, servings, favourited));
         }
     }

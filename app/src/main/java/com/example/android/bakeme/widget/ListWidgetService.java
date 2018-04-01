@@ -10,7 +10,7 @@ import android.widget.RemoteViewsService;
 
 import com.example.android.bakeme.R;
 import com.example.android.bakeme.data.Recipe.Ingredients;
-import com.example.android.bakeme.data.db.RecipeProvider;
+import com.example.android.bakeme.data.db.RecipeContract.IngredientsEntry;
 
 import java.util.ArrayList;
 
@@ -38,19 +38,18 @@ public class ListWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
+            ingredientsList = new ArrayList<>();
             Timber.plant(new Timber.DebugTree());
         }
 
         //Called when first launched and on any update made from within the app or widget
         @Override
         public void onDataSetChanged() {
-            if (csr != null) csr.close();
-            String selection = Ingredients.INGREDIENTS_CHECKED + "=?";
-            String[] selectionArgs = new String[]{"1"};
-            csr = getContentResolver().query(RecipeProvider.CONTENT_URI_INGREDIENTS, null,
-                    selection, selectionArgs, Ingredients.INGREDIENTS_ASSOCIATED_RECIPE);
-            Timber.v(String.valueOf(csr));
-            Timber.v(String.valueOf(csr.getCount()));
+            String selection = IngredientsEntry.INGREDIENTS_CHECKED;
+            String [] selectionArgs = new String[]{String.valueOf(IngredientsEntry.CHECKED_FALSE)};
+            String sortOrder = IngredientsEntry.INGREDIENTS_ASSOCIATED_RECIPE;
+            csr = ctxt.getContentResolver().query(IngredientsEntry.CONTENT_URI_INGREDIENTS,
+                    null, selection, selectionArgs, sortOrder);
         }
 
         @Override
@@ -66,20 +65,26 @@ public class ListWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Timber.v("getViewAt() is called");
-            RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.widget_ingredient_item);
-            if (csr != null && csr.getCount() > 0) {
-                csr.moveToPosition(position);
-                String recipeName = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_ASSOCIATED_RECIPE));
+            if (csr == null || csr.getCount() == 0) return null;
+
+            RemoteViews views = new RemoteViews(ctxt.getPackageName(),
+                    R.layout.widget_ingredient_item);
+            csr.moveToPosition(position);
+                String recipeName = csr.getString(csr.getColumnIndex(Ingredients
+                        .INGREDIENTS_ASSOCIATED_RECIPE));
                 long id = csr.getLong(csr.getColumnIndex(Ingredients.INGREDIENTS_ID));
-                String ingredient = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
-                String measure = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
-                double quantity = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
+                String ingredient
+                        = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_INGREDIENT));
+                String measure
+                        = csr.getString(csr.getColumnIndex(Ingredients.INGREDIENTS_MEASURE));
+                double quantity
+                        = csr.getDouble(csr.getColumnIndex(Ingredients.INGREDIENTS_QUANTITY));
                 ingredientsList.add(new Ingredients(id, ingredient, measure, quantity, recipeName));
 
+                Ingredients currentIngredients = ingredientsList.get(position);
 
                 //only show the recipe name on the first ingredient in the list.
-                if (recipeName.equals(prevRecipeName)) {
+                if (currentIngredients.getAssociatedRecipe().equals(prevRecipeName)) {
                     views.setViewVisibility(R.id.widget_recipe_tv, View.GONE);
                 } else {
                     views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
@@ -87,7 +92,8 @@ public class ListWidgetService extends RemoteViewsService {
                     prevRecipeName = recipeName;
                 }
 
-                views.setTextViewText(R.id.widget_ingredient_tv, ingredientsList.toString());
+                views.setTextViewText(R.id.widget_ingredient_tv, currentIngredients.toString());
+                Timber.v(currentIngredients.toString());
 
                 // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
                 Bundle extras = new Bundle();
@@ -96,9 +102,6 @@ public class ListWidgetService extends RemoteViewsService {
                 Intent fillInIntent = new Intent();
                 fillInIntent.putExtras(extras);
                 views.setOnClickFillInIntent(R.id.widget_ingredient_tv, fillInIntent);
-            }
-
-            csr.close();
 
             return views;
         }

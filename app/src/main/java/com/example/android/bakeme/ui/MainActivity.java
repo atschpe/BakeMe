@@ -27,7 +27,7 @@ import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.data.adapter.RecipeCardAdapter;
 import com.example.android.bakeme.data.api.ApiClient;
 import com.example.android.bakeme.data.api.ApiInterface;
-import com.example.android.bakeme.data.db.RecipeProvider;
+import com.example.android.bakeme.data.db.RecipeContract.RecipeEntry;
 import com.example.android.bakeme.databinding.ActivityMainBinding;
 import com.example.android.bakeme.utils.RecipeUtils;
 import com.example.android.bakeme.widget.IngredientsService;
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                         //retrieve data and send to adapter to display
                         List<Recipe> recipes = response.body();
                         recipeList.addAll(recipes);
-                        RecipeUtils.writeRecipesToRoom(recipeList, MainActivity.this);
+                        RecipeUtils.writeRecipesToDb(recipeList, MainActivity.this);
                         setAdapter(MainActivity.this, recipeList, MainActivity.this);
 
                         //create arrayList both Ingredients and Steps.
@@ -160,12 +160,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                             recipeName = recipe.getName();
                             //get this recipe's ingredients from response and write them to room.
                             ingredientsList.addAll(recipe.getIngredients());
-                            RecipeUtils.writeIngredientsToRoom(ingredientsList, recipeName,
+                            RecipeUtils.writeIngredientsToDb(ingredientsList, recipeName,
                                     MainActivity.this);
 
                             //get this recipe's steps from response and write them to room.
                             stepsList.addAll(recipe.getSteps());
-                            RecipeUtils.writeStepsToRoom(stepsList, recipeName,
+                            RecipeUtils.writeStepsToDb(stepsList, recipeName,
                                     MainActivity.this);
 
                             //clear all for next recipe
@@ -252,12 +252,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         String[] projection = new String[]{
-                RECIPE_ID,
-                RECIPE_IMAGE,
-                RECIPE_NAME,
-                RECIPE_SERVINGS,
-                RECIPE_FAVOURITED};
-        return new CursorLoader(this, RecipeProvider.CONTENT_URI_RECIPE, projection,
+                RecipeEntry.RECIPE_ID,
+                RecipeEntry.RECIPE_IMAGE,
+                RecipeEntry.RECIPE_NAME,
+                RecipeEntry.RECIPE_SERVINGS,
+                RecipeEntry.RECIPE_FAVOURITED};
+        return new CursorLoader(this, RecipeEntry.CONTENT_URI_RECIPE, projection,
                 null, null, null);
     }
 
