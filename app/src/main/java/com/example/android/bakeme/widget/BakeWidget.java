@@ -24,7 +24,6 @@ public class BakeWidget extends AppWidgetProvider {
     static void updateAppWidget(Context ctxt, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         Timber.plant(new Timber.DebugTree());
-        Timber.v("Timber is working within the widget classes");
 
         //has user favourited any recipes?
         boolean nothingFavourited = WidgetUtils.getFavouritedRecipes(ctxt).size() == 0;
@@ -47,7 +46,7 @@ public class BakeWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.empty_tv, emptyText);
         views.setEmptyView(R.id.bakewidget_ingredientList, R.id.shopping_list_empty);
 
-        Intent intent;
+        Intent intent = null;
         int requestCode = 0;
         if (nothingFavourited) {
             //Open MainActivity when clicked
