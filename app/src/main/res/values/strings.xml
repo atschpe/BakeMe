@@ -49,4 +49,6 @@
     <string name="associated_recipe">associatedRecipe</string>
     <string name="favourite_button">favourite button</string>
     <string name="unknown_uri">Unknown URI:</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

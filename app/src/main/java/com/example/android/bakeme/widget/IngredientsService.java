@@ -73,10 +73,11 @@ public class IngredientsService extends IntentService {
         AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetMan.getAppWidgetIds(new ComponentName(this,
                 BakeWidget.class));
+        //Now update all widgets
+        BakeWidget.updateBakeWidgets(this, appWidgetMan, appWidgetIds);
         //update data for listView
         appWidgetMan.notifyAppWidgetViewDataChanged(appWidgetIds,
                 R.id.bakewidget_ingredientList);
-        //Now update all widgets
-        BakeWidget.updateBakeWidgets(this, appWidgetMan, appWidgetIds);
+
     }
 }

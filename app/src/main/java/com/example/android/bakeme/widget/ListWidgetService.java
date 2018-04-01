@@ -83,6 +83,7 @@ public class ListWidgetService extends RemoteViewsService {
             } else {
                 views.setViewVisibility(R.id.widget_recipe_tv, View.VISIBLE);
                 views.setTextViewText(R.id.widget_recipe_tv, recipeName);
+                prevRecipeName = recipeName;
             }
 
             views.setTextViewText(R.id.widget_ingredient_tv, ingredientsList.toString());

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.android.bakeme.R;
-import com.example.android.bakeme.data.Recipe;
 import com.example.android.bakeme.ui.DetailActivity;
 import com.example.android.bakeme.ui.MainActivity;
 import com.example.android.bakeme.utils.RecipeUtils;
@@ -60,7 +59,7 @@ public class BakeWidget extends AppWidgetProvider {
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(ctxt, requestCode, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.bakewidget_ingredientList, pendingIntent);
+        views.setOnClickPendingIntent(R.id.shopping_list_empty, pendingIntent);
 
         // handle clicks to open the correct BakeMe activity.
         if (!nothingFavourited && !nothingChecked) {
